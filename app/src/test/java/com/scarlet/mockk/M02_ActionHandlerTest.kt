@@ -1,0 +1,59 @@
+package com.scarlet.mockk
+
+import com.google.common.truth.Truth.assertThat
+import org.junit.Before
+import org.junit.Test
+
+class M02_ActionHandlerTest {
+
+    // SUT
+    lateinit var actionHandler: ActionHandler
+
+    @Before
+    fun init() {
+
+    }
+
+    @Test
+    fun `should return valid string if doRequest succeed - use answers`() {
+        // Given
+
+        // When
+
+        // Then
+        assertThat(actionHandler.value).isEqualTo("data")
+    }
+
+    @Test
+    fun `should return null if doRequest fail - use answers`() {
+        // Given
+
+        // When
+        actionHandler.doRequest("failed query")
+
+        // Then
+        assertThat(actionHandler.value).isNull()
+    }
+
+    @Test
+    fun `should return valid string if doRequest succeeds - via argument captor, capture when stubbing`() {
+        // Given
+
+        // When
+        actionHandler.doRequest("query")
+
+        // Then
+        assertThat(actionHandler.value).isEqualTo("data")
+    }
+
+    @Test
+    fun `should return valid string if doRequest succeeds - via argument captor, capture when verify`() {
+        // Given
+
+        // When
+        actionHandler.doRequest("query")
+
+        // Then
+        assertThat(actionHandler.value).isEqualTo("data")
+    }
+}
