@@ -7,8 +7,8 @@ import kotlin.coroutines.ContinuationInterceptor
 
 val log: Logger = LoggerFactory.getLogger("Coroutines")
 
-fun log(msg: String?) {
-    log.info(msg)
+fun log(msg: Any?) {
+    log.info(msg.toString())
 }
 
 fun delim(char: String = "-", length: Int = 50) {

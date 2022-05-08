@@ -54,7 +54,7 @@ object UsingSyncCall {
     }
 
     fun showPost(post: Post) {
-        log(post.toString())
+        log(post)
     }
 
     fun postItem(item: Item) {
@@ -93,7 +93,7 @@ object UsingCallback {
     }
 
     fun showPost(post: Post) {
-        log(post.toString())
+        log(post)
     }
 
     fun postItem(item: Item) {
@@ -187,7 +187,7 @@ object AsyncWithCompletableFuture {
         }
 
     fun showPost(post: Post) {
-        log(post.toString())
+        log(post)
     }
 
     fun postItem(item: Item) {
@@ -232,7 +232,7 @@ object AsyncWithRx {
     }
 
     fun showPost(post: Post) {
-        log(post.toString())
+        log(post)
     }
 
     @SuppressLint("CheckResult")
@@ -280,7 +280,7 @@ object AsyncWithCoroutine {
     }
 
     private fun showPost(post: Post) {
-        log(post.toString())
+        log(post)
     }
 
     private suspend fun postItem(item: Item) {

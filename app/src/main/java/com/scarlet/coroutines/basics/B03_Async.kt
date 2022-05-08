@@ -14,7 +14,7 @@ object Async_Demo1 {
             42
         }
 
-        log(deferred.await().toString())
+        log(deferred.await())
     }
 }
 
@@ -35,7 +35,7 @@ object Async_Demo2 {
         }
 
         log("Waiting for results ...")
-        log(user.await().toString())
+        log(user.await())
         log("Done")
     }
 }
@@ -59,7 +59,7 @@ object Async_Demo3 {
         }
 
         log("Waiting for results ...")
-        log(user.await().toString())
+        log(user.await())
         log("Done")
     }
 }
