@@ -11,9 +11,9 @@ object Create_Coroutine_With_RunBlocking_Demo1 {
         log("Hello")
 
         runBlocking {
-            log(0, "Coroutine created")
+            log("Coroutine created")
             delay(1000)
-            log(0, "Coroutine done")
+            log("Coroutine done")
         }
 
         log("World")
@@ -26,9 +26,9 @@ object Create_Coroutine_With_RunBlocking_Demo2 {
     fun main(args: Array<String>) = runBlocking {
         log("Hello")
 
-        log(0, "Coroutine created")
+        log("Coroutine created")
         delay(1000)
-        log(0, "Coroutine done")
+        log("Coroutine done")
 
         log("World")
     }

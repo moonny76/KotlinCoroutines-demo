@@ -10,10 +10,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="43c01521-e0ee-4461-bdd8-3919a2235da8" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/scarlet/coroutines/android/CoActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/scarlet/coroutines/android/CoActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/scarlet/coroutines/basics/B00_WhyCoroutine.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/scarlet/coroutines/basics/B00_WhyCoroutine.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/scarlet/coroutines/basics/B03_Async.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/scarlet/coroutines/basics/B03_Async.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/scarlet/util/Utils.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/scarlet/util/Utils.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/test/java/com/scarlet/coroutines/exceptions/CE01_LaunchEHTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/test/java/com/scarlet/coroutines/exceptions/CE01_LaunchEHTest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/test/java/com/scarlet/coroutines/exceptions/CE02_LaunchSupervisorJobTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/test/java/com/scarlet/coroutines/exceptions/CE02_LaunchSupervisorJobTest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/test/java/com/scarlet/coroutines/exceptions/CE03_Launch_ScopeBuilderTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/test/java/com/scarlet/coroutines/exceptions/CE03_Launch_ScopeBuilderTest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/test/java/com/scarlet/coroutines/exceptions/CE04_ExceptionHandlerTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/test/java/com/scarlet/coroutines/exceptions/CE04_ExceptionHandlerTest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/test/java/com/scarlet/coroutines/exceptions/CE05_AsyncEHTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/test/java/com/scarlet/coroutines/exceptions/CE05_AsyncEHTest.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/test/java/com/scarlet/coroutines/exceptions/CE06_CancellationTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/test/java/com/scarlet/coroutines/exceptions/CE06_CancellationTest.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,8 +33,11 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/app/src/main/java/com/scarlet/coroutines/basics/B02_Launch.kt" root0="SKIP_HIGHLIGHTING" />
+  </component>
   <component name="ProjectCodeStyleSettingsMigration">
-    <option name="version" value="1" />
+    <option name="version" value="2" />
   </component>
   <component name="ProjectId" id="28DttAsqaSUWOUw81kcJonFHvHV" />
   <component name="ProjectViewState">
@@ -44,12 +49,16 @@
     <property name="RunOnceActivity.cidr.known.project.marker" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="cidr.known.project.marker" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../Work2/Github-demo" />
-    <property name="project.structure.last.edited" value="Suggestions" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/app/src/main/java/com/scarlet/coroutines/cancellation" />
+    <property name="project.structure.last.edited" value="SDK Location" />
     <property name="project.structure.proportion" value="0.17" />
     <property name="project.structure.side.proportion" value="0.2" />
+    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors.Color Scheme Font" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\Git\Testing-demo\KotlinCoroutines-demo\app\src\main\java\com\scarlet\coroutines\cancellation" />
+    </key>
     <key name="MoveKotlinTopLevelDeclarationsDialog.RECENTS_KEY">
       <recent name="com.scarlet.livedata" />
       <recent name="com.scarlet" />
@@ -58,7 +67,7 @@
       <recent name="com.scarlet" />
     </key>
   </component>
-  <component name="RunManager" selected="Kotlin.Coroutines_PingPong">
+  <component name="RunManager" selected="Kotlin.CoroutineContext_ContextInheritance_Demo">
     <configuration name="app" type="AndroidRunConfigurationType" factoryName="Android App">
       <module name="KotlinCoroutines-demo.app" />
       <option name="DEPLOY" value="true" />
@@ -73,8 +82,6 @@
       <option name="MODE" value="default_activity" />
       <option name="CLEAR_LOGCAT" value="false" />
       <option name="SHOW_LOGCAT_AUTOMATICALLY" value="false" />
-      <option name="SKIP_NOOP_APK_INSTALLATIONS" value="true" />
-      <option name="FORCE_STOP_RUNNING_APP" value="true" />
       <option name="INSPECTION_WITHOUT_ACTIVITY_RESTART" value="false" />
       <option name="TARGET_SELECTION_MODE" value="DEVICE_AND_SNAPSHOT_COMBO_BOX" />
       <option name="DEBUGGER_TYPE" value="Auto" />
@@ -116,32 +123,74 @@
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Coroutines" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.scarlet.coroutines.basics.Coroutines" />
-      <module name="KotlinCoroutines-demo.app" />
+    <configuration name="CoroutineContext_ContextInheritance_Demo" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.scarlet.coroutines.advanced.CoroutineContext_ContextInheritance_Demo" />
+      <module name="KotlinCoroutines-demo.app.main" />
+      <shortenClasspath name="NONE" />
+      <option name="VM_PARAMETERS" value="-Dkotlinx.coroutines.debug" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Coroutines_PingPong" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.scarlet.coroutines.basics.Coroutines_PingPong" />
-      <module name="KotlinCoroutines-demo.app" />
+    <configuration name="CoroutineContext_Creation_Plus" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.scarlet.coroutines.advanced.CoroutineContext_Creation_Plus" />
+      <module name="KotlinCoroutines-demo.app.main" />
+      <shortenClasspath name="NONE" />
+      <option name="VM_PARAMETERS" value="-Dkotlinx.coroutines.debug" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="GeneratorKt" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.scarlet.coroutines.basics.GeneratorKt" />
-      <module name="KotlinCoroutines-demo.app" />
+    <configuration name="CoroutineContext_Fold" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.scarlet.coroutines.advanced.CoroutineContext_Fold" />
+      <module name="KotlinCoroutines-demo.app.main" />
+      <shortenClasspath name="NONE" />
+      <option name="VM_PARAMETERS" value="-Dkotlinx.coroutines.debug" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="CoroutineContext_Merge" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.scarlet.coroutines.advanced.CoroutineContext_Merge" />
+      <module name="KotlinCoroutines-demo.app.main" />
+      <shortenClasspath name="NONE" />
+      <option name="VM_PARAMETERS" value="-Dkotlinx.coroutines.debug" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="CoroutineScope_Has_Context" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.scarlet.coroutines.advanced.CoroutineScope_Has_Context" />
+      <module name="KotlinCoroutines-demo.app.main" />
+      <shortenClasspath name="NONE" />
+      <option name="VM_PARAMETERS" value="-Dkotlinx.coroutines.debug" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="KotlinCoroutines-demo.app" />
+      <shortenClasspath name="NONE" />
+      <option name="VM_PARAMETERS" value="-Dkotlinx.coroutines.debug" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Android App.app" />
+      <item itemvalue="Kotlin.CoroutineScope_Has_Context" />
+      <item itemvalue="Kotlin.CoroutineContext_Creation_Plus" />
+      <item itemvalue="Kotlin.CoroutineContext_Merge" />
+      <item itemvalue="Kotlin.CoroutineContext_Fold" />
+      <item itemvalue="Kotlin.CoroutineContext_ContextInheritance_Demo" />
+    </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Kotlin.Coroutines_PingPong" />
-        <item itemvalue="Kotlin.Coroutines" />
-        <item itemvalue="Kotlin.GeneratorKt" />
+        <item itemvalue="Kotlin.CoroutineContext_ContextInheritance_Demo" />
+        <item itemvalue="Kotlin.CoroutineContext_Fold" />
+        <item itemvalue="Kotlin.CoroutineContext_Merge" />
+        <item itemvalue="Kotlin.CoroutineContext_Creation_Plus" />
+        <item itemvalue="Kotlin.CoroutineScope_Has_Context" />
       </list>
     </recent_temporary>
   </component>

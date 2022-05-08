@@ -88,7 +88,7 @@ object Failed_child_cause_cancellation_of_its_parent_and_its_siblings {
 
     @JvmStatic
     fun main(args: Array<String>) = runBlocking {
-        var child1: Job? = null
+        var child1: Job?
 
         val parent = launch {
             child1 = launch {

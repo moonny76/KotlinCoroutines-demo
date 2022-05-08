@@ -12,48 +12,44 @@ fun log(msg: Any?) {
 }
 
 fun delim(char: String = "-", length: Int = 50) {
-    println(char.repeat(length))
+    log(char.repeat(length))
 }
 
 fun spaces(level: Int) = "\t".repeat(level)
 
-fun CoroutineScope.log(level: Int, msg: String) {
-    log("${spaces(level)}$msg")
-}
-
 fun CoroutineScope.coroutineInfo(indent: Int) {
     delim()
-    println("\t".repeat(indent) + "thread = ${Thread.currentThread().name}")
-    println("\t".repeat(indent) + "job = ${coroutineContext[Job]}")
-    println("\t".repeat(indent) + "dispatcher = ${coroutineContext[ContinuationInterceptor]}")
-    println("\t".repeat(indent) + "name = ${coroutineContext[CoroutineName]}")
-    println("\t".repeat(indent) + "handler = ${coroutineContext[CoroutineExceptionHandler]}")
+    log("\t".repeat(indent) + "thread = ${Thread.currentThread().name}")
+    log("\t".repeat(indent) + "job = ${coroutineContext[Job]}")
+    log("\t".repeat(indent) + "dispatcher = ${coroutineContext[ContinuationInterceptor]}")
+    log("\t".repeat(indent) + "name = ${coroutineContext[CoroutineName]}")
+    log("\t".repeat(indent) + "handler = ${coroutineContext[CoroutineExceptionHandler]}")
     delim()
 }
 
-suspend fun CoroutineScope.coroutineDynInfo(indent: Int) {
+suspend fun coroutineDynInfo(indent: Int) {
     delim()
-    println("\t".repeat(indent) + "thread = ${Thread.currentThread().name}")
-    println("\t".repeat(indent) + "job = ${currentCoroutineContext()[Job]}")
-    println("\t".repeat(indent) + "dispatcher = ${currentCoroutineContext()[ContinuationInterceptor]}")
+    log("\t".repeat(indent) + "thread = ${Thread.currentThread().name}")
+    log("\t".repeat(indent) + "job = ${currentCoroutineContext()[Job]}")
+    log("\t".repeat(indent) + "dispatcher = ${currentCoroutineContext()[ContinuationInterceptor]}")
     delim()
 }
 
 fun scopeInfo(scope: CoroutineScope, indent: Int) {
     delim()
-    println("\t".repeat(indent) + "Scope's job = ${scope.coroutineContext[Job]}")
-    println("\t".repeat(indent) + "Scope's dispatcher = ${scope.coroutineContext[ContinuationInterceptor]}")
-    println("\t".repeat(indent) + "Scope's name = ${scope.coroutineContext[CoroutineName]}")
-    println("\t".repeat(indent) + "Scope's handler = ${scope.coroutineContext[CoroutineExceptionHandler]}")
+    log("\t".repeat(indent) + "Scope's job = ${scope.coroutineContext[Job]}")
+    log("\t".repeat(indent) + "Scope's dispatcher = ${scope.coroutineContext[ContinuationInterceptor]}")
+    log("\t".repeat(indent) + "Scope's name = ${scope.coroutineContext[CoroutineName]}")
+    log("\t".repeat(indent) + "Scope's handler = ${scope.coroutineContext[CoroutineExceptionHandler]}")
     delim()
 }
 
 fun Job.completeStatus(name: String = "Job", level: Int = 0) = apply {
-    println("${spaces(level)}$name: isCancelled = $isCancelled")
+    log("${spaces(level)}$name: isCancelled = $isCancelled")
 }
 
 fun CoroutineScope.completeStatus(name: String = "scope", level: Int = 0) = apply {
-    println("${spaces(level)}$name: isCancelled = ${coroutineContext.job.isCancelled}")
+    log("${spaces(level)}$name: isCancelled = ${coroutineContext.job.isCancelled}")
 }
 
 fun CoroutineScope.onCompletion(name: String = "scope", level: Int = 0) = apply {
@@ -62,12 +58,12 @@ fun CoroutineScope.onCompletion(name: String = "scope", level: Int = 0) = apply 
 
 fun Job.onCompletion(name: String, level: Int = 0): Job = apply {
     invokeOnCompletion {
-        println("${spaces(level)}$name: isCancelled = $isCancelled, exception = ${it?.javaClass?.name}")
+        log("${spaces(level)}$name: isCancelled = $isCancelled, exception = ${it?.javaClass?.name}")
     }
 }
 
 fun <T> Deferred<T>.onCompletion(name: String, level: Int = 0): Deferred<T> = apply {
     invokeOnCompletion {
-        println("${spaces(level)}$name: isCancelled = $isCancelled, exception = ${it?.javaClass?.name}")
+        log("${spaces(level)}$name: isCancelled = $isCancelled, exception = ${it?.javaClass?.name}")
     }
 }

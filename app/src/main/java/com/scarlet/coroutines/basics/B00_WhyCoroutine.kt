@@ -36,7 +36,7 @@ private fun CoroutineScope.loop() {
 object UsingSyncCall {
 
     // Blocking network request code
-    fun requestToken(): Token {
+    private fun requestToken(): Token {
         log("Token request is being processed ...")
         sleep(1000) // simulate network delay
         log("Token creation done")
@@ -45,7 +45,7 @@ object UsingSyncCall {
     }
 
     // Blocking network request code
-    fun createPost(token: Token, item: Item): Post {
+    private fun createPost(token: Token, item: Item): Post {
         log("Post creation is being processed ...")
         sleep(1000) // simulate network delay
         log("Post creation done")
@@ -53,11 +53,11 @@ object UsingSyncCall {
         return Post(token, item)
     }
 
-    fun showPost(post: Post) {
+    private fun showPost(post: Post) {
         log(post)
     }
 
-    fun postItem(item: Item) {
+    private fun postItem(item: Item) {
         val token = requestToken()
         val post = createPost(token, item)
         showPost(post)
@@ -84,19 +84,19 @@ fun <T> background(value: T, msg: String, callback: (T) -> Unit) {
 }
 
 object UsingCallback {
-    fun requestToken(callback: (Token) -> Unit) {
+    private fun requestToken(callback: (Token) -> Unit) {
         background(Token(42), "Token request is being processed ...", callback)
     }
 
-    fun createPost(token: Token, item: Item, callback: (Post) -> Unit) {
+    private fun createPost(token: Token, item: Item, callback: (Post) -> Unit) {
         background(Post(token, item), "Post creation is being processed ...", callback)
     }
 
-    fun showPost(post: Post) {
+    private fun showPost(post: Post) {
         log(post)
     }
 
-    fun postItem(item: Item) {
+    private fun postItem(item: Item) {
         requestToken { token ->
             log("Token creation done")
             createPost(token, item) { post ->
@@ -168,7 +168,7 @@ object CallbackHell {
 
 object AsyncWithCompletableFuture {
 
-    fun requestToken(): CompletableFuture<Token> = CompletableFuture.supplyAsync {
+    private fun requestToken(): CompletableFuture<Token> = CompletableFuture.supplyAsync {
         log("Token request is being processed ...")
         sleep(1000) // simulate network delay
         log("Token creation done")
@@ -176,7 +176,7 @@ object AsyncWithCompletableFuture {
         Token(42)
     }
 
-    fun createPost(token: Token, item: Item): CompletableFuture<Post> =
+    private fun createPost(token: Token, item: Item): CompletableFuture<Post> =
         CompletableFuture.supplyAsync {
             log("Post creation is being processed ...")
             sleep(1000) // simulate network delay
@@ -186,11 +186,11 @@ object AsyncWithCompletableFuture {
 //            throw RuntimeException("oops")
         }
 
-    fun showPost(post: Post) {
+    private fun showPost(post: Post) {
         log(post)
     }
 
-    fun postItem(item: Item) {
+    private fun postItem(item: Item) {
         requestToken()
             .thenCompose { token ->
                 createPost(token, item)
@@ -214,7 +214,7 @@ object AsyncWithCompletableFuture {
 
 object AsyncWithRx {
 
-    fun requestToken(): Observable<Token> = Observable.create { emitter ->
+    private fun requestToken(): Observable<Token> = Observable.create { emitter ->
         log("Token request is being processed ...")
         sleep(1000) // simulate network delay
         log("Token creation done")
@@ -222,7 +222,7 @@ object AsyncWithRx {
         emitter.onComplete()
     }
 
-    fun createPost(token: Token, item: Item): Observable<Post> = Observable.create { emitter ->
+    private fun createPost(token: Token, item: Item): Observable<Post> = Observable.create { emitter ->
         log("Post creation is being processed ...")
         sleep(1000) // simulate network delay
         log("Post creation done")
@@ -231,7 +231,7 @@ object AsyncWithRx {
         emitter.onComplete()
     }
 
-    fun showPost(post: Post) {
+    private fun showPost(post: Post) {
         log(post)
     }
 

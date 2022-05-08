@@ -1,6 +1,7 @@
 package com.scarlet.coroutines.advanced
 
 import com.scarlet.util.coroutineInfo
+import com.scarlet.util.log
 import com.scarlet.util.onCompletion
 import com.scarlet.util.scopeInfo
 import kotlinx.coroutines.*
@@ -46,7 +47,7 @@ object Canceling_Scope_Cancels_It_and_All_Its_Children {
         val scope = CoroutineScope(CoroutineName("My Scope"))
         // New job gets created if not provided explicitly
         if (scope.coroutineContext[Job] != null) {
-            println("New job is created!")
+            log("New job is created!")
         }
 
         // Dispatchers.Default
@@ -60,7 +61,7 @@ object Canceling_Scope_Cancels_It_and_All_Its_Children {
         scope.cancel()
         job.join() // why need this?
 
-        println("Done.")
+        log("Done.")
     }
 }
 
@@ -73,24 +74,24 @@ object Canceling_Scope_Cancels_It_and_All_Descendents {
         val parent1 = scope.launch(CoroutineName("Parent 1")) {
             launch {
                 delay(1000)
-                println("child 1 done")
+                log("child 1 done")
             }.onCompletion("child 1")
 
             launch {
                 delay(1000)
-                println("child 2 done")
+                log("child 2 done")
             }.onCompletion("child 2")
         }.onCompletion("parent 1")
 
         val parent2 = scope.launch(CoroutineName("Parent 2")) {
             launch {
                 delay(1000)
-                println("child 3 done")
+                log("child 3 done")
             }.onCompletion("child 3")
 
             launch {
                 delay(1000)
-                println("child 4 done")
+                log("child 4 done")
             }.onCompletion("child 4")
         }.onCompletion("parent 2")
 
@@ -98,7 +99,7 @@ object Canceling_Scope_Cancels_It_and_All_Descendents {
         scope.cancel()
 
         joinAll(parent1, parent2)
-        println("Done")
+        log("Done")
     }
 }
 
@@ -111,12 +112,12 @@ object Canceling_A_Scope_Does_Not_Affect_Its_Siblings { // And its parent
         val parentLeft = scopeLeft.launch(CoroutineName("Parent Left")) {
             launch {
                 delay(1000)
-                println("child L-1 done")
+                log("child L-1 done")
             }.onCompletion("child L-1")
 
             launch {
                 delay(1000)
-                println("child L-2 done")
+                log("child L-2 done")
             }.onCompletion("child L-2")
         }.onCompletion("parent left")
 
@@ -125,12 +126,12 @@ object Canceling_A_Scope_Does_Not_Affect_Its_Siblings { // And its parent
         val parentRight = scopeRight.launch(CoroutineName("Parent Right")) {
             launch {
                 delay(1000)
-                println("child R-1 done")
+                log("child R-1 done")
             }.onCompletion("child R-1")
 
             launch {
                 delay(1000)
-                println("child R-2 done")
+                log("child R-2 done")
             }.onCompletion("child R-2")
         }.onCompletion("parent right")
 
@@ -138,7 +139,7 @@ object Canceling_A_Scope_Does_Not_Affect_Its_Siblings { // And its parent
         scopeLeft.cancel()
 
         joinAll(parentLeft, parentRight)
-        println("Done")
+        log("Done")
     }
 }
 
@@ -147,7 +148,7 @@ object Canceling_A_Scope_Does_Not_Affect_Its_Siblings { // And its parent
 object GlobalScope_Cancellation_Demo {
     @JvmStatic
     fun main(args: Array<String>) = runBlocking {
-        println("Job for GlobalScope is ${GlobalScope.coroutineContext[Job]}")
+        log("Job for GlobalScope is ${GlobalScope.coroutineContext[Job]}")
 
         val job = GlobalScope.launch {
             launch(CoroutineName("Child 1")) {

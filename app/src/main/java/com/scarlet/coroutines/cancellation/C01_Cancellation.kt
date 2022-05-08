@@ -27,9 +27,9 @@ object Cancel_Parent_Scope {
         delay(500)
 
         scope.cancel()
-//        scope.coroutineContext[Job]?.cancelAndJoin()
+//        scope.coroutineContext.job.cancelAndJoin()
 
-        println("scope cancelled = ${scope.coroutineContext[Job]?.isCancelled}")
+        println("scope cancelled = ${scope.coroutineContext.job.isCancelled}")
         println("parent cancelled = ${parent.isCancelled}")
         println("child cancelled = ${child?.isCancelled}")
     }
@@ -53,7 +53,7 @@ object Cancel_Parent_Coroutine {
 
         parentJob.cancelAndJoin()
 
-        println("scope cancelled = ${scope.coroutineContext[Job]?.isCancelled}")
+        println("scope cancelled = ${scope.coroutineContext.job.isCancelled}")
         println("parent job cancelled = ${parentJob.isCancelled}")
         println("child1 job cancelled = ${child1?.isCancelled}")
         println("child2 job cancelled = ${child2?.isCancelled}")
@@ -79,7 +79,7 @@ object Cancel_Child_Coroutine {
         child1?.cancel()
         parentJob.join()
 
-        println("scope cancelled = ${scope.coroutineContext[Job]?.isCancelled}")
+        println("scope cancelled = ${scope.coroutineContext.job.isCancelled}")
         println("parent job cancelled = ${parentJob.isCancelled}")
         println("child1 job cancelled = ${child1?.isCancelled}")
         println("child2 job cancelled = ${child2?.isCancelled}")
@@ -108,7 +108,7 @@ object Cancel_Parent_Job_Quiz {
 
         child.join()
 
-        println("scope cancelled = ${scope.coroutineContext[Job]?.isCancelled}")
+        println("scope cancelled = ${scope.coroutineContext.job.isCancelled}")
         println("child cancelled = ${child.isCancelled}")
     }
 }
@@ -130,7 +130,7 @@ object Cancel_Children_Only_To_Reuse_Parent_Job {
         parentJob.cancelChildren()
         parentJob.join()
 
-        println("scope cancelled = ${scope.coroutineContext[Job]?.isCancelled}")
+        println("scope cancelled = ${scope.coroutineContext.job.isCancelled}")
         println("parent job cancelled = ${parentJob.isCancelled}")
         println("child1 job cancelled = ${child1?.isCancelled}")
         println("child2 job cancelled = ${child2?.isCancelled}")
@@ -151,10 +151,10 @@ object Cancel_Children_Only_To_Reuse_Scope {
 
         delay(500)
 
-        scope.coroutineContext[Job]?.cancelChildren()
+        scope.coroutineContext.job.cancelChildren()
         parentJob.join()
 
-        println("scope cancelled = ${scope.coroutineContext[Job]?.isCancelled}")
+        println("scope cancelled = ${scope.coroutineContext.job.isCancelled}")
         println("parent job cancelled = ${parentJob.isCancelled}")
         println("child1 job cancelled = ${child1?.isCancelled}")
         println("child2 job cancelled = ${child2?.isCancelled}")

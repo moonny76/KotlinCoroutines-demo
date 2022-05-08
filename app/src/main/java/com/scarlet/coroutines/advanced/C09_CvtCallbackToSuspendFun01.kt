@@ -1,5 +1,6 @@
 package com.scarlet.coroutines.advanced
 
+import com.scarlet.util.log
 import kotlinx.coroutines.runBlocking
 import java.io.IOException
 
@@ -24,21 +25,21 @@ object CvtCallbackToSuspendFun_01 {
     fun demoCallbackInvocation() {
         getData(object : AsyncCallback {
             override fun onSuccess(result: String) {
-                println("Data received: $result")
+                log("Data received: $result")
             }
 
             override fun onError(ex: Exception) {
-                println("Caught ${ex.javaClass.simpleName}")
+                log("Caught ${ex.javaClass.simpleName}")
             }
         }, true)
 
         getData(object : AsyncCallback {
             override fun onSuccess(result: String) {
-                println("Data received: $result")
+                log("Data received: $result")
             }
 
             override fun onError(ex: Exception) {
-                println("Caught ${ex.javaClass.simpleName}")
+                log("Caught ${ex.javaClass.simpleName}")
             }
         }, false)
     }
@@ -56,16 +57,16 @@ object CvtCallbackToSuspendFun_01 {
     suspend fun demoAsyncInvocation() {
         try {
             val result = getDataAsync(true)
-            println("Data received: $result")
+            log("Data received: $result")
         } catch(ex: Exception) {
-            println("Caught ${ex.javaClass.simpleName}")
+            log("Caught ${ex.javaClass.simpleName}")
         }
 
         try {
             val result = getDataAsync(false)
-            println("Data received: $result")
+            log("Data received: $result")
         } catch(ex: Exception) {
-            println("Caught ${ex.javaClass.simpleName}")
+            log("Caught ${ex.javaClass.simpleName}")
         }
     }
 

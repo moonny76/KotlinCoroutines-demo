@@ -1,5 +1,6 @@
 package com.scarlet.coroutines.exceptions
 
+import com.scarlet.util.log
 import com.scarlet.util.onCompletion
 import kotlinx.coroutines.*
 import kotlinx.coroutines.test.runTest
@@ -10,7 +11,7 @@ import java.lang.RuntimeException
 class CE04_ExceptionHandlerTest {
 
     private val ehandler = CoroutineExceptionHandler { _, exception ->
-        println("Global exception handler Caught $exception")
+        log("Global exception handler Caught $exception")
     }
 
     /**

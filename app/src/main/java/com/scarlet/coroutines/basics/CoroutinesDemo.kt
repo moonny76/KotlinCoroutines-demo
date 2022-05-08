@@ -6,7 +6,7 @@ import kotlin.coroutines.coroutineContext
 
 object Generator {
 
-    fun fib(): Sequence<Int> = sequence {
+    private fun fib(): Sequence<Int> = sequence {
         var x = 0
         var y = 1
         while (true) {
@@ -18,8 +18,8 @@ object Generator {
         }
     }
 
-    private fun prompt(msg: String): Boolean {
-        print(msg)
+    private fun prompt(): Boolean {
+        print("next? ")
         return !readLine().equals("n")
     }
 
@@ -27,7 +27,7 @@ object Generator {
     fun main(args: Array<String>) {
         val iterator = fib().iterator()
 
-        while (prompt("next? ")) {
+        while (prompt()) {
             println("requesting ...")
             println("Got result = ${iterator.next()}")
         }
@@ -36,14 +36,14 @@ object Generator {
 
 object Coroutines_PingPong {
 
-    suspend fun ping() {
+    private suspend fun ping() {
         while (coroutineContext.isActive) {
             println("ping")
             yield()
         }
     }
 
-    suspend fun pong() {
+    private suspend fun pong() {
         while (coroutineContext.isActive) {
             println("pong")
             yield()
@@ -63,21 +63,21 @@ object Coroutines_PingPong {
 
 object Coroutines_Multitasking {
 
-    suspend fun coroutine1() {
+    private suspend fun coroutine1() {
         for (i in 1..10) {
             println("${spaces(4)}Coroutine 1: $i")
             yield()
         }
     }
 
-    suspend fun coroutine2() {
+    private suspend fun coroutine2() {
         for (i in 1..10) {
             println("${spaces(8)}Coroutine 2: $i")
             yield()
         }
     }
 
-    suspend fun coroutine3() {
+    private suspend fun coroutine3() {
         for (i in 1..10) {
             println("${spaces(12)}Coroutine 3: $i")
             yield()

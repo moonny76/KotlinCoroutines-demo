@@ -1,5 +1,6 @@
 package com.scarlet.coroutines.advanced
 
+import com.scarlet.util.log
 import com.scarlet.util.onCompletion
 import kotlinx.coroutines.*
 
@@ -12,13 +13,13 @@ object Dependency_Between_Jobs {
         // coroutine starts when start() or join() called
         val job1 = launch(start = CoroutineStart.LAZY) {
             delay(100)
-            println("Pong")
+            log("Pong")
         }
 
         launch {
-            println("Ping")
+            log("Ping")
             job1.join()
-            println("Ping")
+            log("Ping")
         }
     }
 }
@@ -27,32 +28,32 @@ object Jobs_Forms_Hierarchy {
     @JvmStatic
     fun main(args: Array<String>) = runBlocking {
         val parentJob = launch {
-            println("I am parent")
+            log("I am parent")
 
             launch {
-                println("\tI am a child the parentJob")
+                log("\tI am a child the parentJob")
                 delay(1000)
-            }.invokeOnCompletion { println("\tchild completes") }
+            }.invokeOnCompletion { log("\tchild completes") }
 
             launch { // To check whether already finished child counted as children
-                println("\tI am another child of the parentJob")
+                log("\tI am another child of the parentJob")
                 delay(500)
-            }.invokeOnCompletion { println("\tanother child completes") }
+            }.invokeOnCompletion { log("\tanother child completes") }
 
         }.apply{
-            invokeOnCompletion { println("parentJob completes") }
+            invokeOnCompletion { log("parentJob completes") }
         }
 
         launch {
-            println("I’m a sibling of the parentJob, not its child")
+            log("I’m a sibling of the parentJob, not its child")
             delay(1000)
         }
 
         delay(300)
-        println("The parentJob has ${parentJob.children.count()} children")
+        log("The parentJob has ${parentJob.children.count()} children")
 
         delay(300)
-        println("The parentJob has ${parentJob.children.count()} children")
+        log("The parentJob has ${parentJob.children.count()} children")
     }
 }
 
@@ -73,15 +74,15 @@ object In_Hierarchy_Parent_Waits_Until_All_Children_Finished {
             repeat(3) { i -> // launch a few children jobs
                 launch { // try Dispatchers.Default
                     delay((i + 1) * 200L) // variable delay 200ms, 400ms, 600ms
-                    println("\tChild Coroutine $i is done")
+                    log("\tChild Coroutine $i is done")
                 }
             }
-            println("parent: I'm done, but will wait until all my children completes")
+            log("parent: I'm done, but will wait until all my children completes")
             // No need to join here
         }.onCompletion("parent: now, I am completed")
 
         parent.join() // wait for completion of the request, including all its children
-        println("Processing of the request is complete")
+        log("Processing of the request is complete")
     }
 }
 
@@ -89,22 +90,22 @@ object In_Hierarchy_Parent_Waits_Until_All_Children_Finished_Other_Demo {
     @JvmStatic
     fun main(args: Array<String>) = runBlocking {
         val parentJob = launch {
-            println("I’m the parent")
+            log("I’m the parent")
         }.onCompletion("Finally, parent finished ...")
 
         launch(parentJob) {
-            println("\tI’m a child")
+            log("\tI’m a child")
             delay(1000)
         }.onCompletion("\tChild finished after 1000")
 
-        println("The Parent job has ${parentJob.children.count()} child right after child launch")
-        println("is Parent still alive right after child launch? ${parentJob.isActive}")
+        log("The Parent job has ${parentJob.children.count()} child right after child launch")
+        log("is Parent still alive right after child launch? ${parentJob.isActive}")
 
         delay(500)
-        println("is Parent still alive at 500? ${parentJob.isActive}")
+        log("is Parent still alive at 500? ${parentJob.isActive}")
 
         parentJob.join()
-        println("is Parent still alive after joined? ${parentJob.isActive}")
+        log("is Parent still alive after joined? ${parentJob.isActive}")
     }
 }
 

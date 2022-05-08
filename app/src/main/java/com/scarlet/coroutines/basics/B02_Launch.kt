@@ -7,23 +7,23 @@ import kotlinx.coroutines.*
 suspend fun save(user: User) {
     // simulate network delay
     delay(1000)
-    log("\tUser saved")
+    log("\tUser saved $user")
 }
 
 object LaunchDemo01 {
     @JvmStatic
     fun main(args: Array<String>) = runBlocking {
-        log(0, "1. before launch")
+        log("1. before launch")
 
         val user = User("A001", "Jody", 33)
 
         launch {
-            log(1, "3. before save")
+            log("3. before save")
             save(user)
-            log(1, "4. after save")
+            log("4. after save")
         }
 
-        log(0, "2. after launch")
+        log("2. after launch")
     }
 
 }
@@ -31,36 +31,35 @@ object LaunchDemo01 {
 object Launch_Demo02 {
     @JvmStatic
     fun main(args: Array<String>) {
-
         runBlocking {
             launch {
                 delay(1000)
-                log(1, "(2) child 1 done.")
+                log("2. child 1 done.")
             }
             launch {
                 delay(2000)
-                log(1, "(3) child 2 done.")
+                log("3. child 2 done.")
             }
 
-            log(0, "(1) end of runBlocking")
+            log("1. end of runBlocking")
         }
 
-        log("(4) Done")
+        log("4. Done")
     }
 }
 
 object Launch_Join_Demo {
     @JvmStatic
     fun main(args: Array<String>) = runBlocking {
-        log(0, "(1) start of runBlocking")
+        log("1. start of runBlocking")
 
         launch {
-            log(1, "(2) child 1 start")
+            log("2. child 1 start")
             delay(1000)
-            log(1, "(3) child 1 done")
+            log("3. child 1 done")
         }
 
-        log("(4) Done") // How to print this at the last
+        log("4. Done") // How to print this at the last
     }
 }
 
@@ -68,17 +67,17 @@ object Launch_Join_Demo {
 object GlobalScope_Demo {
     @JvmStatic
     fun main(args: Array<String>) = runBlocking{
-        log(0, "(1) start of runBlocking")
+        log("1. start of runBlocking")
 
         val user = User("A001", "Jody", 33)
 
         GlobalScope.launch {
-            log(1, "(2) before save")
+            log("2. before save")
             save(user)
-            log(1, "(3) after save")
+            log("3. after save")
         }.join()
 
-        log("(4) Done.")
+        log("4. Done.")
     }
 
 }
@@ -94,9 +93,9 @@ object CoroutineScope_Sneak_Preview_Demo {
         val user = User("A001", "Jody", 33)
 
         scope.launch {
-            log(1, "before save")
+            log("before save")
             save(user)
-            log(1, "after save")
+            log("after save")
         }
 
 //        runBlocking { job.join() }

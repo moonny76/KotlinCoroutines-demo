@@ -1,6 +1,7 @@
 package com.scarlet.coroutines.exceptions
 
 import com.scarlet.util.completeStatus
+import com.scarlet.util.log
 import com.scarlet.util.onCompletion
 import kotlinx.coroutines.*
 import kotlinx.coroutines.test.runTest
@@ -140,11 +141,11 @@ class CE02_LaunchSupervisorJobTest {
                 }.onCompletion("parentJob")
                 parentJob.join()
             } catch (ex: Exception) {
-                println("Exception caught: $ex") // No use
+                log("Exception caught: $ex") // No use
             }
             scope.completeStatus()
         } catch (ex: Exception) {
-            println("Outer: Exception caught: $ex") // No use
+            log("Outer: Exception caught: $ex") // No use
         }
     }
 

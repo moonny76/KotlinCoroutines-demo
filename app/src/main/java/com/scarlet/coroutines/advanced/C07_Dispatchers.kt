@@ -1,6 +1,7 @@
 package com.scarlet.coroutines.advanced
 
 import com.scarlet.util.coroutineInfo
+import com.scarlet.util.log
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers
 import java.util.concurrent.Executors
@@ -28,7 +29,7 @@ object Dispatchers_Main_Failure_Demo {
             delay(1000)
         }.join()
 
-        println("Done.")
+        log("Done.")
     }
 }
 
@@ -40,7 +41,7 @@ object DefaultDispatchers_Demo {
                 // To make it busy
                 List(1000) { Random.nextLong() }.maxOrNull()
 
-                println("Running on thread: ${Thread.currentThread().name}")
+                log("Running on thread: ${Thread.currentThread().name}")
             }
         }
     }
@@ -52,7 +53,7 @@ object IODispatchers_Demo {
         repeat(64) {
             launch(Dispatchers.IO) {
                 Thread.sleep(200)
-                println("Running on thread: ${Thread.currentThread().name}")
+                log("Running on thread: ${Thread.currentThread().name}")
             }
         }
     }
@@ -66,10 +67,10 @@ object ThreadSharing_Demo {
     @JvmStatic
     fun main(args: Array<String>) = runBlocking<Unit>{
         launch(Dispatchers.Default) {
-            println(Thread.currentThread().name)
+            log(Thread.currentThread().name)
 
             withContext(Dispatchers.IO) {
-                println(Thread.currentThread().name)
+                log(Thread.currentThread().name)
             }
         }
     }
@@ -91,7 +92,7 @@ object Unconfined_Dispatchers_Demo {
             coroutineInfo(1)
         }.join()
 
-        println("Done.")
+        log("Done.")
     }
 }
 

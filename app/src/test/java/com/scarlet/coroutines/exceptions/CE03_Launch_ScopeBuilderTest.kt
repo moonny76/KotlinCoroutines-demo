@@ -1,6 +1,7 @@
 package com.scarlet.coroutines.exceptions
 
 import com.scarlet.util.completeStatus
+import com.scarlet.util.log
 import com.scarlet.util.onCompletion
 import kotlinx.coroutines.*
 import kotlinx.coroutines.test.runTest
@@ -29,7 +30,7 @@ class CE03_Launch_ScopeBuilderTest {
                 }.onCompletion("child")
             }
         } catch (ex: Exception) {
-            println("Caught: $ex")
+            log("Caught: $ex")
         }
     }
 
@@ -49,7 +50,7 @@ class CE03_Launch_ScopeBuilderTest {
 //                coroutineContext.cancelChildren()
             }
         } catch (ex: Exception) {
-            println("Caught: $ex")
+            log("Caught: $ex")
         }
     }
 
@@ -68,7 +69,7 @@ class CE03_Launch_ScopeBuilderTest {
                 launch { delay(1000) }.onCompletion("child2")
             }
         } catch (ex: Exception) {
-            println("Caught: $ex")
+            log("Caught: $ex")
         }
     }
 
@@ -110,7 +111,7 @@ class CE03_Launch_ScopeBuilderTest {
                 }.onCompletion("child")
             }
         } catch (ex: Exception) {
-            println("Caught: $ex") // useless
+            log("Caught: $ex") // useless
         }
     }
 
@@ -130,7 +131,7 @@ class CE03_Launch_ScopeBuilderTest {
 //                coroutineContext.cancel()
             }
         } catch (ex: Exception) {
-            println("Caught: $ex")
+            log("Caught: $ex")
         }
     }
 
@@ -148,7 +149,7 @@ class CE03_Launch_ScopeBuilderTest {
                 launch { delay(200) }.onCompletion("child2")
             }
         } catch (ex: Exception) {
-            println("Caught: $ex") // useless
+            log("Caught: $ex") // useless
         }
     }
 
@@ -167,7 +168,7 @@ class CE03_Launch_ScopeBuilderTest {
                 coroutineContext.cancel() // cancelChildren()
             }
         } catch (ex: Exception) {
-            println("Caught: $ex")
+            log("Caught: $ex")
         }
     }
 

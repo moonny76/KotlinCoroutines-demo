@@ -83,7 +83,7 @@ dependencies {
     testImplementation          "junit:junit:$junit_version"
     androidTestImplementation   "junit:junit:$junit_version"
 
-    def mockk_version = '1.12.3'
+    def mockk_version = '1.12.4'
     testImplementation          "io.mockk:mockk:$mockk_version"
     androidTestImplementation   "io.mockk:mockk-android:$mockk_version"
 

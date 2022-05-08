@@ -1,5 +1,6 @@
 package com.scarlet.coroutines.exceptions
 
+import com.scarlet.util.log
 import kotlinx.coroutines.*
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
@@ -16,11 +17,11 @@ class CE05_AsyncEHTest {
                 throw RuntimeException("my exception")
                 42
             } catch (ex: Exception) {
-                println("Caught: $ex") // caught
+                log("Caught: $ex") // caught
             }
         }
 
-        println(deferred.await())
+        log(deferred.await())
     }
 
     /**
@@ -40,7 +41,7 @@ class CE05_AsyncEHTest {
             try {
                 deferred.await()
             } catch (ex: Exception) {
-                println("Caught: $ex") // handled
+                log("Caught: $ex") // handled
             }
         }
 
@@ -57,7 +58,7 @@ class CE05_AsyncEHTest {
                 try {
                     deferred.await()
                 } catch (ex: Exception) {
-                    println("Caught: $ex") // handled
+                    log("Caught: $ex") // handled
                 }
             }
         }
@@ -72,7 +73,7 @@ class CE05_AsyncEHTest {
                         42
                     }.await()
                 } catch (ex: Exception) {
-                    println("Caught: $ex")  // handled
+                    log("Caught: $ex")  // handled
                 }
             }
         }
@@ -92,7 +93,7 @@ class CE05_AsyncEHTest {
             try {
                 deferred.await()
             } catch (ex: Exception) {
-                println("Caught: $ex")  // handled
+                log("Caught: $ex")  // handled
             }
         }
     }
@@ -113,7 +114,7 @@ class CE05_AsyncEHTest {
         try {
             deferred.await()
         } catch (ex: Exception) {
-            println("Caught: $ex") // covered, but not handled
+            log("Caught: $ex") // covered, but not handled
         }
     }
 
@@ -128,7 +129,7 @@ class CE05_AsyncEHTest {
             try {
                 deferred.await()
             } catch (ex: Exception) {
-                println("Caught: $ex") // covered, but not handled
+                log("Caught: $ex") // covered, but not handled
             }
         }
     }

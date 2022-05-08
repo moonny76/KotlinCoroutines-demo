@@ -137,7 +137,7 @@ class CE06_CancellationTest {
                 }
             }
 
-            println("All subsequent computations will be skipped ...")
+            log("All subsequent computations will be skipped ...")
 
             networkRequestCooperative()
             networkRequestUncooperative() // long running computation

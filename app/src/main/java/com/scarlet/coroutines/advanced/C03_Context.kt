@@ -2,6 +2,7 @@ package com.scarlet.coroutines.advanced
 
 import com.scarlet.util.coroutineInfo
 import com.scarlet.util.delim
+import com.scarlet.util.log
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers
 import kotlin.coroutines.ContinuationInterceptor
@@ -20,12 +21,12 @@ import kotlin.coroutines.EmptyCoroutineContext
 object CoroutineContext_01 {
     @JvmStatic
     fun main(args: Array<String>) = runBlocking {
-        println(Thread.currentThread().name)
-        println("CoroutineContect  = $coroutineContext")
-        println("Name              = ${coroutineContext[CoroutineName]}")
-        println("Job               = ${coroutineContext[Job]}")
-        println("Dispatcher        = ${coroutineContext[ContinuationInterceptor]}")
-        println("Exception handler = ${coroutineContext[CoroutineExceptionHandler]}")
+        log(Thread.currentThread().name)
+        log("CoroutineContext  = $coroutineContext")
+        log("Name              = ${coroutineContext[CoroutineName]}")
+        log("Job               = ${coroutineContext[Job]}")
+        log("Dispatcher        = ${coroutineContext[ContinuationInterceptor]}")
+        log("Exception handler = ${coroutineContext[CoroutineExceptionHandler]}")
     }
 }
 
@@ -35,13 +36,13 @@ object CoroutineContext_Creation_Plus {
 //        val context: CoroutineName = CoroutineName("My Coroutine")
 //        val context: CoroutineContext.Element = CoroutineName("My Coroutine")
         var context: CoroutineContext = CoroutineName("My Coroutine")
-        println(context)
+        log(context)
 
         context += Dispatchers.Default
-        println(context)
+        log(context)
 
         context += Job()
-        println(context)
+        log(context)
     }
 }
 
@@ -49,8 +50,8 @@ object CoroutineContext_Merge {
     @JvmStatic
     fun main(args: Array<String>) {
         var context = CoroutineName("My Coroutine") + Dispatchers.Default + Job()
-        println(context)
-        delim();
+        log(context)
+        delim()
 
         /*
          * Element on the right overrides the same element on the left.
@@ -58,7 +59,7 @@ object CoroutineContext_Merge {
 
         context += CoroutineName("Your Coroutine") + Dispatchers.IO + SupervisorJob()
 
-        println(context)
+        log(context)
         delim()
 
         /*
@@ -69,7 +70,7 @@ object CoroutineContext_Merge {
 
         context += emptyContext
 
-        println(context)
+        log(context)
         delim()
 
         /*
@@ -78,7 +79,7 @@ object CoroutineContext_Merge {
 
         context = context.minusKey(ContinuationInterceptor)
 
-        println(context)
+        log(context)
         delim()
     }
 }
@@ -102,7 +103,7 @@ object CoroutineContext_ContextInheritance_Demo {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        println("top-level thread = ${Thread.currentThread().name}")
+        log("top-level thread = ${Thread.currentThread().name}")
 
         // The default context is an event loop on the current thread.
         runBlocking(CoroutineName("Parent Coroutine: runBlocking")) {
@@ -115,8 +116,8 @@ object CoroutineContext_ContextInheritance_Demo {
                 delay(1000)
             }.join()
 
-            println("\trunBlocking: try to exit runBlocking")
+            log("\trunBlocking: try to exit runBlocking")
         }
-        println("Bye main")
+        log("Bye main")
     }
 }

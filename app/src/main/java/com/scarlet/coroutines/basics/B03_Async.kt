@@ -21,7 +21,7 @@ object Async_Demo1 {
 object Async_Demo2 {
 
     private suspend fun getUser(userId: String): User {
-        log("inside getUser")
+        log("inside getUser $userId")
         delay(1_000)
         return User("A001", "Sara Corner", 33)
     }
@@ -43,7 +43,7 @@ object Async_Demo2 {
 object Async_Demo3 {
 
     private suspend fun getUser(userId: String): User {
-        log("inside getUser")
+        log("inside getUser $userId")
         delay(1_000)
         return User("A001", "Sara Corner", 33)
     }

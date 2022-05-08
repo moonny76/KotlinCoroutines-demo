@@ -6,7 +6,7 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.snackbar.Snackbar
-import com.org.scarlet.R
+import com.scarlet.R
 import kotlinx.coroutines.*
 import kotlin.system.exitProcess
 

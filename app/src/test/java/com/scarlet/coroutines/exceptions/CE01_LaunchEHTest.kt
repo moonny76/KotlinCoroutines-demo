@@ -72,7 +72,7 @@ class CE01_LaunchEHTest {
             try {
                 failingFunction()
             } catch (ex: Exception) {
-                println("Caught $ex")
+                log("Caught $ex")
             }
         }
     }
@@ -85,7 +85,7 @@ class CE01_LaunchEHTest {
                 failingFunction()
             }
         } catch (ex: Exception) {
-            println("Caught $ex")  // useless
+            log("Caught $ex")  // useless
         }
     }
 

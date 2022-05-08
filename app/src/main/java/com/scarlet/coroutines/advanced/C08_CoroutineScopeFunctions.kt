@@ -1,6 +1,7 @@
 package com.scarlet.coroutines.advanced
 
 import com.scarlet.util.coroutineInfo
+import com.scarlet.util.log
 import com.scarlet.util.onCompletion
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers
@@ -28,7 +29,7 @@ object Not_What_We_Want {
 
     suspend fun getUserName(): String {
         delay(500)
-        return "paulaabdul"
+        return "paula abdul"
     }
 
     suspend fun getTweets(): List<Tweet> {
@@ -50,8 +51,8 @@ object Not_What_We_Want {
             null
         }
         val tweets = async { getTweets() }
-        println("User: $details")
-        println("Tweets: ${tweets.await()}")
+        log("User: $details")
+        log("Tweets: ${tweets.await()}")
     }
 // Only Exception...
 }
@@ -63,13 +64,13 @@ object coroutineScopeDemo {
             delay(1000)
             10
         }
-        println("a is calculated")
+        log("a is calculated")
         val b = coroutineScope {
             delay(1000)
             20
         }
-        println(a) // 10
-        println(b) // 20
+        log(a) // 10
+        log(b) // 20
     }
 // (1 sec)
 // a is calculated
@@ -91,7 +92,7 @@ object What_We_Want {
 
     suspend fun getUserName(): String {
         delay(500)
-        return "paulaabdul"
+        return "paula abdul"
     }
 
     suspend fun getTweets(): List<Tweet> {
@@ -113,8 +114,8 @@ object What_We_Want {
             null
         }
         val tweets = async { getTweets() }
-        println("User: $details")
-        println("Tweets: ${tweets.await()}")
+        log("User: $details")
+        log("Tweets: ${tweets.await()}")
     }
 // User: null
 // Tweets: [Tweet(text=Hello, world)]
@@ -128,20 +129,20 @@ object withContext_Demo {
             coroutineInfo(0)
 
             coroutineScope {
-                println("\t\tInside coroutineScope")
+                log("\t\tInside coroutineScope")
                 coroutineInfo(1)
                 delay(100)
             }
 
             withContext(CoroutineName("child 1") + Dispatchers.Default) {
-                println("\t\tInside first withContext")
+                log("\t\tInside first withContext")
                 coroutineInfo(1)
                 delay(500)
             }
 
             Executors.newFixedThreadPool(3).asCoroutineDispatcher().use { ctx ->
                 withContext(CoroutineName("child 2") + ctx) {
-                    println("\t\tInside second withContext")
+                    log("\t\tInside second withContext")
                     coroutineInfo(1)
                     delay(1000)
                 }
@@ -149,11 +150,11 @@ object withContext_Demo {
         }
 
         delay(50)
-        println("children after 50ms  = ${parent.children.toList()}")
+        log("children after 50ms  = ${parent.children.toList()}")
         delay(200)
-        println("children after 200ms = ${parent.children.toList()}")
+        log("children after 200ms = ${parent.children.toList()}")
         delay(600)
-        println("children after 400ms = ${parent.children.toList()}")
+        log("children after 400ms = ${parent.children.toList()}")
         parent.join()
     }
 }
@@ -173,7 +174,7 @@ object MainSafety_Demo {
         launch(CoroutineName("parent") + Dispatchers.Swing) {
             coroutineInfo(0)
 
-            println("fib(40) = ${fibonacci(40)}")
+            log("fib(40) = ${fibonacci(40)}")
 
             coroutineInfo(0)
         }.join()
@@ -186,7 +187,7 @@ object Timeout {
         launch {
             launch { // cancelled by its parent
                 delay(2000)
-                println("Will not be printed")
+                log("Will not be printed")
             }
             withTimeout(1000) { // we cancel launch
                 delay(1500)
@@ -195,7 +196,7 @@ object Timeout {
 
         launch {
             delay(2000)
-            println("Done")
+            log("Done")
         }.onCompletion("child 2")
     }
 // (2 sec)
@@ -220,7 +221,7 @@ object WithTimeoutOrNull_Demo {
     @JvmStatic
     fun main(args: Array<String>) = runBlocking{
         val user = getUserOrNull()
-        println("User: $user")
+        log("User: $user")
     }
 // (1 sec)
 // User: null

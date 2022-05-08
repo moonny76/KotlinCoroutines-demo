@@ -171,7 +171,7 @@ object coroutineScope_applied_and_parent_cancelled {
             log("Parent done.")
         }
 
-        parent.join();
+        parent.join()
 
 //        delay(500)
 //        parent.cancelAndJoin()

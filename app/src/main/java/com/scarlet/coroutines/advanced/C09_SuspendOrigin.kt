@@ -1,11 +1,8 @@
 package com.scarlet.coroutines.advanced
 
+import com.scarlet.util.log
 import kotlinx.coroutines.runBlocking
 import java.util.concurrent.Executors
-
-internal fun log(msg: String) {
-    println("[${Thread.currentThread().name}] $msg")
-}
 
 object Phase1 {
     private fun fooWithDelay(a: Int, b: Int): Int {
