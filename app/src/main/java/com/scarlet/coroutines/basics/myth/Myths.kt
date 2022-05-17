@@ -7,8 +7,8 @@ import java.util.*
 
 // Will this help?
 suspend fun findBigPrime_Wish_To_Be_NonBlocking(): BigInteger =
-    BigInteger.probablePrime(3072, Random())
+    BigInteger.probablePrime(2048, Random())
 
 suspend fun findBigPrime_ProperWay(): BigInteger = withContext(Dispatchers.Default) {
-    BigInteger.probablePrime(3072, Random())
+    BigInteger.probablePrime(2048, Random())
 }

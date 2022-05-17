@@ -10,12 +10,25 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="43c01521-e0ee-4461-bdd8-3919a2235da8" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/app/src/test/java/com/scarlet/coroutines/exceptions/CE01_LaunchEHTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/test/java/com/scarlet/coroutines/exceptions/CE01_LaunchEHTest.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/test/java/com/scarlet/coroutines/exceptions/CE02_LaunchSupervisorJobTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/test/java/com/scarlet/coroutines/exceptions/CE02_LaunchSupervisorJobTest.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/test/java/com/scarlet/coroutines/exceptions/CE03_Launch_ScopeBuilderTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/test/java/com/scarlet/coroutines/exceptions/CE03_Launch_ScopeBuilderTest.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/test/java/com/scarlet/coroutines/exceptions/CE04_ExceptionHandlerTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/test/java/com/scarlet/coroutines/exceptions/CE04_ExceptionHandlerTest.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/test/java/com/scarlet/coroutines/exceptions/CE05_AsyncEHTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/test/java/com/scarlet/coroutines/exceptions/CE05_AsyncEHTest.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/test/java/com/scarlet/coroutines/exceptions/CE06_CancellationTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/test/java/com/scarlet/coroutines/exceptions/CE06_CancellationTest.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/scarlet/coroutines/migration/C09_CvtCallbackToSuspendFun1.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/scarlet/coroutines/migration/C09_CvtCallbackToSuspendFun2.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/scarlet/coroutines/advanced/C02_CPS.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/scarlet/coroutines/advanced/C02_CPS.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/scarlet/coroutines/advanced/C03_Context.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/scarlet/coroutines/advanced/C03_Context.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/scarlet/coroutines/advanced/C04_CoroutineScope.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/scarlet/coroutines/advanced/C04_CoroutineScope.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/scarlet/coroutines/advanced/C05_JobsRelation.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/scarlet/coroutines/advanced/C05_JobsRelation.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/scarlet/coroutines/advanced/C06_SupervisorJob.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/scarlet/coroutines/advanced/C06_SupervisorJob.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/scarlet/coroutines/advanced/C08_CoroutineScopeFunctions.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/scarlet/coroutines/advanced/C08_CoroutineScopeFunctions.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/scarlet/coroutines/advanced/C09_CvtCallbackToSuspendFun01.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/scarlet/coroutines/advanced/C09_CvtCallbackToSuspendFun02.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/scarlet/coroutines/basics/B02_Launch.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/scarlet/coroutines/basics/B03_Async.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/scarlet/coroutines/basics/B03_Async.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/scarlet/coroutines/basics/B04_StructuredConcurrency.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/scarlet/coroutines/basics/B04_StructuredConcurrency.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/scarlet/coroutines/basics/B05_ParallelDecomposition.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/scarlet/coroutines/basics/B05_ParallelDecomposition.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/scarlet/coroutines/basics/CoroutinesDemo.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/scarlet/coroutines/basics/CoroutinesDemo.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/scarlet/coroutines/basics/myth/MythMainActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/scarlet/coroutines/basics/myth/MythMainActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/scarlet/coroutines/basics/myth/Myths.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/scarlet/coroutines/basics/myth/Myths.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,11 +43,33 @@
       <ProjectState />
     </projectState>
   </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <task path="$PROJECT_DIR$">
+          <activation />
+        </task>
+        <projects_view />
+      </state>
+    </system>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Kotlin Class" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/app/src/main/java/com/scarlet/coroutines/basics/B02_Launch.kt" root0="SKIP_HIGHLIGHTING" />
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
   </component>
   <component name="ProjectCodeStyleSettingsMigration">
     <option name="version" value="2" />
@@ -49,15 +84,24 @@
     <property name="RunOnceActivity.cidr.known.project.marker" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="cidr.known.project.marker" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/app/src/main/java/com/scarlet/coroutines/cancellation" />
-    <property name="project.structure.last.edited" value="SDK Location" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/app/src/main/java/com/scarlet/coroutines/migration" />
+    <property name="project.structure.last.edited" value="Suggestions" />
     <property name="project.structure.proportion" value="0.17" />
     <property name="project.structure.side.proportion" value="0.2" />
-    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors.Color Scheme Font" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+  </component>
+  <component name="PsdUISettings">
+    <option name="LAST_EDITED_BUILD_TYPE" value="release" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\Git\Testing-demo\KotlinCoroutines-demo\app\src\main\java\com\scarlet\coroutines\migration" />
+      <recent name="D:\Git\Testing-demo\KotlinCoroutines-demo\app\src\main\java\com\scarlet\coroutines\advanced" />
+      <recent name="D:\Git\Testing-demo\KotlinCoroutines-demo\app\src\main\java\com\scarlet\coroutines\basics" />
       <recent name="D:\Git\Testing-demo\KotlinCoroutines-demo\app\src\main\java\com\scarlet\coroutines\cancellation" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\Git\Testing-demo\KotlinCoroutines-demo\app\src\main\java\com\scarlet\coroutines\migration" />
     </key>
     <key name="MoveKotlinTopLevelDeclarationsDialog.RECENTS_KEY">
       <recent name="com.scarlet.livedata" />
@@ -67,7 +111,7 @@
       <recent name="com.scarlet" />
     </key>
   </component>
-  <component name="RunManager" selected="Kotlin.CoroutineContext_ContextInheritance_Demo">
+  <component name="RunManager" selected="Gradle.CvtToSuspendingFunctionTest">
     <configuration name="app" type="AndroidRunConfigurationType" factoryName="Android App">
       <module name="KotlinCoroutines-demo.app" />
       <option name="DEPLOY" value="true" />
@@ -123,44 +167,92 @@
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="CoroutineContext_ContextInheritance_Demo" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.scarlet.coroutines.advanced.CoroutineContext_ContextInheritance_Demo" />
-      <module name="KotlinCoroutines-demo.app.main" />
-      <shortenClasspath name="NONE" />
-      <option name="VM_PARAMETERS" value="-Dkotlinx.coroutines.debug" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
+    <configuration name="CvtToSuspendingFunctionTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="--tests &quot;com.scarlet.coroutines.migration.CvtToSuspendingFunctionTest&quot;" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":app:testDebugUnitTest" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
     </configuration>
-    <configuration name="CoroutineContext_Creation_Plus" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.scarlet.coroutines.advanced.CoroutineContext_Creation_Plus" />
-      <module name="KotlinCoroutines-demo.app.main" />
-      <shortenClasspath name="NONE" />
-      <option name="VM_PARAMETERS" value="-Dkotlinx.coroutines.debug" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
+    <configuration name="CvtToSuspendingFunctionTest.Callback - should return valid recipes" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="--tests &quot;com.scarlet.coroutines.migration.CvtToSuspendingFunctionTest.Callback - should return valid recipes&quot;" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":app:testDebugUnitTest" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
     </configuration>
-    <configuration name="CoroutineContext_Fold" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.scarlet.coroutines.advanced.CoroutineContext_Fold" />
-      <module name="KotlinCoroutines-demo.app.main" />
-      <shortenClasspath name="NONE" />
-      <option name="VM_PARAMETERS" value="-Dkotlinx.coroutines.debug" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
+    <configuration name="CvtToSuspendingFunctionTest.Suspending Function - should cancel searchRecipes" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="--tests &quot;com.scarlet.coroutines.migration.CvtToSuspendingFunctionTest.Suspending Function - should cancel searchRecipes&quot;" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":app:testDebugUnitTest" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
     </configuration>
-    <configuration name="CoroutineContext_Merge" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.scarlet.coroutines.advanced.CoroutineContext_Merge" />
-      <module name="KotlinCoroutines-demo.app.main" />
-      <shortenClasspath name="NONE" />
-      <option name="VM_PARAMETERS" value="-Dkotlinx.coroutines.debug" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
+    <configuration name="CvtToSuspendingFunctionTest.Suspending Function - should return valid recipes" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="--tests &quot;com.scarlet.coroutines.migration.CvtToSuspendingFunctionTest.Suspending Function - should return valid recipes&quot;" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":app:testDebugUnitTest" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
     </configuration>
-    <configuration name="CoroutineScope_Has_Context" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.scarlet.coroutines.advanced.CoroutineScope_Has_Context" />
+    <configuration name="CvtToSuspendingFunction_3" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.scarlet.coroutines.advanced.CvtToSuspendingFunction_3" />
       <module name="KotlinCoroutines-demo.app.main" />
       <shortenClasspath name="NONE" />
       <option name="VM_PARAMETERS" value="-Dkotlinx.coroutines.debug" />
@@ -178,19 +270,19 @@
     </configuration>
     <list>
       <item itemvalue="Android App.app" />
-      <item itemvalue="Kotlin.CoroutineScope_Has_Context" />
-      <item itemvalue="Kotlin.CoroutineContext_Creation_Plus" />
-      <item itemvalue="Kotlin.CoroutineContext_Merge" />
-      <item itemvalue="Kotlin.CoroutineContext_Fold" />
-      <item itemvalue="Kotlin.CoroutineContext_ContextInheritance_Demo" />
+      <item itemvalue="Kotlin.CvtToSuspendingFunction_3" />
+      <item itemvalue="Gradle.CvtToSuspendingFunctionTest.Callback - should return valid recipes" />
+      <item itemvalue="Gradle.CvtToSuspendingFunctionTest.Suspending Function - should return valid recipes" />
+      <item itemvalue="Gradle.CvtToSuspendingFunctionTest" />
+      <item itemvalue="Gradle.CvtToSuspendingFunctionTest.Suspending Function - should cancel searchRecipes" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Kotlin.CoroutineContext_ContextInheritance_Demo" />
-        <item itemvalue="Kotlin.CoroutineContext_Fold" />
-        <item itemvalue="Kotlin.CoroutineContext_Merge" />
-        <item itemvalue="Kotlin.CoroutineContext_Creation_Plus" />
-        <item itemvalue="Kotlin.CoroutineScope_Has_Context" />
+        <item itemvalue="Gradle.CvtToSuspendingFunctionTest" />
+        <item itemvalue="Gradle.CvtToSuspendingFunctionTest.Suspending Function - should cancel searchRecipes" />
+        <item itemvalue="Gradle.CvtToSuspendingFunctionTest.Suspending Function - should return valid recipes" />
+        <item itemvalue="Gradle.CvtToSuspendingFunctionTest.Callback - should return valid recipes" />
+        <item itemvalue="Kotlin.CvtToSuspendingFunction_3" />
       </list>
     </recent_temporary>
   </component>

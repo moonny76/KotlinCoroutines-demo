@@ -7,7 +7,7 @@ import kotlinx.coroutines.*
 object Canceling_Parent_Cancels_All_Children {
 
     @JvmStatic
-    fun main(args: Array<String>) = runBlocking{
+    fun main(args: Array<String>) = runBlocking {
 
         // What if change to Job()
         val scope = CoroutineScope(SupervisorJob())
@@ -33,7 +33,7 @@ object Canceling_Parent_Cancels_All_Children {
     }
 }
 
-object Canceling_A_Child_Cancels_Only_The_Target_Child_Including_All_Its_Descendents_If_Any {
+object Canceling_A_Child_Cancels_Only_The_Target_Child_Including_All_Its_Descendants_If_Any {
 
     @JvmStatic
     fun main(args: Array<String>) = runBlocking{
@@ -65,7 +65,7 @@ object Canceling_A_Child_Cancels_Only_The_Target_Child_Including_All_Its_Descend
 object SupervisorJob_Child_Failure_SimpleDemo {
 
     @JvmStatic
-    fun main(args: Array<String>) = runBlocking{
+    fun main(args: Array<String>) = runBlocking {
 
         // What if change to Job()
         val scope = CoroutineScope(SupervisorJob())

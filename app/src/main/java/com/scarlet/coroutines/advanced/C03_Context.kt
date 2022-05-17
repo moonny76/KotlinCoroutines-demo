@@ -57,8 +57,10 @@ object CoroutineContext_Merge {
          * Element on the right overrides the same element on the left.
          */
 
-        context += CoroutineName("Your Coroutine") + Dispatchers.IO + SupervisorJob()
+        context += CoroutineName("Your Coroutine")
+        log(context)
 
+        context += Dispatchers.IO + SupervisorJob()
         log(context)
         delim()
 
@@ -116,7 +118,7 @@ object CoroutineContext_ContextInheritance_Demo {
                 delay(1000)
             }.join()
 
-            log("\trunBlocking: try to exit runBlocking")
+            log("runBlocking: try to exit runBlocking")
         }
         log("Bye main")
     }

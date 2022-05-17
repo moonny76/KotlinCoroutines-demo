@@ -7,17 +7,18 @@ import com.scarlet.util.scopeInfo
 import kotlinx.coroutines.*
 
 /**
- * When a coroutine is launched in the CoroutineScope of another coroutine,
- * it inherits its context via CoroutineScope.coroutineContext and the Job
- * of the new coroutine becomes a child of the parent coroutine's job. When
- * the parent coroutine is cancelled, all its children are recursively cancelled,
+ * When a coroutine is launched in the `CoroutineScope` of another coroutine,
+ * it inherits its context via `CoroutineScope.coroutineContext` and the `Job`
+ * of the new coroutine becomes a child of the parent coroutine's job.
+ *
+ * When the parent coroutine is cancelled, all its children are recursively cancelled,
  * too. However, this parent-child relation can be explicitly overridden in one
  * of two ways:
  *
  * 1. When a different scope is explicitly specified when launching a coroutine
- *    (for example, GlobalScope.launch), then it does not inherit a Job from the
- *    parent scope.
- * 2. When a different Job object is passed as the context for the new coroutine,
+ *    (for example, `GlobalScope.launch`), then it does not inherit a coroutine
+ *    context from the original parent scope.
+ * 2. When a different `Job` object is passed as the context for the new coroutine,
  *    then it overrides the Job of the parent scope.
  *
  * In both cases, the launched coroutine is not tied to the scope it was launched
@@ -53,7 +54,6 @@ object Canceling_Scope_Cancels_It_and_All_Its_Children {
         // Dispatchers.Default
         val job = scope.launch(CoroutineName("Top-level Coroutine")) {
             delay(1000)
-            coroutineInfo(0)
         }.onCompletion("job")
 
         delay(500)
@@ -65,34 +65,20 @@ object Canceling_Scope_Cancels_It_and_All_Its_Children {
     }
 }
 
-object Canceling_Scope_Cancels_It_and_All_Descendents {
+object Canceling_Scope_Cancels_It_and_All_Descendants {
     @JvmStatic
     fun main(args: Array<String>) = runBlocking {
 
         val scope = CoroutineScope(Job())
 
         val parent1 = scope.launch(CoroutineName("Parent 1")) {
-            launch {
-                delay(1000)
-                log("child 1 done")
-            }.onCompletion("child 1")
-
-            launch {
-                delay(1000)
-                log("child 2 done")
-            }.onCompletion("child 2")
+            launch { delay(1000); log("child 1 done") }.onCompletion("child 1")
+            launch { delay(1000); log("child 2 done") }.onCompletion("child 2")
         }.onCompletion("parent 1")
 
         val parent2 = scope.launch(CoroutineName("Parent 2")) {
-            launch {
-                delay(1000)
-                log("child 3 done")
-            }.onCompletion("child 3")
-
-            launch {
-                delay(1000)
-                log("child 4 done")
-            }.onCompletion("child 4")
+            launch { delay(1000); log("child 3 done") }.onCompletion("child 3")
+            launch { delay(1000); log("child 4 done") }.onCompletion("child 4")
         }.onCompletion("parent 2")
 
         delay(500)
@@ -103,36 +89,22 @@ object Canceling_Scope_Cancels_It_and_All_Descendents {
     }
 }
 
-object Canceling_A_Scope_Does_Not_Affect_Its_Siblings { // And its parent
+object Canceling_A_Scope_Does_Not_Affect_Its_Siblings {
     @JvmStatic
     fun main(args: Array<String>) = runBlocking {
 
         val scopeLeft = CoroutineScope(Job())
 
         val parentLeft = scopeLeft.launch(CoroutineName("Parent Left")) {
-            launch {
-                delay(1000)
-                log("child L-1 done")
-            }.onCompletion("child L-1")
-
-            launch {
-                delay(1000)
-                log("child L-2 done")
-            }.onCompletion("child L-2")
+            launch { delay(1000); log("child L-1 done") }.onCompletion("child L-1")
+            launch { delay(1000); log("child L-2 done") }.onCompletion("child L-2")
         }.onCompletion("parent left")
 
         val scopeRight = CoroutineScope(Job())
 
         val parentRight = scopeRight.launch(CoroutineName("Parent Right")) {
-            launch {
-                delay(1000)
-                log("child R-1 done")
-            }.onCompletion("child R-1")
-
-            launch {
-                delay(1000)
-                log("child R-2 done")
-            }.onCompletion("child R-2")
+            launch { delay(1000); log("child R-1 done") }.onCompletion("child R-1")
+            launch { delay(1000); log("child R-2 done") }.onCompletion("child R-2")
         }.onCompletion("parent right")
 
         delay(500)
@@ -151,13 +123,8 @@ object GlobalScope_Cancellation_Demo {
         log("Job for GlobalScope is ${GlobalScope.coroutineContext[Job]}")
 
         val job = GlobalScope.launch {
-            launch(CoroutineName("Child 1")) {
-                delay(1000)
-            }.onCompletion("Child 1")
-
-            launch(CoroutineName("Child 2")) {
-                delay(1000)
-            }.onCompletion("Child 2")
+            launch(CoroutineName("Child 1")) { delay(1000) }.onCompletion("Child 1")
+            launch(CoroutineName("Child 2")) { delay(1000) }.onCompletion("Child 2")
         }.onCompletion("Parent")
 
         delay(500)

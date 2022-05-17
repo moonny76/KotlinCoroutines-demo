@@ -4,27 +4,13 @@ import com.scarlet.model.User
 import com.scarlet.util.log
 import kotlinx.coroutines.*
 
-object Async_Demo1 {
-
-    @JvmStatic
-    fun main(args: Array<String>) = runBlocking{
-
-        val deferred = async {
-            delay(1000)
-            42
-        }
-
-        log(deferred.await())
-    }
+private suspend fun getUser(userId: String): User {
+    log("inside getUser $userId")
+    delay(1_000)
+    return User("A001", "Sara Corner", 33)
 }
 
-object Async_Demo2 {
-
-    private suspend fun getUser(userId: String): User {
-        log("inside getUser $userId")
-        delay(1_000)
-        return User("A001", "Sara Corner", 33)
-    }
+object Async_Demo1 {
 
     @JvmStatic
     fun main(args: Array<String>) = runBlocking {
@@ -35,21 +21,16 @@ object Async_Demo2 {
         }
 
         log("Waiting for results ...")
-        log(user.await())
+//        log(user.await())
         log("Done")
     }
 }
 
-object Async_Demo3 {
+// DON'T DO THIS
+@DelicateCoroutinesApi
+object Async_Demo2 {
 
-    private suspend fun getUser(userId: String): User {
-        log("inside getUser $userId")
-        delay(1_000)
-        return User("A001", "Sara Corner", 33)
-    }
-
-    // DON'T DO THIS
-    @DelicateCoroutinesApi
+    @ExperimentalStdlibApi
     @JvmStatic
     fun main(args: Array<String>) = runBlocking {
 

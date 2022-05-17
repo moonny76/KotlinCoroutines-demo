@@ -7,18 +7,16 @@ import java.lang.RuntimeException
 object Nested_Coroutines {
     @JvmStatic
     fun main(args: Array<String>) = runBlocking<Unit> {
-        log("Level 0 Coroutine")
+        log("Top-Level Coroutine")
 
         launch {
             log("Level 1 Coroutine")
+
             launch {
                 log("Level 2 Coroutine")
-                launch {
-                    log("Level 3 Coroutine")
-                }
-                launch {
-                    log("Level 3 Coroutine")
-                }
+
+                launch { log("Level 3 Coroutine") }
+                launch { log("Level 3 Another Coroutine") }
             }
         }
     }
@@ -28,7 +26,7 @@ object Nested_Coroutines {
  * Structured Concurrency Preview
  */
 
-object Canceling_parent_cancels_itself_and_all_children {
+object Canceling_parent_coroutine_cancels_the_parent_and_its_children {
 
     @JvmStatic
     fun main(args: Array<String>) = runBlocking {
@@ -43,6 +41,7 @@ object Canceling_parent_cancels_itself_and_all_children {
                 delay(1000)
                 log("child2 done")
             }
+            log("parent is waiting")
             joinAll(child1, child2)
             log("parent done")
         }
@@ -60,6 +59,7 @@ object Canceling_a_child_cancels_only_the_child {
     @JvmStatic
     fun main(args: Array<String>) = runBlocking {
         var child1: Job? = null
+
         val parent = launch {
             child1 = launch {
                 log("child1 started")
@@ -71,6 +71,8 @@ object Canceling_a_child_cancels_only_the_child {
                 delay(1000)
                 log("child2 done")
             }
+
+            log("parent is waiting")
             joinAll(child1!!, child2)
             log("parent done")
         }
@@ -84,14 +86,12 @@ object Canceling_a_child_cancels_only_the_child {
     }
 }
 
-object Failed_child_cause_cancellation_of_its_parent_and_its_siblings {
+object Failed_child_causes_cancellation_of_its_parent_and_siblings {
 
     @JvmStatic
     fun main(args: Array<String>) = runBlocking {
-        var child1: Job?
-
         val parent = launch {
-            child1 = launch {
+            val child1 = launch {
                 log("child1 started")
                 delay(500)
                 throw RuntimeException("child 1 failed")
@@ -103,7 +103,8 @@ object Failed_child_cause_cancellation_of_its_parent_and_its_siblings {
                 log("child2 done")
             }
 
-            joinAll(child1!!, child2)
+            log("parent is waiting")
+            joinAll(child1, child2)
             log("parent done")
         }
 
@@ -113,7 +114,7 @@ object Failed_child_cause_cancellation_of_its_parent_and_its_siblings {
     }
 }
 
-object Failed_parent_cause_cancellation_of_all_its_children {
+object Failed_parent_causes_cancellation_of_all_children {
 
     @JvmStatic
     fun main(args: Array<String>) = runBlocking {

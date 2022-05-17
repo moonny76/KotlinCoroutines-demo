@@ -21,20 +21,20 @@ object Continuation_Passing_Style {
     fun main(args: Array<String>) {
         println(evaluate())
 
-        println(fact(10))
-
-        println(
-            (0..10).map { fib(it.toLong()) }.joinToString(", ")
-        )
+//        println(fact(10))
+//
+//        println(
+//            (0..10).map { fib(it.toLong()) }.joinToString(", ")
+//        )
     }
 
     // Exercise 1: Convert this to CPS style
     private fun fact(n: Long): Long =
-        if (n <= 1) n else n * fact(n - 1)
+        if (n == 0L || n == 1L) n else n * fact(n - 1)
 
     // Exercise 2: Convert this to CPS style
     private fun fib(n: Long): Long {
-        return if (n <= 1) n
+        return if (n == 0L || n == 1L) n
         else fib(n - 1) + fib(n - 2)
     }
 

@@ -7,6 +7,7 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.swing.Swing
 import java.util.concurrent.Executors
+import kotlin.coroutines.coroutineContext
 
 /**
  * Coroutine Scope Functions
@@ -22,22 +23,23 @@ object Not_What_We_Want {
     data class Details(val name: String, val followers: Int)
     data class Tweet(val text: String)
 
-    suspend fun getFollowersNumber(): Int {
+    private suspend fun getFollowersNumber(): Int {
         delay(100)
         throw Error("Service exception")
     }
 
-    suspend fun getUserName(): String {
+    private suspend fun getUserName(): String {
         delay(500)
         return "paula abdul"
     }
 
-    suspend fun getTweets(): List<Tweet> {
+    private suspend fun getTweets(): List<Tweet> {
         delay(500)
         return listOf(Tweet("Hello, world"))
     }
 
-    suspend fun CoroutineScope.getUserDetails(): Details {
+    // DON'T DO THIS
+    private suspend fun CoroutineScope.getUserDetails(): Details {
         val userName = async { getUserName() }
         val followersNumber = async { getFollowersNumber() }
         return Details(userName.await(), followersNumber.await())
@@ -57,50 +59,28 @@ object Not_What_We_Want {
 // Only Exception...
 }
 
-object coroutineScopeDemo {
-    @JvmStatic
-    fun main(args: Array<String>) = runBlocking{
-        val a = coroutineScope {
-            delay(1000)
-            10
-        }
-        log("a is calculated")
-        val b = coroutineScope {
-            delay(1000)
-            20
-        }
-        log(a) // 10
-        log(b) // 20
-    }
-// (1 sec)
-// a is calculated
-// (1 sec)
-// 10
-// 20
-}
-
 object What_We_Want {
     data class Details(val name: String, val followers: Int)
     data class Tweet(val text: String)
 
     class ApiException(val code: Int, message: String) : Throwable(message)
 
-    suspend fun getFollowersNumber(): Int {
+    private suspend fun getFollowersNumber(): Int {
         delay(100)
         throw ApiException(500, "Service unavailable")
     }
 
-    suspend fun getUserName(): String {
+    private suspend fun getUserName(): String {
         delay(500)
         return "paula abdul"
     }
 
-    suspend fun getTweets(): List<Tweet> {
+    private suspend fun getTweets(): List<Tweet> {
         delay(500)
         return listOf(Tweet("Hello, world"))
     }
 
-    suspend fun getUserDetails(): Details = coroutineScope {
+    private suspend fun getUserDetails(): Details = coroutineScope {
         val userName = async { getUserName() }
         val followersNumber = async { getFollowersNumber() }
         Details(userName.await(), followersNumber.await())
@@ -111,6 +91,7 @@ object What_We_Want {
         val details = try {
             getUserDetails()
         } catch (e: ApiException) {
+            log("Error: ${e.code}")
             null
         }
         val tweets = async { getTweets() }
@@ -129,12 +110,14 @@ object withContext_Demo {
             coroutineInfo(0)
 
             coroutineScope {
+                coroutineContext.job.onCompletion("coroutineScope")
                 log("\t\tInside coroutineScope")
                 coroutineInfo(1)
                 delay(100)
             }
 
             withContext(CoroutineName("child 1") + Dispatchers.Default) {
+                coroutineContext.job.onCompletion("withContext")
                 log("\t\tInside first withContext")
                 coroutineInfo(1)
                 delay(500)
@@ -142,12 +125,13 @@ object withContext_Demo {
 
             Executors.newFixedThreadPool(3).asCoroutineDispatcher().use { ctx ->
                 withContext(CoroutineName("child 2") + ctx) {
+                    coroutineContext.job.onCompletion("newFixedThreadPool")
                     log("\t\tInside second withContext")
                     coroutineInfo(1)
                     delay(1000)
                 }
             }
-        }
+        }.onCompletion("parent")
 
         delay(50)
         log("children after 50ms  = ${parent.children.toList()}")
@@ -161,22 +145,19 @@ object withContext_Demo {
 
 object MainSafety_Demo {
 
-    suspend fun fibonacci(n: Long): Long =
+    private suspend fun fibonacci(n: Long): Long =
         withContext(Dispatchers.Default) {
-            coroutineInfo(1)
-            fib(n)
+            fib(n).also {
+                log(coroutineContext)
+            }
         }
 
-    fun fib(n: Long): Long = if (n <= 1) n else fib(n - 1) + fib(n - 2)
+    private fun fib(n: Long): Long = if (n == 0L || n == 1L) n else fib(n - 1) + fib(n - 2)
 
     @JvmStatic
     fun main(args: Array<String>) = runBlocking {
         launch(CoroutineName("parent") + Dispatchers.Swing) {
-            coroutineInfo(0)
-
             log("fib(40) = ${fibonacci(40)}")
-
-            coroutineInfo(0)
         }.join()
     }
 }
@@ -196,7 +177,7 @@ object Timeout {
 
         launch {
             delay(2000)
-            log("Done")
+            log("child2 done")
         }.onCompletion("child 2")
     }
 // (2 sec)
@@ -204,25 +185,25 @@ object Timeout {
 }
 
 object WithTimeoutOrNull_Demo {
-    class User()
+    class User
 
-    suspend fun fetchUser(): User {
+    private suspend fun fetchUser(): User {
         // Runs forever
         while (true) {
             yield()
         }
     }
 
-    suspend fun getUserOrNull(): User? =
-        withTimeoutOrNull(1000) {
+    private suspend fun getUserOrNull(): User? =
+        withTimeoutOrNull(3000) {
             fetchUser()
         }
 
     @JvmStatic
-    fun main(args: Array<String>) = runBlocking{
+    fun main(args: Array<String>) = runBlocking {
         val user = getUserOrNull()
         log("User: $user")
     }
-// (1 sec)
+// (3 sec)
 // User: null
 }

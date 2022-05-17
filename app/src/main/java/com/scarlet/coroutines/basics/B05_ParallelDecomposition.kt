@@ -1,27 +1,30 @@
 package com.scarlet.coroutines.basics
 
 import com.scarlet.util.log
+import com.scarlet.util.onCompletion
 import kotlinx.coroutines.*
+import kotlinx.coroutines.NonDisposableHandle.parent
 import java.lang.RuntimeException
 
 @JvmInline
 private value class Image(val name: String)
 
 private suspend fun loadImage(name: String): Image {
-    log("Loading $name image started.")
+    log("Loading ${name}: started.")
     delay(1000)
-    log("Loading $name image done.")
+    log("Loading ${name}: done.")
     return Image(name)
 }
 
 private suspend fun loadImageFail(name: String): Image {
-    log("Loading $name image started.")
+    log("Loading ${name}: started.")
     delay(500)
     throw RuntimeException("oops")
 }
 
 private fun combineImages(image1: Image, image2: Image): Image =
     Image("${image1.name} & ${image2.name}")
+
 
 @DelicateCoroutinesApi
 private suspend fun loadAndCombine(name1: String, name2: String): Image {
@@ -31,7 +34,7 @@ private suspend fun loadAndCombine(name1: String, name2: String): Image {
 }
 
 @DelicateCoroutinesApi
-object Using_GlobalScope_But_Not_Recommended {
+object GlobalScope_But_Not_Recommended {
     @JvmStatic
     fun main(args: Array<String>) = runBlocking {
         var image: Image? = null
@@ -47,7 +50,7 @@ object Using_GlobalScope_But_Not_Recommended {
 }
 
 @DelicateCoroutinesApi
-object Using_GlobalScope_Even_If_Parent_Cancelled_Children_Keep_Going {
+object GlobalScope_Even_If_Parent_Cancelled_Children_Keep_Going {
     @JvmStatic
     fun main(args: Array<String>) = runBlocking {
         var image: Image? = null
@@ -74,13 +77,17 @@ private suspend fun loadAndCombineFail(name1: String, name2: String): Image {
 }
 
 @DelicateCoroutinesApi
-object Using_GlobalScope_Everything_keeps_going_Even_If_One_Of_Children_Failed {
+object GlobalScope_EvenIf_One_Of_Children_Fails_Other_Child_Still_Runs {
     @JvmStatic
     fun main(args: Array<String>) = runBlocking {
         var image: Image? = null
 
         val parent = GlobalScope.launch {
-            image = loadAndCombineFail("apple", "kiwi")
+            try {
+                image = loadAndCombineFail("apple", "kiwi")
+            } catch (e: Exception) {
+                log("parent caught $e")
+            }
             log("parent done.")
         }
 
@@ -114,9 +121,9 @@ object Parent_Cancellation_When_Passing_Coroutine_Scope_As_Parameter {
         }
 
         parent.join()
-
 //        delay(500)
 //        parent.cancelAndJoin()
+
         log("combined image = $image")
 
         delay(1000) // To check what happens to children just in case
@@ -153,7 +160,7 @@ object Child_Failure_When_Passing_Coroutine_Scope_As_Parameter {
  * Use coroutineScope()
  */
 
-object coroutineScope_applied_and_parent_cancelled {
+object Using_coroutineScope_and_when_parent_cancelled {
 
     private suspend fun loadAndCombine(name1: String, name2: String): Image = coroutineScope {
         val deferred1 = async { loadImage(name1) }
@@ -172,9 +179,9 @@ object coroutineScope_applied_and_parent_cancelled {
         }
 
         parent.join()
-
 //        delay(500)
 //        parent.cancelAndJoin()
+
         log("combined image = $image")
 
         delay(1000) // To check what happens to children just in case
@@ -182,7 +189,7 @@ object coroutineScope_applied_and_parent_cancelled {
 
 }
 
-object coroutineScope_applied_and_child_failed {
+object Using_coroutineScope_and_when_child_failed {
 
     private suspend fun loadAndCombine(name1: String, name2: String): Image = coroutineScope {
         val deferred1 = async { loadImageFail(name1) }

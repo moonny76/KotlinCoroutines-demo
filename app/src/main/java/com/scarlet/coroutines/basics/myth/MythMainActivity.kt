@@ -4,7 +4,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.snackbar.Snackbar
 import com.scarlet.R
 import kotlinx.coroutines.*
@@ -26,42 +28,48 @@ class MythMainActivity : AppCompatActivity() {
 
         textView = findViewById(R.id.counter)
         findButton = findViewById(R.id.startButton)
-        cancelButton = findViewById(R.id.stopButton)
+        cancelButton = findViewById<Button>(R.id.stopButton).apply {
+            isEnabled = false
+        }
+
         status = findViewById(R.id.findBigPrime)
 
         findButton.setOnClickListener {
             findButton.isEnabled = false
+            cancelButton.isEnabled = true
             status.text = "Calculating big prime number ..."
 
-            showSnackbar("Launching finBigPrime ...")
+            showSnackbar("Launching findBigPrime ...")
 
             primeJob = lifecycleScope.launch {
-                findBigPrime_Wish_To_Be_NonBlocking()
-//                findBigPrime_ProperWay()
-                status.text = "Done"
+                val primeNumber = findBigPrime_Wish_To_Be_NonBlocking()
+//                val primeNumber = findBigPrime_ProperWay()
+                status.text = primeNumber.toString()
+                findButton.isEnabled = true
+                cancelButton.isEnabled = false
             }
         }
 
         cancelButton.setOnClickListener {
+            findButton.isEnabled = true
             cancelButton.isEnabled = false
             showSnackbar("Cancelling findBigPrime ...")
-            status.text = "Cancelling findBigPrime ..."
+            status.text = "findBigPrime cancelled"
 
             primeJob?.cancel()
-            countingJob?.cancel()
+//            findButton.isEnabled = true
+//            cancelButton.isEnabled = false
         }
-    }
-
-    override fun onStart() {
-        super.onStart()
 
         countingJob = lifecycleScope.launch {
-            var value = 0
-            while (true) {
-                textView.text = value.toString().also {
-                    value++
+            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                var value = 0
+                while (true) {
+                    textView.text = value.toString().also {
+                        value++
+                    }
+                    delay(1000)
                 }
-                delay(1000)
             }
         }
     }
@@ -72,6 +80,7 @@ class MythMainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        countingJob?.cancel()
 
         exitProcess(0)
     }

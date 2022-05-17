@@ -2,7 +2,6 @@ package com.scarlet.coroutines.basics
 
 import com.scarlet.util.spaces
 import kotlinx.coroutines.*
-import kotlin.coroutines.coroutineContext
 
 object Generator {
 
@@ -28,36 +27,8 @@ object Generator {
         val iterator = fib().iterator()
 
         while (prompt()) {
-            println("requesting ...")
             println("Got result = ${iterator.next()}")
         }
-    }
-}
-
-object Coroutines_PingPong {
-
-    private suspend fun ping() {
-        while (coroutineContext.isActive) {
-            println("ping")
-            yield()
-        }
-    }
-
-    private suspend fun pong() {
-        while (coroutineContext.isActive) {
-            println("pong")
-            yield()
-        }
-    }
-
-    @JvmStatic
-    fun main(args: Array<String>) = runBlocking {
-        val job1 = launch { ping() }
-        val job2 = launch { pong() }
-
-        delay(10)
-        job1.cancelAndJoin()
-        job2.cancelAndJoin()
     }
 }
 
@@ -94,3 +65,4 @@ object Coroutines_Multitasking {
         println("Done!")
     }
 }
+
