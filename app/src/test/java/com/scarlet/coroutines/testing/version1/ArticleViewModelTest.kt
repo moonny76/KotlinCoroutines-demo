@@ -2,7 +2,7 @@ package com.scarlet.coroutines.testing.version1
 
 import com.google.common.truth.Truth.assertThat
 import com.scarlet.coroutines.testing.ApiService
-import com.scarlet.model.Article.Companion.articleSamples
+import com.scarlet.model.Article
 import com.scarlet.util.Resource
 import com.scarlet.util.getValueForTest
 import com.scarlet.util.log
@@ -26,21 +26,23 @@ class ArticleViewModelTest {
     private lateinit var apiService: ApiService
 
     // sample test data
-    private val testArticles = Resource.Success(articleSamples)
+    private val testArticles = Resource.Success(Article.articleSamples)
 
     @Before
     fun init() {
-        TODO()
+        // TODO() - initialize mocks
+
+        coEvery { apiService.getArticles() } coAnswers {
+            delay(3000)
+            testArticles
+        }
     }
 
     // More on livedata testing later ...
     @Test
     fun `loadData - test suspend fun not creating new coroutines`() = runTest {
         // Given
-        coEvery { apiService.getArticles() } coAnswers {
-            delay(3000)
-            testArticles
-        }
+        viewModel = ArticleViewModel(apiService)
 
         // When
         viewModel.loadData()
@@ -53,11 +55,7 @@ class ArticleViewModelTest {
     @Test
     fun `onButtonClicked - test fun creating new coroutines - runBlocking`() = runBlocking {
         // Given
-        coEvery { apiService.getArticles() } coAnswers {
-//            log("coAnswers")
-            delay(3000)
-            testArticles
-        }
+        viewModel = ArticleViewModel(apiService)
 
         // When
         viewModel.onButtonClicked()
@@ -72,11 +70,7 @@ class ArticleViewModelTest {
     @Test
     fun `onButtonClicked - test fun creating new coroutines - runTest`() = runTest {
         // Given
-        coEvery { apiService.getArticles() } coAnswers {
-            log("coAnswers")
-            delay(3000)
-            testArticles
-        }
+        viewModel = ArticleViewModel(apiService)
 
         // When
         viewModel.onButtonClicked()

@@ -1,4 +1,4 @@
-package com.scarlet.basics.junit
+package com.scarlet.junit.mythbuster
 
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test

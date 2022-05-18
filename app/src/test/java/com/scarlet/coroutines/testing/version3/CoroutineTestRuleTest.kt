@@ -40,6 +40,12 @@ class CoroutineTestRuleTest {
     @Before
     fun init() {
         MockKAnnotations.init(this)
+
+        coEvery { apiService.getArticles() } coAnswers {
+            delay(3000)
+            testArticles
+        }
+
         Dispatchers.setMain(testDispatcher)
     }
 
@@ -52,11 +58,6 @@ class CoroutineTestRuleTest {
     fun `runTest - test fun creating new coroutines`() = runTest {
         // Given
         viewModel = ArticleViewModel(apiService)
-
-        coEvery { apiService.getArticles() } coAnswers {
-            delay(3000)
-            testArticles
-        }
 
         // When
         viewModel.onButtonClicked()

@@ -109,7 +109,7 @@ class MockitoTest {
      */
 
     @Test
-    fun `Mockito - consecutive call`() {
+    fun `Mockito - consecutive calls`() {
         val mockedFile = mock<Path> {
             on { readText() } doReturn "read 1" doReturn "read 2" doReturn "read 3"
         }
@@ -129,7 +129,7 @@ class MockitoTest {
     }
 
     /**
-     * Eq
+     * `eq` and `anyXXX`
      */
 
     /**
@@ -211,7 +211,7 @@ class MockitoTest {
     }
 
     /**
-     * argThat
+     * `argThat`
      *
      * The `argThat` argument matcher in Mockito lets you create advanced argument
      * matchers that run a function on passed arguments, and checks if the function
@@ -229,7 +229,7 @@ class MockitoTest {
     }
 
     /**
-     * ArgumentCaptor
+     * `ArgumentCaptor`
      *
      * When you need to run additional assertions on an argument, the `ArgumentCaptor`
      * is the tool for the job in Mockito. An `ArgumentCaptor` will keep track of
@@ -246,7 +246,7 @@ class MockitoTest {
     fun `Mockito - ArgumentCaptor`() {
         val mockPhone = mock<Phone>()
         // personArgument.capture() must not be null
-//        val personArgument = ArgumentCaptor.forClass(Person::class.java)
+        val personArgument = ArgumentCaptor.forClass(Person::class.java)
 
         mockPhone.call(Person("Sarah Jane", 33))
 

@@ -17,6 +17,7 @@ import kotlinx.coroutines.test.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import kotlin.coroutines.ContinuationInterceptor
 
 @ExperimentalCoroutinesApi
 class SetMainTest {
@@ -32,25 +33,29 @@ class SetMainTest {
     // SUT
     private lateinit var viewModel: ArticleViewModel
 
+    // TODO: Create a test dispatcher
 
     @Before
     fun init() {
         MockKAnnotations.init(this)
-    }
-
-    @Test
-    fun `runTest - test fun creating new coroutines`() = runTest {
-        // Given
-        viewModel = ArticleViewModel(mockApiService)
 
         coEvery { mockApiService.getArticles() } coAnswers {
             log("coAnswers")
             delay(3000)
             testArticles
         }
+    }
+
+    @Test
+    fun `runTest - test fun creating new coroutines`() = runTest {
+        // Given
+        val testDispatcher = coroutineContext[ContinuationInterceptor] as TestDispatcher
+        viewModel = ArticleViewModel(mockApiService, testDispatcher)
 
         // When
         viewModel.onButtonClicked()
+
+        // TODO - what?
 
         // Then
         coVerify { mockApiService.getArticles() }

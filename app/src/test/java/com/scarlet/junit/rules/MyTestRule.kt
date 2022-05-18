@@ -1,4 +1,4 @@
-package com.scarlet.basics.rules
+package com.scarlet.junit.rules
 
 import org.junit.rules.TestRule
 import org.junit.runner.Description

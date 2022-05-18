@@ -1,4 +1,4 @@
-package com.scarlet.basics.junit
+package com.scarlet.junit.mythbuster
 
 import org.junit.*
 

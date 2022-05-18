@@ -4,10 +4,12 @@ import androidx.lifecycle.*
 import com.scarlet.coroutines.testing.ApiService
 import com.scarlet.model.Article
 import com.scarlet.util.Resource
+import com.scarlet.util.log
 import kotlinx.coroutines.*
 
 class ArticleViewModel(
-    private val apiService: ApiService
+    private val apiService: ApiService,
+    // TODO() - Add a coroutine dispatcher
 ) : ViewModel() {
 
     private val scope = CoroutineScope(SupervisorJob())
@@ -17,8 +19,8 @@ class ArticleViewModel(
         get() = _articles
 
     fun onButtonClicked() {
+        log("onButtonClicked()")
         scope.launch {
-//            log("onButtonClicked")
             loadData()
         }
     }

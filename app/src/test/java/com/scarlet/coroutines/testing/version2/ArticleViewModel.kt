@@ -11,7 +11,8 @@ import com.scarlet.util.log
 import kotlinx.coroutines.*
 
 class ArticleViewModel(
-    private val apiService: ApiService
+    private val apiService: ApiService,
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : ViewModel() {
 
     private val _articles = MutableLiveData<Resource<List<Article>>>()
@@ -19,7 +20,7 @@ class ArticleViewModel(
         get() = _articles
 
     fun onButtonClicked() {
-        viewModelScope.launch {
+        viewModelScope.launch(dispatcher) {
             log("onButtonClicked")
             loadData()
         }

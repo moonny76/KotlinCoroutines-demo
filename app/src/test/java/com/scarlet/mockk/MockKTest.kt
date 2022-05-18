@@ -61,7 +61,7 @@ class MockKTest {
      */
     @Test
     fun `MockK - lenient mock creation`() {
-        val mockedPath = mockk<Path>() // relaxed = true
+        val mockedPath = mockk<Path>(/*relaxed = true*/)
 
         val fileName = mockedPath.fileName()
         println(fileName)
@@ -69,7 +69,7 @@ class MockKTest {
 
     @Test//(expected = MockKException::class)
     fun `MockK - lenient mock creation, only for Unit return fun`() {
-        val mockedPath = mockk<Path>() // relaxUnitFun = true
+        val mockedPath = mockk<Path>(/*relaxUnitFun = true*/)
 
         mockedPath.writeText("hello")      // returns Unit, will not throw
 
@@ -130,13 +130,12 @@ class MockKTest {
         justRun { mockedPath.writeText(any()) }
     }
 
-
     /**
      * Consecutive calls
      */
 
     @Test
-    fun `MockK - consecutive call`() {
+    fun `MockK - consecutive calls`() {
         val mockedPath = mockk<Path>()
 
         // Chain multiple calls
@@ -175,13 +174,10 @@ class MockKTest {
         println(mockedPath.readText())
         println(mockedPath.readText())
         println(mockedPath.readText())
-        // Assert (Then)
     }
 
     /**
-     * Eq
-     *
-     * anyXXX
+     * `eq` and `anyXXX`
      *
      * When creating a stub or verifying a call, Mockito provides many different
      * argument matchers. Besides `eq`, the most commonly used are the `any` family:
@@ -246,13 +242,11 @@ class MockKTest {
 //        mockedPath.writeText("hello")
 //        verify(atLeast = 1) { mockedPath.writeText("hello") }
 //        verify(atMost = 1) { mockedPath.writeText("hello") }
-
-        verify(timeout = 100) { mockedPath.readText() }
     }
 
     @Test
     fun `MockK - verification mode2`() {
-        val mockedPath = mockk<Path>(relaxed = true)
+        val mockedPath = mockk<Path>()
         every { mockedPath.readText() } returns "hello, world"
 
         thread {
@@ -284,7 +278,7 @@ class MockKTest {
     @Test
     fun `Mockito - inOrder verification`() {
         // A. Single mock whose methods must be invoked in a particular order
-        val singleMock = mockk<MutableList<String>>(relaxUnitFun = true) {
+        val singleMock = mockk<MutableList<String>>(/*relaxUnitFun = true*/) {
             every { add("was added first") } returns true
             every { add("was added second") } returns true
             every { add("was added third") } returns true
@@ -318,17 +312,7 @@ class MockKTest {
             singleMock.add("was added first")
             singleMock.add("was added second")
         }
-
-        val mockCar1 = mockk<Car>()
-        val mockCar2 = mockk<Car>()
-
-        verify {
-            listOf(mockCar1, mockCar2) wasNot Called
-        }
-
-        confirmVerified(singleMock)
     }
-
 
     /**
      * argThat - match
@@ -348,7 +332,7 @@ class MockKTest {
     }
 
     /**
-     * ArgumentCaptor
+     * `ArgumentCaptor`
      *
      * MockK has a similar utility called a `CapturingSlot`. The functionality is
      * very similar to Mockito, but the usage is different. Rather than calling
@@ -380,7 +364,24 @@ class MockKTest {
     }
 
     @Test
-    fun `MockK - MutableList1`() {
+    fun `MockK - MutableList - demo1`() {
+        // Given
+        val mockPhone = mockk<Phone>()
+        val personSlots = mutableListOf<Person>()
+        every { mockPhone.call(capture(personSlots)) } returns Unit
+
+        // When
+        mockPhone.call(Person("Sarah Jane", 33))
+        mockPhone.call(Person("Peter Parker", 25))
+
+        // Then
+        assertThat(
+            personSlots.map { it.name }
+        ).isEqualTo(listOf("Sarah Jane", "Peter Parker"))
+    }
+
+    @Test
+    fun `MockK - MutableList - demo2`() {
         // Given
         val mockPhone = mockk<Phone>()
         val personSlots = mutableListOf<Person>()
@@ -399,22 +400,7 @@ class MockKTest {
         ).isEqualTo(listOf("Sarah Jane", "Peter Parker"))
     }
 
-    @Test
-    fun `MockK - MutableList2`() {
-        // Given
-        val mockPhone = mockk<Phone>()
-        val personSlots = mutableListOf<Person>()
-        every { mockPhone.call(capture(personSlots)) } returns Unit
 
-        // When
-        mockPhone.call(Person("Sarah Jane", 33))
-        mockPhone.call(Person("Peter Parker", 25))
-
-        // Then
-        assertThat(
-            personSlots.map { it.name }
-        ).isEqualTo(listOf("Sarah Jane", "Peter Parker"))
-    }
 
     /**
      * Inline Assertions: `withArg` - special matcher available in verification mode only
