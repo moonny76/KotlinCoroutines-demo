@@ -1,4 +1,4 @@
-package com.scarlet.livedata
+package com.scarlet.coroutines.testing.livedata
 
 import com.scarlet.model.Article
 import com.scarlet.util.Resource
@@ -28,7 +28,7 @@ class LiveDataTest {
     }
 
     @Test
-    fun `articles - getValueForTest or getOrAwaitValue`() = runTest {
+    fun `articles - getValueForTest`() = runTest {
         // Arrange (Given)
 
         // Act (When)

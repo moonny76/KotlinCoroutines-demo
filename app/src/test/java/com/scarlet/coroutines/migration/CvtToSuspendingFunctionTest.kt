@@ -2,8 +2,8 @@ package com.scarlet.coroutines.migration
 
 import com.google.common.truth.Truth.assertThat
 import com.scarlet.model.Recipe
+import com.scarlet.model.Recipe.Companion.mRecipes
 import com.scarlet.util.Resource
-import com.scarlet.util.TestData
 import io.mockk.*
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.*
@@ -39,7 +39,7 @@ class CvtToSuspendingFunctionTest {
         // Arrange (Given)
         val slot = slot<Callback<List<Recipe>>>()
         every { mockResponse.isSuccessful } returns true
-        every { mockResponse.body() } returns TestData.mRecipes
+        every { mockResponse.body() } returns mRecipes
         every { mockCall.enqueue(capture(slot)) } answers {
             slot.captured.onResponse(mockCall, mockResponse)
         }
@@ -50,7 +50,7 @@ class CvtToSuspendingFunctionTest {
         target.searchRecipes("eggs", mockApi, object : RecipeCallback<List<Recipe>> {
             override fun onSuccess(response: Resource<List<Recipe>>) {
                 // Assert (Then)
-                assertThat(response).isEqualTo(Resource.Success(TestData.mRecipes))
+                assertThat(response).isEqualTo(Resource.Success(mRecipes))
             }
 
             override fun onError(response: Resource<List<Recipe>>) {
@@ -65,7 +65,7 @@ class CvtToSuspendingFunctionTest {
         // Arrange (Given)
         val slot = slot<Callback<List<Recipe>>>()
         every { mockResponse.isSuccessful } returns true
-        every { mockResponse.body() } returns TestData.mRecipes
+        every { mockResponse.body() } returns mRecipes
         every { mockCall.enqueue(capture(slot)) } answers {
             slot.captured.onResponse(mockCall, mockResponse)
         }
@@ -76,7 +76,7 @@ class CvtToSuspendingFunctionTest {
         val response = target.searchRecipes("eggs", mockApi, TODO())
 
         // Assert (Then)
-        assertThat(response).isEqualTo(Resource.Success(TestData.mRecipes))
+        assertThat(response).isEqualTo(Resource.Success(mRecipes))
     }
 
     @Test
@@ -84,7 +84,7 @@ class CvtToSuspendingFunctionTest {
         // Arrange (Given)
         val slot = slot<Callback<List<Recipe>>>()
         every { mockResponse.isSuccessful } returns true
-        every { mockResponse.body() } returns TestData.mRecipes
+        every { mockResponse.body() } returns mRecipes
         every {
             mockCall.enqueue(capture(slot))
         } answers {

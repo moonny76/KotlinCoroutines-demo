@@ -1,4 +1,4 @@
-package com.scarlet.coroutines.basics.myth
+package com.scarlet.coroutines.android
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -10,6 +10,8 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.snackbar.Snackbar
 import com.scarlet.R
 import kotlinx.coroutines.*
+import java.math.BigInteger
+import java.util.*
 import kotlin.system.exitProcess
 
 class MythMainActivity : AppCompatActivity() {
@@ -42,8 +44,8 @@ class MythMainActivity : AppCompatActivity() {
             showSnackbar("Launching findBigPrime ...")
 
             primeJob = lifecycleScope.launch {
-                val primeNumber = findBigPrime_Wish_To_Be_NonBlocking()
-//                val primeNumber = findBigPrime_ProperWay()
+//                val primeNumber = findBigPrime_Wish_To_Be_NonBlocking()
+                val primeNumber = findBigPrime_ProperWay()
                 status.text = primeNumber.toString()
                 findButton.isEnabled = true
                 cancelButton.isEnabled = false
@@ -84,4 +86,14 @@ class MythMainActivity : AppCompatActivity() {
 
         exitProcess(0)
     }
+
+    // Will this help?
+    private suspend fun findBigPrime_Wish_To_Be_NonBlocking(): BigInteger =
+        BigInteger.probablePrime(2048, Random())
+
+    private suspend fun findBigPrime_ProperWay(): BigInteger = withContext(Dispatchers.Default) {
+        BigInteger.probablePrime(2048, Random())
+    }
 }
+
+

@@ -8,7 +8,7 @@ data class Article(val id: String, val author: String, val title: String) {
             Article("A003", "Kent Beck", "Extreme Programming"),
             Article("A004", "Robert Martin", "Agile Patterns"),
             Article("A005", "Sean McQuillan", "Android Testing"),
-            Article("A006", "Roman Elizarov", "Coroutine")
+            Article("A006", "Roman Elizarov", "Kotlin Coroutines")
         )
     }
 }

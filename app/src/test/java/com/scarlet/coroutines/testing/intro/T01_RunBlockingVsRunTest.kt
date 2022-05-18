@@ -8,6 +8,7 @@ import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.*
 import kotlinx.coroutines.test.TestDispatcher
+import kotlinx.coroutines.test.currentTime
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
@@ -15,7 +16,7 @@ import kotlin.coroutines.ContinuationInterceptor
 import kotlin.system.measureTimeMillis
 
 @ExperimentalCoroutinesApi
-class T01_RunBlockingVsRunTest {
+class RunBlockingVsRunTest {
 
     interface ArticleService {
         suspend fun getArticle(id: String): Article
@@ -30,7 +31,7 @@ class T01_RunBlockingVsRunTest {
     // SUT
     private lateinit var repository: Repository
 
-    private val expectedArticle = Article("A001", "Roman Elizarov", "Kotlin Coroutines")
+    private val expectedArticle = Article("A006", "Roman Elizarov", "Kotlin Coroutines")
 
     @MockK
     private lateinit var mockArticleService: ArticleService
@@ -53,7 +54,7 @@ class T01_RunBlockingVsRunTest {
 
         val duration = measureTimeMillis {
             // When
-            val article = repository.getArticle("A001")
+            val article = repository.getArticle("A006")
             // Then
             assertThat(article).isEqualTo(expectedArticle)
         }
@@ -63,10 +64,6 @@ class T01_RunBlockingVsRunTest {
 
     @Test
     fun `runTest demo`() = runTest {
-        val dispatcher: TestDispatcher = coroutineContext[ContinuationInterceptor] as TestDispatcher
-        log("${dispatcher}")
-        log("${dispatcher.scheduler}")
-
         // Given
         coEvery {
             mockArticleService.getArticle(any())

@@ -3,10 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".coroutines.basics.myth.MythMainActivity"
     android:orientation="vertical"
     android:gravity="center"
-    >
+    tools:context=".coroutines.android.MythMainActivity">
 
     <TextView
         android:id="@+id/counter"

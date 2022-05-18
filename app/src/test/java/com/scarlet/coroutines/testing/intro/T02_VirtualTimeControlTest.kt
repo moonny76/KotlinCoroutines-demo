@@ -7,7 +7,7 @@ import kotlinx.coroutines.test.*
 import org.junit.Test
 
 @ExperimentalCoroutinesApi
-class T02_VirtualTimeControlTest {
+class VirtualTimeControlTest {
 
     @Test
     fun `test virtual time control - StandardTestDispatcher`() = runTest {
@@ -17,11 +17,11 @@ class T02_VirtualTimeControlTest {
             log("child start")
             delay(1000)
             count = 1
-//            delay(1000)
-//            count = 3
-//            delay(1000)
-//            count = 5
-//            log("child end")
+            delay(1000)
+            count = 3
+            delay(1000)
+            count = 5
+            log("child end")
         }
 
         assertThat(count).isEqualTo(0)
@@ -35,7 +35,7 @@ class T02_VirtualTimeControlTest {
 //        log("$currentTime")
 //        assertThat(count).isEqualTo(1)
 //
-//        advanceTimeBy(999) // 999
+//        advanceTimeBy(1000)
 //        log("$currentTime")
 //        assertThat(count).isEqualTo(3)
     }
@@ -49,28 +49,26 @@ class T02_VirtualTimeControlTest {
             yield()
             state = 2
             delay(1000)
-//            state = 3
-//            delay(1000)
-//            state = 4
-//            delay(1000)
-//            state = 5
+            state = 3
+            delay(1000)
+            state = 4
+            delay(1000)
+            state = 5
         }
 
         assertThat(state).isEqualTo(0)
         log("$currentTime")
 
-        // Run any tasks that are pending at or before the current virtual clock-time.
+        // `runCurrent` run any tasks that are pending at or before the current virtual clock-time.
         // Calling this function will never advance the clock.
-//        runCurrent()
 //        assertThat(state).isEqualTo(2)
 //        log("$currentTime")
 
         // Immediately execute all pending tasks and advance the virtual clock-time to the last delay.
         // If new tasks are scheduled due to advancing virtual time, they will be executed before
         // `advanceUntilIdle` returns.
-//        advanceUntilIdle()
+//        assertThat(state).isEqualTo(5)
 //        log("$currentTime")
-//        assertThat(state).isEqualTo(3)
     }
 
     @Test
@@ -79,10 +77,8 @@ class T02_VirtualTimeControlTest {
 
         launch {
             state = 1
-            yield()
-            state = 2
             delay(1000)
-            state = 3
+            state = 2
         }
 
         assertThat(state).isEqualTo(TODO())
@@ -95,10 +91,8 @@ class T02_VirtualTimeControlTest {
 
         launch {
             state = 1
-            yield()
-            state = 2
             delay(1000)
-            state = 3
+            state = 2
         }
 
         assertThat(state).isEqualTo(TODO())

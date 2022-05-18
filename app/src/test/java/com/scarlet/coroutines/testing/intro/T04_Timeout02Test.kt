@@ -25,10 +25,10 @@ suspend fun loadData(api: Api): String = withTimeout(5_000) {
 }
 
 @ExperimentalCoroutinesApi
-class T04_Timeout02Test {
+class Timeout02Test {
 
     @Test(expected = TimeoutCancellationException::class)
-    fun test1() = runTest {
+    fun `Wrong test`() = runTest {
 
         val api = SuspendingFakeApi()
 
@@ -43,7 +43,7 @@ class T04_Timeout02Test {
             log("result = ${loadData(api)}")
         }.onCompletion("job")
 
-        advanceTimeBy(4_999) // 4999 ~ 5001
+        advanceTimeBy(4_999) // 4999 ~ 5000 ms
         api.deferred.complete("Hello")
 
         log("Done.")

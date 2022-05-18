@@ -1,7 +1,7 @@
 package com.scarlet.coroutines.testing.version1
 
 import com.google.common.truth.Truth.assertThat
-import com.scarlet.livedata.ApiService
+import com.scarlet.coroutines.testing.ApiService
 import com.scarlet.model.Article.Companion.articleSamples
 import com.scarlet.util.Resource
 import com.scarlet.util.getValueForTest

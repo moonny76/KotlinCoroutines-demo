@@ -1,4 +1,4 @@
-package com.scarlet.livedata
+package com.scarlet.coroutines.testing
 
 import androidx.lifecycle.LiveData
 import com.scarlet.model.Article
@@ -16,7 +16,7 @@ interface ApiService {
     suspend fun getTopArticle(): Resource<Article>
 
     /**
-     * Get all the articles written by the author of the current top-ranked article
+     * Get all the articles written by a specific author
      */
     fun getArticlesByAuthorName(name: String): LiveData<Resource<List<Article>>>
 }

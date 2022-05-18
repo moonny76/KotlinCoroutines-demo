@@ -5,15 +5,19 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.coroutineScope
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.scarlet.R
-import com.scarlet.util.TestData
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.launch
+import com.scarlet.model.Recipe
+import com.scarlet.model.Recipe.Companion.mRecipes
+import com.scarlet.util.Resource
+import com.scarlet.util.spaces
+import kotlinx.coroutines.*
+import java.util.LinkedHashMap
 
 @ExperimentalCoroutinesApi
 class CoActivity : AppCompatActivity() {
-    val apiService = FakeRemoteDataSource()
+    private val apiService = FakeRemoteDataSource()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,46 +25,50 @@ class CoActivity : AppCompatActivity() {
 
         prepareFakeData()
 
-        Log.d(TAG, "onCreate: massive launching started ...")
+        Log.d(TAG, "[onCreate] massive launching started ...")
+
+        /*
+         * Use either lifecycleScope or lifecycle.coroutineScope
+         */
 
         lifecycle.coroutineScope.launch {
             Log.d(TAG, "launch started")
-            val recipes = apiService.searchRecipes("eggs")
+            val recipes = apiService.getRecipes()
             Log.d(TAG, "recipes in launch = $recipes")
         }.invokeOnCompletion {
             Log.d(TAG, "launch completed: $it")
         }
 
-        lifecycle.coroutineScope.launchWhenCreated {
+        lifecycleScope.launchWhenCreated {
             Log.d(TAG, "launchWhenCreated started")
-            val recipes = apiService.searchRecipes("eggs")
+            val recipes = apiService.getRecipes()
             Log.d(TAG, "recipes in launchWhenCreated = $recipes")
         }.invokeOnCompletion {
             Log.d(TAG, "launchWhenCreated completed: $it")
         }
 
-        lifecycle.coroutineScope.launchWhenStarted {
-            Log.d(TAG, "launchWhenStarted started")
-            val recipes = apiService.searchRecipes("eggs")
-            Log.d(TAG, "recipes in launchWhenStarted = $recipes")
+        lifecycleScope.launchWhenStarted {
+            Log.d(TAG, "${spaces(2)}launchWhenStarted started")
+            val recipes = apiService.getRecipes()
+            Log.d(TAG, "${spaces(2)}recipes in launchWhenStarted = $recipes")
         }.invokeOnCompletion {
-            Log.d(TAG, "launchWhenStarted completed: $it")
+            Log.d(TAG, "${spaces(2)}launchWhenStarted completed: $it")
         }
 
-        lifecycle.coroutineScope.launchWhenResumed {
-            Log.d(TAG, "launchWhenResumed started")
-            val recipes = apiService.searchRecipes("eggs")
-            Log.d(TAG, "recipes in launchWhenResumed = $recipes")
+        lifecycleScope.launchWhenResumed {
+            Log.d(TAG, "${spaces(4)}launchWhenResumed started")
+            val recipes = apiService.getRecipes()
+            Log.d(TAG, "${spaces(4)}recipes in launchWhenResumed = $recipes")
         }.invokeOnCompletion {
-            Log.d(TAG, "launchWhenResumed completed: $it")
+            Log.d(TAG, "${spaces(4)}launchWhenResumed completed: $it")
         }
 
-        lifecycle.coroutineScope.launch {
+        lifecycleScope.launch {
             Log.d(TAG, "repeatOnLifecycle launched")
             lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
-                Log.d(TAG, "repeatOnLifeCycle started")
-                val recipes = apiService.searchRecipes("eggs")
-                Log.d(TAG, "recipes in repeatOnLifeCycle = $recipes")
+                Log.d(TAG, "${spaces(4)}repeatOnLifeCycle at RESUMED started")
+                val recipes = apiService.getRecipes()
+                Log.d(TAG, "${spaces(4)}recipes in repeatOnLifeCycle = $recipes")
             }
             Log.d(TAG, "See when i am printed ...")
         }.invokeOnCompletion {
@@ -70,35 +78,55 @@ class CoActivity : AppCompatActivity() {
 
     private fun prepareFakeData() {
         FakeRemoteDataSource.FAKE_NETWORK_DELAY = 3_000
-        apiService.addRecipes(TestData.mRecipes)
+        apiService.addRecipes(mRecipes)
     }
 
     override fun onStart() {
         super.onStart()
-        Log.d(TAG, "onStart: ")
+        Log.d(TAG, "[onStart]")
     }
 
     override fun onStop() {
         super.onStop()
-        Log.d(TAG, "onStop: ")
+        Log.d(TAG, "[onStop]")
     }
 
     override fun onPause() {
         super.onPause()
-        Log.d(TAG, "onPause: ")
+        Log.d(TAG, "[onPause]")
     }
 
     override fun onResume() {
         super.onResume()
-        Log.d(TAG, "onResume: ")
+        Log.d(TAG, "[onResume]")
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        Log.d(TAG, "onDestroy:")
+        Log.d(TAG, "[onDestroy]")
     }
 
     companion object {
         const val TAG = "Coroutine"
     }
+
+    private class FakeRemoteDataSource {
+        private val mRecipes: MutableMap<String, Recipe> = LinkedHashMap<String, Recipe>()
+
+        suspend fun getRecipes(): Resource<List<Recipe>> {
+            return withContext(Dispatchers.IO) {
+                delay(FAKE_NETWORK_DELAY)
+                Resource.Success(mRecipes.values.toList())
+            }
+        }
+
+        fun addRecipes(recipes: List<Recipe>) {
+            recipes.forEach { recipe -> mRecipes[recipe.recipeId] = recipe.copy() }
+        }
+
+        companion object {
+            var FAKE_NETWORK_DELAY = 0L
+        }
+    }
 }
+
