@@ -15,7 +15,7 @@ import java.lang.RuntimeException
 @JvmInline
 value class Image(val content: String)
 
-interface ApiService {
+interface ImageService {
     suspend fun loadImage(name: String): Image
 }
 
@@ -26,8 +26,8 @@ fun combineImages(image1: Image, image2: Image): Image =
 @ExperimentalCoroutinesApi
 class StructuredConcurrencyTest {
 
-    @MockK(relaxed = true)
-    lateinit var apiService: ApiService
+    @MockK
+    lateinit var imageService: ImageService
 
     @Before
     fun init() {
@@ -36,7 +36,7 @@ class StructuredConcurrencyTest {
 
     @Test
     fun `loadAndCombineImages - parent job cancelled`() = runTest {
-        coEvery { apiService.loadImage(any()) } coAnswers  {
+        coEvery { imageService.loadImage(any()) } coAnswers  {
             delay(1000)
             Image("image1")
         } coAndThen {
@@ -47,8 +47,8 @@ class StructuredConcurrencyTest {
         var image: Image? = null
         val job = launch {
             image = coroutineScope {
-                val deferred1 = async { apiService.loadImage("image1") }.onCompletion("deferred1")
-                val deferred2 = async { apiService.loadImage("image2") }.onCompletion("deferred2")
+                val deferred1 = async { imageService.loadImage("image1") }.onCompletion("deferred1")
+                val deferred2 = async { imageService.loadImage("image2") }.onCompletion("deferred2")
 
                 combineImages(deferred1.await(), deferred2.await())
             }
@@ -57,13 +57,12 @@ class StructuredConcurrencyTest {
         delay(1500)
         job.cancelAndJoin()
 
-        log(image.toString())
         assertThat(image).isNull()
     }
 
     @Test
     fun `loadAndCombineImages - child fails`() = runTest {
-        coEvery { apiService.loadImage(any()) } coAnswers  {
+        coEvery { imageService.loadImage(any()) } coAnswers  {
             delay(1000)
             throw RuntimeException("Oops")
         } coAndThen {
@@ -76,19 +75,19 @@ class StructuredConcurrencyTest {
             try {
                 image = coroutineScope {
                     val deferred1 =
-                        async { apiService.loadImage("image1") }.onCompletion("deferred1")
+                        async { imageService.loadImage("image1") }.onCompletion("deferred1")
                     val deferred2 =
-                        async { apiService.loadImage("image2") }.onCompletion("deferred2")
+                        async { imageService.loadImage("image2") }.onCompletion("deferred2")
 
                     combineImages(deferred1.await(), deferred2.await())
                 }
             } catch (ex: Exception) {
-                log("Caught ex = $ex")
+                log("Caught ex = ${ex.javaClass.simpleName}")
             }
         }.onCompletion("parent").join()
 
-        log(image.toString())
         assertThat(image).isNull()
     }
 }
+
 

@@ -1,6 +1,9 @@
 package com.scarlet.coroutines.cancellation
 
+import com.scarlet.util.log
+import com.scarlet.util.onCompletion
 import kotlinx.coroutines.*
+import kotlinx.coroutines.NonCancellable.isCancelled
 import java.lang.Exception
 
 /**
@@ -9,34 +12,34 @@ import java.lang.Exception
  *
  * If we try to start another coroutine, it will just be ignored.
  *
- * If we try to suspend, it will throw CancellationException and our finally block will end.
+ * If we try to suspend, it will throw `CancellationException`.
  */
 
-object Try_Launch_Or_Call_Suspending_Function_in_Cancelling_State {
+object Try_Launch_Or_Call_Suspending_Function_in_Canceling_State {
     @JvmStatic
     fun main(args: Array<String>) = runBlocking {
 
         val job = launch {
             try {
                 delay(200)
-                println("Job is done")
+                log("Job is done")
             } finally {
-                println("Finally")
+                log("Finally")
 
-                println("isActive = ${coroutineContext.isActive}")
-                println("isCancelled = ${coroutineContext[Job]?.isCancelled}")
+                log("isActive = ${coroutineContext.isActive}, isCancelled = ${coroutineContext.job.isCancelled}")
 
                 // Try to launch new coroutine
-                launch { // will be ignored
-                    println("Will not be printed")
-                } //.join() // will throw cancellation exception
+                launch { // will be ignored because of immediate cancellation
+                    log("Will not be printed")
+                    delay(50)
+                }.onCompletion("Jombi").join() // will throw cancellation exception and skip the rest
 
                 // Try to call suspending function will throw cancellation exception
                 try {
                     delay(100)
-                    println("Will not be printed")
+                    log("Will not be printed")
                 } catch (ex: Exception) {
-                    println("Caught: $ex")
+                    log("Caught: $ex")
                 }
                 // Nevertheless, if you want to call suspending function to clean up ... how to do?
             }
@@ -44,7 +47,7 @@ object Try_Launch_Or_Call_Suspending_Function_in_Cancelling_State {
 
         delay(100)
         job.cancelAndJoin()
-        println("Cancel done")
+        log("Cancel done")
     }
 }
 

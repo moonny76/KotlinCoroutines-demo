@@ -59,8 +59,6 @@ class MythMainActivity : AppCompatActivity() {
             status.text = "findBigPrime cancelled"
 
             primeJob?.cancel()
-//            findButton.isEnabled = true
-//            cancelButton.isEnabled = false
         }
 
         countingJob = lifecycleScope.launch {

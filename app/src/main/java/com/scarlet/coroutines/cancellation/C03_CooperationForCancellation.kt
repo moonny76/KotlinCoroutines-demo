@@ -1,6 +1,9 @@
 package com.scarlet.coroutines.cancellation
 
+import androidx.constraintlayout.motion.utils.ViewState
+import com.scarlet.util.Resource
 import com.scarlet.util.log
+import com.scarlet.util.onCompletion
 import kotlinx.coroutines.*
 
 object Uncooperative_Cancellation {
@@ -84,6 +87,5 @@ object Cleanup_When_Cancelled {
         log("Try to cancel the job ...")
         job.cancelAndJoin()
     }
+
 }
-
-

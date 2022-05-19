@@ -6,11 +6,21 @@ import com.scarlet.util.onCompletion
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.swing.Swing
+import java.lang.RuntimeException
 import java.util.concurrent.Executors
-import kotlin.coroutines.coroutineContext
 
 /**
- * Coroutine Scope Functions
+ * **Coroutine Scope Functions**
+ *
+ * Unlike `async` or `launch`, coroutine scope functions do not really create new coroutines.
+ * Their code block is called *in-place*. When they are suspended, we suspend a coroutine
+ * on which this coroutine scope function is called.
+ *
+ * The provided scope inherits its `coroutineContext` from the outer scope, but overrides
+ * the context's `Job`. This way, the produced scope respects parental responsibilities:
+ *  - inherits a context from its parent,
+ *  - awaits for all children before it can finish itself,
+ *  - cancels all its children, when the parent is canceled.
  *
  * 1. coroutineScope
  * 2. supervisorScope
@@ -18,6 +28,87 @@ import kotlin.coroutines.coroutineContext
  * 4. withTimeout
  * 5. withTimeoutOrNull
  */
+
+object coroutineScope_Demo1 {
+    @JvmStatic
+    fun main(args: Array<String>) = runBlocking {
+        log("runBlocking: ${coroutineContext}")
+
+        val a = coroutineScope {
+            delay(1000).also {
+                log("a: ${coroutineContext}")
+            }
+            10
+        }
+        log("a is calculated")
+        val b = coroutineScope {
+            delay(1000).also {
+                log("b: ${coroutineContext}")
+            }
+            20
+        }
+        log("a = $a, b = $b")
+    }
+}
+
+object coroutineScope_Demo2 {
+    @JvmStatic
+    fun main(args: Array<String>) = runBlocking {
+        log("runBlocking begins")
+
+        coroutineScope {
+            log("Launching children ...")
+
+            launch {
+                log("child1 starts")
+                delay(2000)
+            }.onCompletion("child1")
+
+            launch {
+                log("child2 starts")
+                delay(1000)
+            }.onCompletion("child2")
+
+            delay(10)
+
+            log("Waiting until children are completed ...")
+        }
+
+        log("Done!")
+    }
+}
+
+object coroutineScope_Demo3 {
+    @JvmStatic
+    fun main(args: Array<String>) = runBlocking {
+        log("runBlocking begins")
+
+        try {
+            coroutineScope {
+                log("Launching children ...")
+
+                launch {
+                    log("child1 starts")
+                    delay(2000)
+                }.onCompletion("child1")
+
+                launch {
+                    log("child2 starts")
+                    delay(1000)
+                    throw RuntimeException("Oops")
+                }.onCompletion("child2")
+
+                delay(10)
+
+                log("Waiting until children are completed ...")
+            }
+        } catch (ex: Exception) {
+            log("Caught exception: ${ex.javaClass.simpleName}")
+        }
+
+        log("Done!")
+    }
+}
 
 object Not_What_We_Want {
     data class Details(val name: String, val followers: Int)
@@ -38,22 +129,21 @@ object Not_What_We_Want {
         return listOf(Tweet("Hello, world"))
     }
 
-    // DON'T DO THIS
-    private suspend fun CoroutineScope.getUserDetails(): Details {
-        val userName = async { getUserName() }
-        val followersNumber = async { getFollowersNumber() }
+    private suspend fun getUserDetails(scope: CoroutineScope): Details {
+        val userName = scope.async { getUserName() }
+        val followersNumber = scope.async { getFollowersNumber() }
         return Details(userName.await(), followersNumber.await())
     }
 
     @JvmStatic
     fun main(args: Array<String>) = runBlocking {
         val details = try {
-            getUserDetails()
+            getUserDetails(this)
         } catch (e: Error) {
             null
         }
-        val tweets = async { getTweets() }
         log("User: $details")
+        val tweets = async { getTweets() }
         log("Tweets: ${tweets.await()}")
     }
 // Only Exception...
@@ -87,7 +177,7 @@ object What_We_Want {
     }
 
     @JvmStatic
-    fun main(args: Array<String>) = runBlocking{
+    fun main(args: Array<String>) = runBlocking {
         val details = try {
             getUserDetails()
         } catch (e: ApiException) {

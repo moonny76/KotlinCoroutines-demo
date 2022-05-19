@@ -7,7 +7,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Test
 
 @ExperimentalCoroutinesApi
-class CE06_CancellationTest {
+class CancellationTest {
 
     private suspend fun networkRequestCooperative() {
         log("networkRequestDelayed")
@@ -83,41 +83,12 @@ class CE06_CancellationTest {
             try {
                 networkRequestCooperative()
             } catch (ex: Exception) {
-                log("Caught: $ex")
+                log("Caught: ${ex.javaClass.simpleName}")
             }
 
             log("Coroutine keep running ... isActive = ${(coroutineContext.isActive)}")
 
             networkRequestUncooperative() // this will not be skipped
-        }.onCompletion("job")
-
-        delay(100)
-        job.cancelAndJoin()
-    }
-
-    @Test
-    fun `cancellation exception swallowed - but, next cooperative suspend function will cancel`() = runTest {
-
-        val job = launch {
-            try {
-                networkRequestCooperative()
-            } catch (ex: Exception) {
-                log("Caught: $ex")
-            }
-
-            log("Second suspend function will cancel, though")
-
-            try {
-                networkRequestCooperative()
-            } catch (ex: Exception) {
-                // What if we comment out if-statement below?
-                if (ex is CancellationException) {
-                    throw ex
-                }
-            }
-
-            log("Am I skipped or not?")
-
         }.onCompletion("job")
 
         delay(100)
@@ -131,7 +102,7 @@ class CE06_CancellationTest {
             try {
                 networkRequestCooperative()
             } catch (ex: Exception) {
-                log("Caught: $ex")
+                log("Caught: ${ex.javaClass.simpleName}")
                 if (ex is CancellationException) {
                     throw ex
                 }

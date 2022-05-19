@@ -9,11 +9,11 @@ import java.io.IOException
 import java.lang.RuntimeException
 
 /**
- * Top-level coroutines: coroutines without parent coroutine.
+ * **Top-level coroutines**: coroutines without parent coroutine.
  *
- * Root coroutines:
- * - Coroutines that are a direct child of a CoroutineScope instance or supervisorScope
- * - All children coroutines (coroutines created in the context of another Job) delegate
+ * **Root coroutines**:
+ * - Coroutines that are a direct child of a `CoroutineScope` instance or `supervisorScope`
+ * - All child coroutines (coroutines created in the context of another Job) delegate
  *   handling of their exceptions to their parent coroutine, which also delegates to the
  *   parent, and so on until the root.
  *
@@ -21,7 +21,7 @@ import java.lang.RuntimeException
  */
 
 @ExperimentalCoroutinesApi
-class CE01_LaunchEHTest {
+class LaunchEHTest {
 
     private fun failingFunction() {
         throw RuntimeException("oops")
@@ -32,34 +32,42 @@ class CE01_LaunchEHTest {
         failingFunction()
     }
 
-    // `runblocking` rethrows uncaught exception.
+    // `runBlocking` and `runTest` rethrows uncaught exception.
     @Test
-    fun `exception with runBlocking`() = runBlocking {
+    fun `exception with runBlocking or runTest`() = runTest {
         failingFunction()
     }
 
-    // rethrows only the first propagated uncaught exception
+    // `runBlocking` rethrows only the first propagated uncaught exception
     @Test
     fun `multiple exceptions - runBlocking`() = runBlocking<Unit> {
+        coroutineContext.job.invokeOnCompletion { cause ->
+            println("job completed with $cause")
+        }
+
         launch {
             delay(10)
             throw RuntimeException("yellow")
         }
         launch {
-            delay(20)
+            delay(10)
             throw IOException("mellow")
         }
     }
 
-    // rethrows only the first propagated uncaught exception
+    // `runTest` rethrows only the first propagated uncaught exception
     @Test
-    fun `multiple exceptions - runBlockingTest`() = runTest {
+    fun `multiple exceptions - runTest`() = runTest {
+        coroutineContext.job.invokeOnCompletion { cause ->
+            println("job completed with $cause")
+        }
+
         val job1 = launch {
             delay(10)
             throw RuntimeException("yellow")
         }
         val job2 = launch {
-            delay(20)
+            delay(10)
             throw IOException("mellow")
         }
 
@@ -79,43 +87,32 @@ class CE01_LaunchEHTest {
 
     // rethrows propagated uncaught exception
     @Test
-    fun `Non-root coroutine - cannot handle propagated exception on site using try-catch`() = runTest{
-        try {
-            launch {
-                failingFunction()
+    fun `Non-root coroutine - cannot handle propagated exception on site using try-catch`() =
+        runTest {
+            try {
+                launch {
+                    failingFunction()
+                }
+            } catch (ex: Exception) {
+                log("Caught $ex")  // useless
             }
-        } catch (ex: Exception) {
-            log("Caught $ex")  // useless
         }
-    }
 
     @Test
     fun `Failure of child cancels the parent and its siblings`() = runTest {
 
-        val scope = CoroutineScope(Job() + testScheduler)
-        scope.coroutineContext[Job]?.onCompletion("scope")
+        val scope = CoroutineScope(Job().onCompletion("scope"))
 
-        var child1: Job? = null
-        var child2: Job? = null
         val parentJob = scope.launch {
-
-            child1 = launch {
+            launch {
                 delay(100)
                 throw RuntimeException("oops")
             }.onCompletion("child1")
 
-            child2 = launch {
-                delay(1000)
-            }.onCompletion("child2")
-
+            launch { delay(1000) }.onCompletion("child2")
         }.onCompletion("parentJob")
 
         parentJob.join()
-
-        log("scope cancelled = ${scope.coroutineContext[Job]?.isCancelled}")
-        log("parent job cancelled = ${parentJob.isCancelled}")
-        log("child1 job cancelled = ${child1?.isCancelled}")
-        log("child2 job cancelled = ${child2?.isCancelled}")
     }
 
 }

@@ -27,14 +27,6 @@ fun CoroutineScope.coroutineInfo(indent: Int) {
     delim()
 }
 
-suspend fun coroutineDynInfo(indent: Int) {
-    delim()
-    log("\t".repeat(indent) + "thread = ${Thread.currentThread().name}")
-    log("\t".repeat(indent) + "job = ${currentCoroutineContext()[Job]}")
-    log("\t".repeat(indent) + "dispatcher = ${currentCoroutineContext()[ContinuationInterceptor]}")
-    delim()
-}
-
 fun scopeInfo(scope: CoroutineScope, indent: Int) {
     delim()
     log("\t".repeat(indent) + "Scope's job = ${scope.coroutineContext[Job]}")
@@ -49,11 +41,7 @@ fun Job.completeStatus(name: String = "Job", level: Int = 0) = apply {
 }
 
 fun CoroutineScope.completeStatus(name: String = "scope", level: Int = 0) = apply {
-    log("${spaces(level)}$name: isCancelled = ${coroutineContext.job.isCancelled}")
-}
-
-fun CoroutineScope.onCompletion(name: String = "scope", level: Int = 0) = apply {
-    coroutineContext.job.onCompletion(name, level)
+    log("${spaces(level)}$name: isCancelled = ${coroutineContext[Job]?.isCancelled}")
 }
 
 fun Job.onCompletion(name: String, level: Int = 0): Job = apply {
