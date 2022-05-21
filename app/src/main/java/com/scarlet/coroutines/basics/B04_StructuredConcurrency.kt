@@ -86,6 +86,33 @@ object Canceling_a_child_cancels_only_the_child {
     }
 }
 
+object Failed_parent_causes_cancellation_of_all_children {
+
+    @JvmStatic
+    fun main(args: Array<String>) = runBlocking {
+        val parent = launch {
+            launch {
+                log("child1 started")
+                delay(1000)
+                log("child1 done")
+            }
+
+            launch {
+                log("child2 started")
+                delay(1000)
+                log("child2 done")
+            }
+
+            delay(500)
+            throw RuntimeException("parent failed")
+        }
+
+        parent.join()
+
+        log("Done.")
+    }
+}
+
 object Failed_child_causes_cancellation_of_its_parent_and_siblings {
 
     @JvmStatic
@@ -114,29 +141,3 @@ object Failed_child_causes_cancellation_of_its_parent_and_siblings {
     }
 }
 
-object Failed_parent_causes_cancellation_of_all_children {
-
-    @JvmStatic
-    fun main(args: Array<String>) = runBlocking {
-        val parent = launch {
-            launch {
-                log("child1 started")
-                delay(1000)
-                log("child1 done")
-            }
-
-            launch {
-                log("child2 started")
-                delay(1000)
-                log("child2 done")
-            }
-
-            delay(500)
-            throw RuntimeException("parent failed")
-        }
-
-        parent.join()
-
-        log("Done.")
-    }
-}
