@@ -84,8 +84,8 @@ class SupervisorScopeBuilderTest {
 
                 delay(100)
 
-                throw RuntimeException("Oops")
-//                coroutineContext.cancel()
+//                throw RuntimeException("Oops")
+                coroutineContext.cancel()
             }
 
         } catch (ex: Exception) {
