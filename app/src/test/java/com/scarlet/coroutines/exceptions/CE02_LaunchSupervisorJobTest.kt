@@ -9,16 +9,15 @@ import org.junit.Test
 import java.io.IOException
 import java.lang.RuntimeException
 
+/**
+ * **SupervisorJob** - failing child does not affect the parent and its sibling.
+ *
+ * Location of SupervisorJob matters:
+ *  - Warning: SupervisorJob only works when it is part of a failing
+ *    coroutine's direct parent context!! <-- by kim
+ */
 @ExperimentalCoroutinesApi
 class LaunchSupervisorJobTest {
-
-    /**
-     * SupervisorJob - failing child does not affect the parent and its sibling.
-     *
-     * Location of SupervisorJob matters:
-     *  - Warning: SupervisorJob only works when it is part of a failing
-     *    coroutine's direct parent context!! <-- by kim
-     */
 
     /**
      * Quiz: Who's child1's parent?
@@ -26,6 +25,7 @@ class LaunchSupervisorJobTest {
 
     @Test
     fun `lecture note example - who's child1's parent`() = runTest {
+        onCompletion("runBlocking")
 
         val parentJob = launch(SupervisorJob()) {
             launch {
@@ -33,7 +33,9 @@ class LaunchSupervisorJobTest {
                 throw IOException("failure")
             }.onCompletion("child1")
 
-            launch { delay(200) }.onCompletion("child2")
+            launch {
+                delay(200)
+            }.onCompletion("child2")
         }.onCompletion("parent")
 
         parentJob.join()
@@ -41,6 +43,7 @@ class LaunchSupervisorJobTest {
 
     @Test
     fun `SupervisorJob in failing child's parent context takes effect`() = runTest {
+        onCompletion("runBlocking")
         val scope = CoroutineScope(SupervisorJob()) // Compare with Job()
 
         val child1 = scope.launch {
@@ -48,10 +51,12 @@ class LaunchSupervisorJobTest {
             throw RuntimeException("oops")
         }.onCompletion("child1")
 
-        val child2 = scope.launch { delay(200) }.onCompletion("child2")
+        val child2 = scope.launch {
+            delay(200)
+        }.onCompletion("child2")
 
         joinAll(child1, child2)
-        scope.completeStatus()
+        scope.completeStatus("scope")
     }
 
     @Test
@@ -101,7 +106,7 @@ class LaunchSupervisorJobTest {
     }
 
     @Test
-    fun `SupervisorJob does not work when it is not part of the failing child's parent context`() = runTest {
+    fun `SupervisorJob does not work when it is not part of the failing child's direct parent context`() = runTest {
         try {
             val scope = CoroutineScope(Job())
             try {
@@ -118,11 +123,11 @@ class LaunchSupervisorJobTest {
                 parentJob.join()
 
             } catch (ex: Exception) {
-                log("Exception caught: $ex") // No use
+                log("Exception caught: $ex") // Useless
             }
             scope.completeStatus()
         } catch (ex: Exception) {
-            log("Outer: Exception caught: $ex") // No use
+            log("Outer: Exception caught: $ex") // Useless
         }
     }
 

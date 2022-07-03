@@ -22,44 +22,56 @@ class ExceptionHandlerTest {
 
     @Test
     fun `CEH at the scope`() = runTest {
-        val scope = CoroutineScope(Job() + testDispatcher + ehandler)
+        val scope = CoroutineScope(Job() + ehandler /*+ testDispatcher*/)
 
         val parent = scope.launch {
             launch {
-                log("Child 1 started")
                 delay(10_000)
                 throw RuntimeException("oops")
             }.onCompletion("child1")
 
             launch {
-                log("Child 2 started")
                 delay(20_000)
             }.onCompletion("child2")
         }.onCompletion("parent")
 
         parent.join()
-        scope.coroutineContext.job.completeStatus("scope")
+        scope.completeStatus("scope")
     }
 
     @Test
     fun `CEH at the root coroutine - child of scope`() = runTest {
-        val scope = CoroutineScope(SupervisorJob() + testDispatcher)
+        val scope = CoroutineScope(SupervisorJob())
 
         val parent = scope.launch(ehandler) {
-            launch { delay(100); throw RuntimeException("oops") }.onCompletion("child1")
-            launch { delay(200) }.onCompletion("child2")
+            launch {
+                delay(100)
+                throw RuntimeException("oops")
+            }.onCompletion("child1")
+
+            launch {
+                delay(200)
+            }.onCompletion("child2")
         }.onCompletion("parent")
 
         parent.join()
-        scope.coroutineContext.job.completeStatus("scope")
+        scope.completeStatus("scope")
     }
 
     @Test
     fun `CEH at the root coroutine - child of supervisorScope`() = runTest {
         supervisorScope {
+            onCompletion("supervisorScope")
+
             launch(ehandler) {
-                launch { delay(100); throw RuntimeException("oops") }.onCompletion("child1")
-                launch { delay(200) }.onCompletion("child2")
+                launch {
+                    delay(100)
+                    throw RuntimeException("oops")
+                }.onCompletion("child1")
+
+                launch {
+                    delay(200)
+                }.onCompletion("child2")
             }.onCompletion("parent")
         }
     }
@@ -67,8 +79,14 @@ class ExceptionHandlerTest {
     @Test(expected = RuntimeException::class)
     fun `CEH not at the root coroutine - child of coroutineScope`() = runTest {
         coroutineScope {
+            onCompletion("coroutineScope")
+
             launch(ehandler) {
-                launch { delay(100); throw RuntimeException("oops") }.onCompletion("child1")
+                launch {
+                    delay(100)
+                    throw RuntimeException("oops")
+                }.onCompletion("child1")
+
                 launch { delay(200) }.onCompletion("child2")
             }.onCompletion("parent")
         }
@@ -76,13 +94,21 @@ class ExceptionHandlerTest {
 
     @Test
     fun `CEH not at the root coroutine - not a direct child of scope`() = runTest {
-        val scope = CoroutineScope(Job() + testDispatcher)
+        val scope = CoroutineScope(Job())
 
-        scope.launch {
-            launch(ehandler) { delay(100); throw RuntimeException("oops") }.onCompletion("child1")
-            launch { delay(200) }.onCompletion("child2")
+        val parent = scope.launch {
+            launch(ehandler) {
+                delay(100)
+                throw RuntimeException("oops")
+            }.onCompletion("child1")
+
+            launch {
+                delay(200)
+            }.onCompletion("child2")
         }.onCompletion("parent")
 
+        parent.join()
+        scope.completeStatus("scope")
     }
 }
 

@@ -12,7 +12,7 @@ import java.lang.RuntimeException
 class SupervisorScopeBuilderTest {
 
     /**
-     * `supervisorScope` has a `SupervisorJob()` and acts as a direct parent to root coroutine.
+     * **`supervisorScope`** has a **`SupervisorJob()`** and acts as a direct parent to root coroutine.
      * `supervisorJob` do *not* rethrow uncaught exception, but *propagates* it instead!!
      *
      * This feature requires an installed `CoroutineExceptionHandler` in its root coroutines,
@@ -24,14 +24,14 @@ class SupervisorScopeBuilderTest {
      */
 
     @Test(expected = RuntimeException::class)
-    fun `supervisorScope propagates exception from children but it can only be caught by CEH`() =
+    fun `supervisorScope propagates exception from children which can only be caught by CEH`() =
         runTest {
-            coroutineContext.job.onCompletion("runTest")
+            onCompletion("runTest")
 
             try {
 
                 supervisorScope {
-                    coroutineContext.job.onCompletion("supervisorScope")
+                    onCompletion("supervisorScope")
 
                     val child = launch {
                         delay(500)
@@ -52,18 +52,20 @@ class SupervisorScopeBuilderTest {
 
     @Test(expected = RuntimeException::class)
     fun `supervisorScope - failed child doesn't affect its parent nor siblings`() = runTest {
-        coroutineContext.job.onCompletion("runTest")
+        onCompletion("runTest")
 
         try {
             supervisorScope {
-                coroutineContext.job.onCompletion("supervisorScope")
+                onCompletion("supervisorScope")
 
                 launch {
                     delay(100)
                     throw RuntimeException("oops")
                 }.onCompletion("child1")
 
-                launch { delay(200) }.onCompletion("child2")
+                launch {
+                    delay(200)
+                }.onCompletion("child2")
             }.onCompletion("parent")
 
         } catch (ex: Exception) {
@@ -76,7 +78,7 @@ class SupervisorScopeBuilderTest {
         try {
             // rethrows its own uncaught exception
             supervisorScope {
-                coroutineContext.job.onCompletion("supervisorScope")
+                onCompletion("supervisorScope")
 
                 launch {
                     delay(500)
@@ -84,8 +86,7 @@ class SupervisorScopeBuilderTest {
 
                 delay(100)
 
-//                throw RuntimeException("Oops")
-                coroutineContext.cancel()
+                throw RuntimeException("Oops")
             }
 
         } catch (ex: Exception) {
@@ -99,7 +100,7 @@ class SupervisorScopeBuilderTest {
         try {
             // rethrows its own uncaught exception
             supervisorScope {
-                coroutineContext.job.onCompletion("supervisorScope")
+                onCompletion("supervisorScope")
 
                 launch { delay(500) }.onCompletion("child1")
                 launch { delay(500) }.onCompletion("child2")
@@ -122,7 +123,7 @@ class SupervisorScopeBuilderTest {
         val scope = CoroutineScope(Job())
 
         supervisorScope {
-            coroutineContext.job.onCompletion("supervisorScope")
+            onCompletion("supervisorScope")
 
             val parent = scope.launch {
                 launch { delay(100); throw RuntimeException("oops") }.onCompletion("child1")
@@ -140,9 +141,9 @@ class SupervisorScopeBuilderTest {
         val scope = CoroutineScope(Job())
 
         val parentJob = scope.launch {
-            supervisorScope {
-                coroutineContext.job.onCompletion("supervisorScope")
+            onCompletion("supervisorScope")
 
+            supervisorScope {
                 launch { delay(100); throw RuntimeException("oops") }.onCompletion("child1")
                 launch { delay(200) }.onCompletion("child2")
             }

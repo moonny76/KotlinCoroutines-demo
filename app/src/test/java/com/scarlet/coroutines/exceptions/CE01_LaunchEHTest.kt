@@ -41,9 +41,7 @@ class LaunchEHTest {
     // `runBlocking` rethrows only the first propagated uncaught exception
     @Test
     fun `multiple exceptions - runBlocking`() = runBlocking<Unit> {
-        coroutineContext.job.invokeOnCompletion { cause ->
-            println("job completed with $cause")
-        }
+        onCompletion("runBlocking")
 
         launch {
             delay(10)
@@ -58,9 +56,7 @@ class LaunchEHTest {
     // `runTest` rethrows only the first propagated uncaught exception
     @Test
     fun `multiple exceptions - runTest`() = runTest {
-        coroutineContext.job.invokeOnCompletion { cause ->
-            println("job completed with $cause")
-        }
+        onCompletion("runBlocking")
 
         val job1 = launch {
             delay(10)
@@ -85,7 +81,6 @@ class LaunchEHTest {
         }
     }
 
-    // rethrows propagated uncaught exception
     @Test
     fun `Non-root coroutine - cannot handle propagated exception on site using try-catch`() =
         runTest {
@@ -100,8 +95,8 @@ class LaunchEHTest {
 
     @Test
     fun `Failure of child cancels the parent and its siblings`() = runTest {
-
-        val scope = CoroutineScope(Job().onCompletion("scope"))
+        onCompletion("runBlocking")
+        val scope = CoroutineScope(Job()).onCompletion("scope")
 
         val parentJob = scope.launch {
             launch {
@@ -109,7 +104,9 @@ class LaunchEHTest {
                 throw RuntimeException("oops")
             }.onCompletion("child1")
 
-            launch { delay(1000) }.onCompletion("child2")
+            launch {
+                delay(1000)
+            }.onCompletion("child2")
         }.onCompletion("parentJob")
 
         parentJob.join()

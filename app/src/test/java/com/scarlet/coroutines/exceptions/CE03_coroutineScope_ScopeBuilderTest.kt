@@ -11,7 +11,7 @@ import java.lang.RuntimeException
 class CoroutineScopeBuilderTest {
 
     /**
-     * coroutineScope has a Job().
+     * **coroutineScope** has a `Job()`.
      * A failing child causes the cancellation of its parent and siblings.
      * Does not propagate exception, just rethrows it!!
      */
@@ -21,7 +21,7 @@ class CoroutineScopeBuilderTest {
         try {
             // rethrows uncaught exception
             coroutineScope {
-                coroutineContext.job.onCompletion("coroutineScope")
+                onCompletion("coroutineScope")
 
                 launch {
                     delay(100)
@@ -39,7 +39,7 @@ class CoroutineScopeBuilderTest {
         try {
             // rethrows uncaught exception
             coroutineScope {
-                coroutineContext.job.onCompletion("coroutineScope")
+                onCompletion("coroutineScope")
 
                 launch { delay(500) }.onCompletion("child1")
                 launch { delay(500) }.onCompletion("child2")
@@ -59,14 +59,16 @@ class CoroutineScopeBuilderTest {
         try {
             // rethrows uncaught exception
             coroutineScope {
-                coroutineContext.job.onCompletion("coroutineScope")
+                onCompletion("coroutineScope")
 
                 launch {
                     delay(500)
                     throw RuntimeException("oops")
                 }.onCompletion("child1")
 
-                launch { delay(1000) }.onCompletion("child2")
+                launch {
+                    delay(1000)
+                }.onCompletion("child2")
             }
         } catch (ex: Exception) {
             log("Caught: $ex")
@@ -79,14 +81,16 @@ class CoroutineScopeBuilderTest {
 
         val parentJob = scope.launch {
             coroutineScope {
-                coroutineContext.job.onCompletion("coroutineScope")
+                onCompletion("coroutineScope")
 
                 launch {
                     delay(500)
                     throw RuntimeException("oops")
                 }.onCompletion("child1")
 
-                launch { delay(1000) }.onCompletion("child2")
+                launch {
+                    delay(1000)
+                }.onCompletion("child2")
             }
         }.onCompletion("parentJob")
 
