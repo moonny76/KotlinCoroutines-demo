@@ -1,6 +1,7 @@
 package com.scarlet.coroutines.migration
 
 import com.scarlet.util.log
+import kotlinx.coroutines.runBlocking
 import java.io.IOException
 
 // Callback
@@ -48,33 +49,22 @@ object Callback_1 {
 object CvtToSuspendingFunction_1 {
 
     // Use resume/resumeWithException or resumeWith only
-    private fun getData(callback: AsyncCallback, status: Boolean = true) {
-
-        // TODO()
-
-    }
+    private suspend fun getData(status: Boolean = true): String = TODO()
 
     @JvmStatic
-    fun main(args: Array<String>) {
-        getData(object : AsyncCallback {
-            override fun onSuccess(result: String) {
-                log("Data received: $result")
-            }
+    fun main(args: Array<String>) = runBlocking<Unit> {
 
-            override fun onError(ex: Exception) {
-                log("Caught ${ex.javaClass.simpleName}")
-            }
-        }, true) // for success case
+        // for success case
+        getData(true).also {
+            log("Data received: $it")
+        }
 
-        getData(object : AsyncCallback {
-            override fun onSuccess(result: String) {
-                log("Data received: $result")
-            }
-
-            override fun onError(ex: Exception) {
-                log("Caught ${ex.javaClass.simpleName}")
-            }
-        }, false) // for error case
+        // for error case
+        try {
+            getData(false)
+        } catch (ex: Exception) {
+            log("Caught ${ex.javaClass.simpleName}")
+        }
     }
 }
 

@@ -5,8 +5,7 @@ import com.scarlet.util.log
 import kotlinx.coroutines.*
 
 private suspend fun save(user: User) {
-    // simulate network delay
-    delay(1000)
+    delay(1000) // simulate some delay
     log("User saved: $user")
 }
 
@@ -67,6 +66,7 @@ object Launch_Join_Demo {
     }
 }
 
+// DON'T DO THIS
 @DelicateCoroutinesApi
 object GlobalScope_Demo {
 
@@ -95,16 +95,16 @@ object CoroutineScope_Sneak_Preview_Demo {
         val scope = CoroutineScope(Job())
 
         val job = scope.launch {
-            log("before save")
+            log("1. before save")
             save(User("A001", "Jody", 33))
-            log("after save")
+            log("2. after save")
         }
 
         // force the main thread wait
 //        Thread.sleep(2000)
 //        runBlocking { job.join() }
 
-        log("Done.")
+        log("3. Done.")
     }
 }
 

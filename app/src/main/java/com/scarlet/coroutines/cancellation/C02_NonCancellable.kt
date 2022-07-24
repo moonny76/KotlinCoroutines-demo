@@ -7,10 +7,10 @@ import kotlinx.coroutines.NonCancellable.isCancelled
 import java.lang.Exception
 
 /**
- * If Job is already in a "Cancelling" state, then suspension or starting
+ * If **Job** is already in a _Cancelling_ state, then suspension or starting
  * another coroutine is not possible at all.
  *
- * If we try to start another coroutine, it will just be ignored.
+ * If we try to start another coroutine, it will just be _ignored_.
  *
  * If we try to suspend, it will throw `CancellationException`.
  */
@@ -22,7 +22,7 @@ object Try_Launch_Or_Call_Suspending_Function_in_Canceling_State {
         val job = launch {
             try {
                 delay(200)
-                log("Job is done")
+                log("Unreachable code") // because it will be cancelled after 100ms
             } finally {
                 log("Finally")
 
@@ -32,7 +32,7 @@ object Try_Launch_Or_Call_Suspending_Function_in_Canceling_State {
                 launch { // will be ignored because of immediate cancellation
                     log("Will not be printed")
                     delay(50)
-                }.onCompletion("Jombi").join() // will throw cancellation exception and skip the rest
+                }.onCompletion("Jombi")//.join() will throw cancellation exception and skip the rest
 
                 // Try to call suspending function will throw cancellation exception
                 try {
@@ -61,7 +61,7 @@ object Call_Suspending_Function_in_Cancelling_State_To_Cleanup {
             } finally {
                 println("Finally")
 
-                // DO NOT USE NonCancellable with launch or async
+                // DO NOT USE NonCancellable with `launch` or `async`
                 withContext(NonCancellable) {
                     delay(1000L)
                     println("Cleanup done")

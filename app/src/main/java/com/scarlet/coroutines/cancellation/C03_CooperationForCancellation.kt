@@ -1,9 +1,6 @@
 package com.scarlet.coroutines.cancellation
 
-import androidx.constraintlayout.motion.utils.ViewState
-import com.scarlet.util.Resource
 import com.scarlet.util.log
-import com.scarlet.util.onCompletion
 import kotlinx.coroutines.*
 
 object Uncooperative_Cancellation {
@@ -13,7 +10,7 @@ object Uncooperative_Cancellation {
         var nextPrintTime = startTime
         while (true) {
             if (System.currentTimeMillis() >= nextPrintTime) {
-                println("I'm working..")
+                log("I'm working..")
                 nextPrintTime += 500
             }
         }
@@ -26,7 +23,7 @@ object Uncooperative_Cancellation {
         }
 
         delay(1500)
-
+        log("Cancelling job ...")
         job.cancelAndJoin()
     }
 }
@@ -38,6 +35,7 @@ object Uncooperative_Cancellation {
  */
 object Cooperative_Cancellation {
 
+    // How to make sure this suspending function be cooperative?
     private suspend fun printTwice() = withContext(Dispatchers.Default) {
         val startTime = System.currentTimeMillis()
         var nextPrintTime = startTime
@@ -56,7 +54,7 @@ object Cooperative_Cancellation {
         }
 
         delay(1500)
-
+        log("Cancelling job ...")
         job.cancelAndJoin()
     }
 }
@@ -74,6 +72,7 @@ object Cleanup_When_Cancelled {
         }
 
         // TODO: cleanup
+        cleanUp()
     }
 
     @JvmStatic
@@ -88,4 +87,8 @@ object Cleanup_When_Cancelled {
         job.cancelAndJoin()
     }
 
+    private suspend fun cleanUp() {
+        delay(100)
+        log("Cleanup ...")
+    }
 }

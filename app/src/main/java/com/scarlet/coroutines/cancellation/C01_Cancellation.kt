@@ -1,20 +1,22 @@
 package com.scarlet.coroutines.cancellation
 
+import com.scarlet.util.completeStatus
+import com.scarlet.util.log
 import com.scarlet.util.onCompletion
 import kotlinx.coroutines.*
 
 /**
- * The Job interface has a method cancel, that allows its cancellation.
+ * The **`Job`** interface has a method `cancel`, that allows its cancellation.
  * Calling it triggers the following effects:
- * - Such a coroutine ends the job at the first suspension point (such as delay()).
- * - If a job has some children, they are canceled too (but its parent is not affected).
+ * - Such a coroutine ends the job _at the first suspension point_ (such as `delay()`).
+ * - If a job has some children, they are canceled too.
  * - Once a job is canceled, it cannot be used as a parent for any new coroutines,
- *   it is first in "Cancelling" and then in "Cancelled" state.
+ *   it is first in _Cancelling_ and then in _Cancelled_ state.
  */
 
 object Cancel_Parent_Scope {
     @JvmStatic
-    fun main(args: Array<String>) = runBlocking{
+    fun main(args: Array<String>) = runBlocking<Unit> {
         val scope = CoroutineScope(Job())
 
         var child: Job? = null
@@ -29,15 +31,15 @@ object Cancel_Parent_Scope {
         scope.cancel()
 //        scope.coroutineContext.job.cancelAndJoin()
 
-        println("scope cancelled = ${scope.coroutineContext.job.isCancelled}")
-        println("parent cancelled = ${parent.isCancelled}")
-        println("child cancelled = ${child?.isCancelled}")
+        log("parent cancelled = ${parent.isCancelled}")
+        log("child cancelled = ${child?.isCancelled}")
+        scope.completeStatus("scope")
     }
 }
 
 object Cancel_Parent_Coroutine {
     @JvmStatic
-    fun main(args: Array<String>) = runBlocking {
+    fun main(args: Array<String>) = runBlocking<Unit> {
         val scope = CoroutineScope(Job())
 
         var child1: Job? = null
@@ -53,16 +55,16 @@ object Cancel_Parent_Coroutine {
 
         parentJob.cancelAndJoin()
 
-        println("scope cancelled = ${scope.coroutineContext.job.isCancelled}")
-        println("parent job cancelled = ${parentJob.isCancelled}")
-        println("child1 job cancelled = ${child1?.isCancelled}")
-        println("child2 job cancelled = ${child2?.isCancelled}")
+        log("parent job cancelled = ${parentJob.isCancelled}")
+        log("child1 job cancelled = ${child1?.isCancelled}")
+        log("child2 job cancelled = ${child2?.isCancelled}")
+        scope.completeStatus("scope")
     }
 }
 
 object Cancel_Child_Coroutine {
     @JvmStatic
-    fun main(args: Array<String>) = runBlocking {
+    fun main(args: Array<String>) = runBlocking<Unit> {
         val scope = CoroutineScope(Job())
 
         var child1: Job? = null
@@ -79,10 +81,10 @@ object Cancel_Child_Coroutine {
         child1?.cancel()
         parentJob.join()
 
-        println("scope cancelled = ${scope.coroutineContext.job.isCancelled}")
-        println("parent job cancelled = ${parentJob.isCancelled}")
-        println("child1 job cancelled = ${child1?.isCancelled}")
-        println("child2 job cancelled = ${child2?.isCancelled}")
+        log("parent job cancelled = ${parentJob.isCancelled}")
+        log("child1 job cancelled = ${child1?.isCancelled}")
+        log("child2 job cancelled = ${child2?.isCancelled}")
+        scope.completeStatus("scope")
     }
 }
 
@@ -91,7 +93,7 @@ object Cancel_Child_Coroutine {
  */
 object Cancel_Parent_Job_Quiz {
     @JvmStatic
-    fun main(args: Array<String>) = runBlocking {
+    fun main(args: Array<String>) = runBlocking<Unit> {
 
         val scope = CoroutineScope(Job())
         val job = Job()
@@ -105,17 +107,16 @@ object Cancel_Parent_Job_Quiz {
 
         // How to cancel the child via its parent?
         // job.cancel() or scope.cancel() ?
-
         child.join()
 
-        println("scope cancelled = ${scope.coroutineContext.job.isCancelled}")
-        println("child cancelled = ${child.isCancelled}")
+        log("child cancelled = ${child.isCancelled}")
+        scope.completeStatus("scope")
     }
 }
 
 object Cancel_Children_Only_To_Reuse_Parent_Job {
     @JvmStatic
-    fun main(args: Array<String>) = runBlocking {
+    fun main(args: Array<String>) = runBlocking<Unit> {
         val scope = CoroutineScope(Job())
 
         var child1: Job? = null
@@ -130,16 +131,16 @@ object Cancel_Children_Only_To_Reuse_Parent_Job {
         parentJob.cancelChildren()
         parentJob.join()
 
-        println("scope cancelled = ${scope.coroutineContext.job.isCancelled}")
-        println("parent job cancelled = ${parentJob.isCancelled}")
-        println("child1 job cancelled = ${child1?.isCancelled}")
-        println("child2 job cancelled = ${child2?.isCancelled}")
+        log("parent job cancelled = ${parentJob.isCancelled}")
+        log("child1 job cancelled = ${child1?.isCancelled}")
+        log("child2 job cancelled = ${child2?.isCancelled}")
+        scope.completeStatus("scope")
     }
 }
 
 object Cancel_Children_Only_To_Reuse_Scope {
     @JvmStatic
-    fun main(args: Array<String>) = runBlocking {
+    fun main(args: Array<String>) = runBlocking<Unit> {
         val scope = CoroutineScope(Job())
 
         var child1: Job? = null
@@ -154,10 +155,10 @@ object Cancel_Children_Only_To_Reuse_Scope {
         scope.coroutineContext.job.cancelChildren()
         parentJob.join()
 
-        println("scope cancelled = ${scope.coroutineContext.job.isCancelled}")
-        println("parent job cancelled = ${parentJob.isCancelled}")
-        println("child1 job cancelled = ${child1?.isCancelled}")
-        println("child2 job cancelled = ${child2?.isCancelled}")
+        log("parent job cancelled = ${parentJob.isCancelled}")
+        log("child1 job cancelled = ${child1?.isCancelled}")
+        log("child2 job cancelled = ${child2?.isCancelled}")
+        scope.completeStatus("scope")
     }
 }
 

@@ -12,8 +12,8 @@ object Threads {
         val time = measureTimeMillis {
             val jobs = List(100_000) {
                 thread {
-                    Thread.sleep(1_000)
                     print(".")
+                    Thread.sleep(1_000)
                 }
             }
             jobs.forEach { it.join() }
@@ -28,8 +28,8 @@ object Coroutines {
         val time = measureTimeMillis {
             val jobs = List(100_000) {
                 launch {
-                    delay(1_000)
                     print(".")
+                    delay(1_000)
                 }
             }
             jobs.forEach { it.join() }

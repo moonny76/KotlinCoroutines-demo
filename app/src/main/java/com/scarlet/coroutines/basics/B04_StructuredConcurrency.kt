@@ -1,6 +1,7 @@
 package com.scarlet.coroutines.basics
 
 import com.scarlet.util.log
+import com.scarlet.util.onCompletion
 import kotlinx.coroutines.*
 import java.lang.RuntimeException
 
@@ -41,6 +42,7 @@ object Canceling_parent_coroutine_cancels_the_parent_and_its_children {
                 delay(1000)
                 log("child2 done")
             }
+
             log("parent is waiting")
             joinAll(child1, child2)
             log("parent done")
@@ -48,7 +50,7 @@ object Canceling_parent_coroutine_cancels_the_parent_and_its_children {
 
         parent.join()
 //        delay(500)
-//        parent.cancel()
+//        parent.cancel() // parent.cancelAndJoin()
 
         log("Done")
     }

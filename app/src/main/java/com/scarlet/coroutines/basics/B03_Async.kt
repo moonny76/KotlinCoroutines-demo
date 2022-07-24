@@ -15,13 +15,15 @@ object Async_Demo1 {
     @JvmStatic
     fun main(args: Array<String>) = runBlocking {
 
-        val user = async {
+        val deferred = async {
             log("Request user with Id A001")
             getUser("A001")
         }
 
         log("Waiting for results ...")
-//        log(user.await())
+        val user = deferred.await()
+        log(user)
+
         log("Done")
     }
 }
@@ -34,13 +36,15 @@ object Async_Demo2 {
     @JvmStatic
     fun main(args: Array<String>) = runBlocking {
 
-        val user = GlobalScope.async {
+        val deferred = GlobalScope.async {
             log("Request user with Id A001")
             getUser("A001")
         }
 
         log("Waiting for results ...")
-        log(user.await())
+        val user = deferred.await()
+        log(user)
+
         log("Done")
     }
 }

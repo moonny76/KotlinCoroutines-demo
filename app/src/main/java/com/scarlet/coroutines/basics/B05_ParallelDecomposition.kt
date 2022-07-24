@@ -34,7 +34,7 @@ private suspend fun loadAndCombine(name1: String, name2: String): Image {
 }
 
 @DelicateCoroutinesApi
-object GlobalScope_But_Not_Recommended {
+object GlobalScope_Not_Recommended {
     @JvmStatic
     fun main(args: Array<String>) = runBlocking {
         var image: Image? = null
@@ -61,11 +61,12 @@ object GlobalScope_Even_If_Parent_Cancelled_Children_Keep_Going {
         }
 
         delay(500)
+        log("Cancel parent coroutine after 500ms")
 
         parent.cancelAndJoin()
         log("combined image = $image")
 
-//        delay(1000) // To check what happens to children
+        delay(1000) // To check what happens to children
     }
 }
 
@@ -120,9 +121,10 @@ object Parent_Cancellation_When_Passing_Coroutine_Scope_As_Parameter {
             log("Parent done")
         }
 
-        parent.join()
-//        delay(500)
-//        parent.cancelAndJoin()
+//        parent.join()
+        delay(500)
+        log("Cancel parent coroutine after 500ms")
+        parent.cancelAndJoin()
 
         log("combined image = $image")
 
@@ -180,6 +182,7 @@ object Using_coroutineScope_and_when_parent_cancelled {
 
         parent.join()
 //        delay(500)
+//        log("Cancel parent coroutine after 500ms")
 //        parent.cancelAndJoin()
 
         log("combined image = $image")

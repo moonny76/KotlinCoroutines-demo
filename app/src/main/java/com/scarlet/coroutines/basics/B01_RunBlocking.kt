@@ -1,6 +1,7 @@
 package com.scarlet.coroutines.basics
 
 import com.scarlet.util.log
+import com.scarlet.util.onCompletion
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 
@@ -24,12 +25,10 @@ object Create_Coroutine_With_RunBlocking_Demo2 {
 
     @JvmStatic
     fun main(args: Array<String>) = runBlocking {
-        log("Hello")
-
         log("Coroutine created")
-        delay(1000)
-        log("Coroutine done")
 
-        log("World")
+        delay(1000)
+
+        log("Coroutine done")
     }
 }
