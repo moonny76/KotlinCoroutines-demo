@@ -36,6 +36,8 @@ object Dispatchers_Main_Failure_Demo {
 object DefaultDispatchers_Demo {
     @JvmStatic
     fun main(args: Array<String>) = runBlocking{
+        log("# processors = ${Runtime.getRuntime().availableProcessors()}")
+
         repeat(20) {
             launch(Dispatchers.Default) {
                 // To make it busy
@@ -49,10 +51,10 @@ object DefaultDispatchers_Demo {
 
 object IODispatchers_Demo {
     @JvmStatic
-    fun main(args: Array<String>) = runBlocking{
+    fun main(args: Array<String>) = runBlocking {
         repeat(64) {
             launch(Dispatchers.IO) {
-                Thread.sleep(200)
+                delay(200)
                 log("Running on thread: ${Thread.currentThread().name}")
             }
         }
@@ -85,7 +87,9 @@ object Unconfined_Dispatchers_Demo {
             coroutineInfo(1)
             withContext(Dispatchers.Unconfined + CoroutineName("Unconfined")) {
                 coroutineInfo(2)
+
                 delay(1000)
+
                 // Whatever thread the suspending function uses will be continue to run
                 coroutineInfo(2)
             }
@@ -94,6 +98,11 @@ object Unconfined_Dispatchers_Demo {
 
         log("Done.")
     }
+}
+
+private suspend fun someSuspendingFunction(dispatcher: CoroutineDispatcher) = withContext(dispatcher) {
+    delay(1000)
+    log("Running on thread: ${Thread.currentThread().name}")
 }
 
 /**

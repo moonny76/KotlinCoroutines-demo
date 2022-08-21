@@ -1,19 +1,18 @@
 package com.scarlet.coroutines.advanced
 
 import com.scarlet.util.log
-import kotlinx.coroutines.runBlocking
 import java.util.concurrent.Executors
 
 object Phase1 {
     private fun fooWithDelay(a: Int, b: Int): Int {
         log("step 1")
-        Thread.sleep(1000)
+        Thread.sleep(3000)
         log("step 2")
         return a + b
     }
 
     @JvmStatic
-    fun main(args: Array<String>) = runBlocking {
+    fun main(args: Array<String>) {
         log("main started")
 
         log("result = ${fooWithDelay(3, 4)}")

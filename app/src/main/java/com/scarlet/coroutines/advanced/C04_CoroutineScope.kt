@@ -9,19 +9,8 @@ import kotlinx.coroutines.*
  * of the new coroutine becomes a child of the parent coroutine's job.
  *
  * When the parent coroutine is cancelled, all its children are recursively cancelled,
- * too. However, this parent-child relation can be explicitly overridden in one
- * of two ways:
- *
- * 1. When a different scope is explicitly specified when launching a coroutine
- *    (for example, `GlobalScope.launch`), then it does not inherit a coroutine
- *    context from the original parent scope.
- * 2. When a different `Job` object is passed as the context for the new coroutine,
- *    then it overrides the Job of the parent scope.
- *
- * In both cases, the launched coroutine is not tied to the scope it was launched
- * from and operates independently.
+ * too. This is a very powerful feature, because it allows you to cancel all coroutines.
  */
-
 
 object CoroutineScope_Has_Context {
     @JvmStatic
@@ -111,6 +100,25 @@ object Canceling_A_Scope_Does_Not_Affect_Its_Siblings {
         log("Done")
     }
 }
+
+/**
+ * When a coroutine is launched in the `CoroutineScope` of another coroutine,
+ * it inherits its context via `CoroutineScope.coroutineContext` and the `Job`
+ * of the new coroutine becomes a child of the parent coroutine's job.
+ *
+ * When the parent coroutine is cancelled, all its children are recursively cancelled,
+ * too. However, this parent-child relation can be explicitly overridden in one
+ * of two ways:
+ *
+ * 1. **When a _different scope is explicitly specified_ when launching a coroutine
+ *    (for example, `GlobalScope.launch`), then it does not inherit a coroutine
+ *    context from the original parent scope.**
+ * 2. When a different `Job` object is passed as the context for the new coroutine,
+ *    then it overrides the Job of the parent scope.
+ *
+ * In both cases, the launched coroutine is not tied to the scope it was launched
+ * from and operates independently.
+ */
 
 @ExperimentalStdlibApi
 @DelicateCoroutinesApi

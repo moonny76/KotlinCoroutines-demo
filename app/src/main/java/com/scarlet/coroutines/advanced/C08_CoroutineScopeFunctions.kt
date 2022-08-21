@@ -12,9 +12,9 @@ import java.util.concurrent.Executors
 /**
  * **Coroutine Scope Functions**
  *
- * Unlike `async` or `launch`, coroutine scope functions do not really create new coroutines.
- * Their code block is called *in-place*. When they are suspended, we suspend a coroutine
- * on which this coroutine scope function is called.
+ * Unlike `async` or `launch`, the body of `coroutineScope` is called *in-place*.
+ * It formally creates a new coroutine, but it suspends the previous one until the new
+ * one is finished, so it **does not start any concurrent process**.
  *
  * The provided scope inherits its `coroutineContext` from the outer scope, but overrides
  * the context's `Job`. This way, the produced scope respects parental responsibilities:
@@ -32,18 +32,18 @@ import java.util.concurrent.Executors
 object coroutineScope_Demo1 {
     @JvmStatic
     fun main(args: Array<String>) = runBlocking {
-        log("runBlocking: ${coroutineContext}")
+        log("runBlocking: $coroutineContext")
 
         val a = coroutineScope {
             delay(1000).also {
-                log("a: ${coroutineContext}")
+                log("a: $coroutineContext")
             }
             10
         }
         log("a is calculated")
         val b = coroutineScope {
             delay(1000).also {
-                log("b: ${coroutineContext}")
+                log("b: $coroutineContext")
             }
             20
         }
@@ -171,7 +171,11 @@ object What_We_Want {
     }
 
     private suspend fun getUserDetails(): Details = coroutineScope {
-        val userName = async { getUserName() }
+        val userName = async {
+            val username = getUserName()
+            log("User name: $username")
+            username
+        }
         val followersNumber = async { getFollowersNumber() }
         Details(userName.await(), followersNumber.await())
     }
@@ -226,9 +230,9 @@ object withContext_Demo {
         delay(50)
         log("children after 50ms  = ${parent.children.toList()}")
         delay(200)
-        log("children after 200ms = ${parent.children.toList()}")
+        log("children after 250ms = ${parent.children.toList()}")
         delay(600)
-        log("children after 400ms = ${parent.children.toList()}")
+        log("children after 850ms = ${parent.children.toList()}")
         parent.join()
     }
 }

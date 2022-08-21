@@ -12,9 +12,12 @@ object Dependency_Between_Jobs {
 
         // coroutine starts when start() or join() called
         val job = launch(start = CoroutineStart.LAZY) {
+            log("See when I am printed ...")
             delay(100)
             log("Pong")
         }
+
+        delay(500)
 
         launch {
             log("Ping")
@@ -52,7 +55,7 @@ object Jobs_Forms_Hierarchy {
         delay(300)
         log("The parentJob has ${parentJob.children.count()} children")
 
-        delay(500)
+        delay(500) // By this time, another child of the parentJob should have already been completed
         log("The parentJob has ${parentJob.children.count()} children")
     }
 }
@@ -64,7 +67,7 @@ object In_Hierarchy_Parent_Waits_Until_All_Children_Finished {
      *
      * A parent coroutine always waits for completion of all its children.
      * A parent does not have to explicitly track all the children it launches,
-     * and it does not have to use `Job.join` to wait for them at the end:
+     * and it does **not** have to use `Job.join` to wait for them at the end:
      */
 
     @JvmStatic
@@ -86,6 +89,25 @@ object In_Hierarchy_Parent_Waits_Until_All_Children_Finished {
     }
 }
 
+/**
+ * When a coroutine is launched in the `CoroutineScope` of another coroutine,
+ * it inherits its context via `CoroutineScope.coroutineContext` and the `Job`
+ * of the new coroutine becomes a child of the parent coroutine's job.
+ *
+ * When the parent coroutine is cancelled, all its children are recursively cancelled,
+ * too. However, this parent-child relation can be explicitly overridden in one
+ * of two ways:
+ *
+ * 1. When a _different scope is explicitly specified_ when launching a coroutine
+ *    (for example, `GlobalScope.launch`), then it does not inherit a coroutine
+ *    context from the original parent scope.
+ * 2. **When a different `Job` object is passed as the context for the new coroutine,
+ *    then it overrides the Job of the parent scope.**
+ *
+ * In both cases, the launched coroutine is not tied to the scope it was launched
+ * from and operates independently.
+ */
+
 object In_Hierarchy_Parent_Waits_Until_All_Children_Finished_Other_Demo {
     @JvmStatic
     fun main(args: Array<String>) = runBlocking {
@@ -98,11 +120,13 @@ object In_Hierarchy_Parent_Waits_Until_All_Children_Finished_Other_Demo {
             delay(1000)
         }.onCompletion("\t\tChild finished after 1000")
 
-        log("The Parent job has ${parentJob.children.count()} child right after child launch")
-        log("is Parent active right after child launch? ${parentJob.isActive}")
+        delay(100)
+
+        log("The Parent job has ${parentJob.children.count()} children at around 100ms")
+        log("is Parent active at around 100ms? ${parentJob.isActive}")
 
         delay(500)
-        log("is Parent still active at 500? ${parentJob.isActive}")
+        log("is Parent still active at around 600ms? ${parentJob.isActive}")
 
         parentJob.join()
         log("is Parent still active after joined? ${parentJob.isActive}")
