@@ -1,7 +1,6 @@
 package com.scarlet.coroutines.basics
 
 import com.scarlet.util.log
-import com.scarlet.util.onCompletion
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 
