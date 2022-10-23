@@ -28,7 +28,7 @@ class CoActivity : AppCompatActivity() {
         Log.d(TAG, "[onCreate] massive launching started ...")
 
         /*
-         * Use either lifecycleScope or lifecycle.coroutineScope
+         * Use either `lifecycleScope` or `lifecycle.coroutineScope`
          */
 
         lifecycle.coroutineScope.launch {
