@@ -55,7 +55,7 @@ class CancellationTest {
     }
 
     @Test
-    fun `failed suspending function throws causing exception, not cancellation exception`() = runTest{
+    fun `failed suspending function throws causing exception, not cancellation exception`() = runTest {
         launch {
             try {
                 networkRequestFailed()
@@ -109,8 +109,6 @@ class CancellationTest {
             }
 
             log("All subsequent computations will be skipped ...")
-
-            networkRequestCooperative()
             networkRequestUncooperative() // long running computation
 
         }.onCompletion("job")

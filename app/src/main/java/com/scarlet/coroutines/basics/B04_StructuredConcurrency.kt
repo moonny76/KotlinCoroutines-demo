@@ -10,13 +10,13 @@ object Nested_Coroutines {
         log("Top-Level Coroutine")
 
         launch {
-            log("Level 1 Coroutine")
+            log("\tLevel 1 Coroutine")
 
             launch {
-                log("Level 2 Coroutine")
+                log("\t\tLevel 2 Coroutine")
 
-                launch { log("Level 3 Coroutine") }
-                launch { log("Level 3 Another Coroutine") }
+                launch { log("\t\t\tLevel 3 Coroutine") }
+                launch { log("\t\t\tLevel 3 Another Coroutine") }
             }
         }
     }
@@ -32,19 +32,19 @@ object Canceling_parent_coroutine_cancels_the_parent_and_its_children {
     fun main(args: Array<String>) = runBlocking {
         val parent = launch {
             val child1 = launch {
-                log("child1 started")
-                delay(1000)
-                log("child1 done")
+                log("\t\tchild1 started")
+                delay(1_000)
+                log("\t\tchild1 done")
             }
             val child2 = launch {
-                log("child2 started")
-                delay(1000)
-                log("child2 done")
+                log("\t\tchild2 started")
+                delay(1_000)
+                log("\t\tchild2 done")
             }
 
-            log("parent is waiting")
+            log("\tparent is waiting")
             joinAll(child1, child2)
-            log("parent done")
+            log("\tparent done")
         }
 
         parent.join()
@@ -63,19 +63,19 @@ object Canceling_a_child_cancels_only_the_child {
 
         val parent = launch {
             child1 = launch {
-                log("child1 started")
-                delay(1000)
-                log("child1 done")
+                log("\t\tchild1 started")
+                delay(1_000)
+                log("\t\tchild1 done")
             }
             val child2 = launch {
-                log("child2 started")
-                delay(1000)
-                log("child2 done")
+                log("\t\tchild2 started")
+                delay(1_000)
+                log("\t\tchild2 done")
             }
 
-            log("parent is waiting")
+            log("\tparent is waiting")
             joinAll(child1!!, child2)
-            log("parent done")
+            log("\tparent done")
         }
 
         delay(500)
@@ -93,19 +93,19 @@ object Failed_parent_causes_cancellation_of_all_children {
     fun main(args: Array<String>) = runBlocking {
         val parent = launch {
             launch {
-                log("child1 started")
-                delay(1000)
-                log("child1 done")
+                log("\t\tchild1 started")
+                delay(1_000)
+                log("\t\tchild1 done")
             }
 
             launch {
-                log("child2 started")
-                delay(1000)
-                log("child2 done")
+                log("\t\tchild2 started")
+                delay(1_000)
+                log("\t\tchild2 done")
             }
 
             delay(500)
-            throw RuntimeException("parent failed")
+            throw RuntimeException("\tparent failed")
         }
 
         parent.join()
@@ -120,20 +120,20 @@ object Failed_child_causes_cancellation_of_its_parent_and_siblings {
     fun main(args: Array<String>) = runBlocking {
         val parent = launch {
             val child1 = launch {
-                log("child1 started")
+                log("\t\tchild1 started")
                 delay(500)
                 throw RuntimeException("child 1 failed")
             }
 
             val child2 = launch {
-                log("child2 started")
-                delay(1000)
-                log("child2 done")
+                log("\t\tchild2 started")
+                delay(1_000)
+                log("\t\tchild2 done")
             }
 
-            log("parent is waiting")
+            log("\tparent is waiting")
             joinAll(child1, child2)
-            log("parent done")
+            log("\tparent done")
         }
 
         parent.join()

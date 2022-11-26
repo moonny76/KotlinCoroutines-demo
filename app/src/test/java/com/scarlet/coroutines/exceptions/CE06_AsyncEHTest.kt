@@ -35,11 +35,12 @@ class AsyncEHTest {
     fun `non-root coroutine - uncaught exception propagates`() = runTest {
 
         val deferred = async { // Not a root coroutine
-            delay(1000)
+            delay(1_000)
             throw RuntimeException("my exception")
             42
         }
 
+        // Comment out the entire try block and see whether exception still happens.
         try {
             deferred.await()
         } catch (ex: Exception) {
@@ -73,24 +74,22 @@ class AsyncEHTest {
             val scope = CoroutineScope(Job() + testDispatcher)
 
             val deferred = scope.async { // root coroutine
-                delay(1000)
+                delay(1_000)
                 throw RuntimeException("my exception")
                 42
             }
 
-//            delay(2000) // Check to see what exception will be thrown.
+            // Uncomment block below and see what happens to sibling coroutine.
+//            scope.launch {
+//                delay(1500)
+//            }.onCompletion("child")
+//            delay(2000)
 
             try {
                 deferred.await()
             } catch (ex: Exception) {
                 log("Caught: $ex") // caught and handled
             }
-
-            scope.completeStatus("scope")
-
-            scope.launch {
-                delay(2000)
-            }.onCompletion("child")
 
             scope.completeStatus("scope")
         }
@@ -116,7 +115,7 @@ class AsyncEHTest {
         }
 
     /**
-     * Quiz: Why `sibling1` coroutine cancelled?
+     * Quiz: Why `whoAmI` coroutine cancelled?
      */
     @Test
     fun `root coroutine - exposed exception - another example`() = runTest {
@@ -132,7 +131,7 @@ class AsyncEHTest {
             try {
                 deferred.await()
             } catch (ex: Exception) {
-                log("Caught: $ex")  // caught and handled? - comment out try-catch and see what happens
+                log("Caught: $ex")
             }
 
         }.onCompletion("whoAmI")

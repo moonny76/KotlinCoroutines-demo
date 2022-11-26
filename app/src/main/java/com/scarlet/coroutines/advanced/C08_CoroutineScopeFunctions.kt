@@ -35,14 +35,14 @@ object coroutineScope_Demo1 {
         log("runBlocking: $coroutineContext")
 
         val a = coroutineScope {
-            delay(1000).also {
+            delay(1_000).also {
                 log("a: $coroutineContext")
             }
             10
         }
         log("a is calculated")
         val b = coroutineScope {
-            delay(1000).also {
+            delay(1_000).also {
                 log("b: $coroutineContext")
             }
             20
@@ -61,12 +61,12 @@ object coroutineScope_Demo2 {
 
             launch {
                 log("child1 starts")
-                delay(2000)
+                delay(2_000)
             }.onCompletion("child1")
 
             launch {
                 log("child2 starts")
-                delay(1000)
+                delay(1_000)
             }.onCompletion("child2")
 
             delay(10)
@@ -89,12 +89,12 @@ object coroutineScope_Demo3 {
 
                 launch {
                     log("child1 starts")
-                    delay(2000)
+                    delay(2_000)
                 }.onCompletion("child1")
 
                 launch {
                     log("child2 starts")
-                    delay(1000)
+                    delay(1_000)
                     throw RuntimeException("Oops")
                 }.onCompletion("child2")
 
@@ -121,7 +121,7 @@ object Not_What_We_Want {
 
     private suspend fun getUserName(): String {
         delay(500)
-        return "paula abdul"
+        return "Paula Abdul"
     }
 
     private suspend fun getTweets(): List<Tweet> {
@@ -132,6 +132,7 @@ object Not_What_We_Want {
     private suspend fun getUserDetails(scope: CoroutineScope): Details {
         val userName = scope.async { getUserName() }
         val followersNumber = scope.async { getFollowersNumber() }
+
         return Details(userName.await(), followersNumber.await())
     }
 
@@ -171,12 +172,9 @@ object What_We_Want {
     }
 
     private suspend fun getUserDetails(): Details = coroutineScope {
-        val userName = async {
-            val username = getUserName()
-            log("User name: $username")
-            username
-        }
+        val userName = async { getUserName() }
         val followersNumber = async { getFollowersNumber() }
+
         Details(userName.await(), followersNumber.await())
     }
 
@@ -222,7 +220,7 @@ object withContext_Demo {
                     coroutineContext.job.onCompletion("newFixedThreadPool")
                     log("\t\tInside second withContext")
                     coroutineInfo(1)
-                    delay(1000)
+                    delay(1_000)
                 }
             }
         }.onCompletion("parent")
@@ -261,16 +259,16 @@ object Timeout {
     fun main(args: Array<String>) = runBlocking<Unit>{
         launch {
             launch { // cancelled by its parent
-                delay(2000)
+                delay(2_000)
                 log("Will not be printed")
             }
-            withTimeout(1000) { // we cancel launch
-                delay(1500)
+            withTimeout(1_000) { // we cancel launch
+                delay(1_500)
             }
         }.onCompletion("child 1")
 
         launch {
-            delay(2000)
+            delay(2_000)
             log("child2 done")
         }.onCompletion("child 2")
     }
@@ -289,7 +287,7 @@ object WithTimeoutOrNull_Demo {
     }
 
     private suspend fun getUserOrNull(): User? =
-        withTimeoutOrNull(3000) {
+        withTimeoutOrNull(3_000) {
             fetchUser()
         }
 

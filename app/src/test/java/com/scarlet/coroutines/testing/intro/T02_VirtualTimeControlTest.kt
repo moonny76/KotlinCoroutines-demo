@@ -15,11 +15,11 @@ class VirtualTimeControlTest {
 
         launch {
             log("child start")
-            delay(1000)
+            delay(1_000)
             count = 1
-            delay(1000)
+            delay(1_000)
             count = 3
-            delay(1000)
+            delay(1_000)
             count = 5
             log("child end")
         }
@@ -27,15 +27,15 @@ class VirtualTimeControlTest {
         assertThat(count).isEqualTo(0)
         log("$currentTime")
 
-//        advanceTimeBy(1000)
+//        advanceTimeBy(1_000)
 //        log("$currentTime")
 //        assertThat(count).isEqualTo(0)
 //
-//        advanceTimeBy(1000)
+//        advanceTimeBy(1_000)
 //        log("$currentTime")
 //        assertThat(count).isEqualTo(1)
 //
-//        advanceTimeBy(1000)
+//        advanceTimeBy(1_000)
 //        log("$currentTime")
 //        assertThat(count).isEqualTo(3)
     }
@@ -48,11 +48,11 @@ class VirtualTimeControlTest {
             state = 1
             yield()
             state = 2
-            delay(1000)
+            delay(1_000)
             state = 3
-            delay(1000)
+            delay(1_000)
             state = 4
-            delay(1000)
+            delay(1_000)
             state = 5
         }
 
@@ -77,7 +77,7 @@ class VirtualTimeControlTest {
 
         launch {
             state = 1
-            delay(1000)
+            delay(1_000)
             state = 2
         }
 
@@ -91,7 +91,7 @@ class VirtualTimeControlTest {
 
         launch {
             state = 1
-            delay(1000)
+            delay(1_000)
             state = 2
         }
 
@@ -105,11 +105,11 @@ class VirtualTimeControlTest {
 
         launch {
             log("child start")
-            delay(1000)
+            delay(1_000)
             count = 1
-            delay(1000)
+            delay(1_000)
             count = 3
-            delay(1000)
+            delay(1_000)
             count = 5
             log("child end")
         }
@@ -117,11 +117,11 @@ class VirtualTimeControlTest {
         assertThat(count).isEqualTo(0)
         log("$currentTime")
 
-        advanceTimeBy(1000)
+        advanceTimeBy(1_000)
         log("$currentTime")
         assertThat(count).isEqualTo(1)
 
-        advanceTimeBy(1000)
+        advanceTimeBy(1_000)
         log("$currentTime")
         assertThat(count).isEqualTo(3)
 

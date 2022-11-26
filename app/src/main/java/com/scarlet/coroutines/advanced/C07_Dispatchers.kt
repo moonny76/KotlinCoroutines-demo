@@ -35,13 +35,13 @@ object Dispatchers_Main_Failure_Demo {
 
 object DefaultDispatchers_Demo {
     @JvmStatic
-    fun main(args: Array<String>) = runBlocking{
+    fun main(args: Array<String>) = runBlocking {
         log("# processors = ${Runtime.getRuntime().availableProcessors()}")
 
         repeat(20) {
             launch(Dispatchers.Default) {
                 // To make it busy
-                List(1000) { Random.nextLong() }.maxOrNull()
+                List(1_000) { Random.nextLong() }.maxOrNull()
 
                 log("Running on thread: ${Thread.currentThread().name}")
             }
@@ -67,13 +67,15 @@ object IODispatchers_Demo {
  */
 object ThreadSharing_Demo {
     @JvmStatic
-    fun main(args: Array<String>) = runBlocking<Unit>{
+    fun main(args: Array<String>) = runBlocking<Unit> {
         launch(Dispatchers.Default) {
-            log(Thread.currentThread().name)
+            log("Default dispatcher: ${Thread.currentThread().name}")
 
             withContext(Dispatchers.IO) {
-                log(Thread.currentThread().name)
+                log("IO dispatcher: ${Thread.currentThread().name}")
             }
+
+            log("Default dispatcher: ${Thread.currentThread().name}")
         }
     }
 }
@@ -88,7 +90,8 @@ object Unconfined_Dispatchers_Demo {
             withContext(Dispatchers.Unconfined + CoroutineName("Unconfined")) {
                 coroutineInfo(2)
 
-                delay(1000)
+                delay(1_000)
+//                someSuspendingFunction(Dispatchers.Default)
 
                 // Whatever thread the suspending function uses will be continue to run
                 coroutineInfo(2)
@@ -100,10 +103,11 @@ object Unconfined_Dispatchers_Demo {
     }
 }
 
-private suspend fun someSuspendingFunction(dispatcher: CoroutineDispatcher) = withContext(dispatcher) {
-    delay(1000)
-    log("Running on thread: ${Thread.currentThread().name}")
-}
+private suspend fun someSuspendingFunction(dispatcher: CoroutineDispatcher) =
+    withContext(dispatcher) {
+        delay(1_000)
+        log("Running on thread: ${Thread.currentThread().name}")
+    }
 
 /**
  * newSingleThreadContext and newFixedThreadPoolContext
@@ -140,3 +144,10 @@ object Custom_Dispatchers_Demo {
 
 }
 
+/**
+ * Homework: Please check `limitedParallelism` function for yourself.
+ * https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-coroutine-dispatcher/limited-parallelism.html
+ *
+ *  @ExperimentalCoroutinesApi
+ *  fun limitedParallelism(parallelism: Int): CoroutineDispatcher
+ */

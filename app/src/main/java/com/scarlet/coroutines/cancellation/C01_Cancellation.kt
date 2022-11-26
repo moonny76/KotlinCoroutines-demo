@@ -22,14 +22,13 @@ object Cancel_Parent_Scope {
         var child: Job? = null
         val parent = scope.launch {
             child = launch {
-                delay(1000)
+                delay(1_000)
             }.onCompletion("child")
         }.onCompletion("parent")
 
         delay(500)
 
-        scope.cancel()
-//        scope.coroutineContext.job.cancelAndJoin()
+        scope.cancel() // What should we do to wait for all the children to be completed in cancelled state?
 
         log("parent cancelled = ${parent.isCancelled}")
         log("child cancelled = ${child?.isCancelled}")
@@ -46,9 +45,9 @@ object Cancel_Parent_Coroutine {
         var child2: Job? = null
         val parentJob = scope.launch {
             child1 =
-                launch { delay(1000) }.onCompletion("child1")
+                launch { delay(1_000) }.onCompletion("child1")
             child2 =
-                launch { delay(1000) }.onCompletion("child2")
+                launch { delay(1_000) }.onCompletion("child2")
         }.onCompletion("parentJob")
 
         delay(500)
@@ -71,9 +70,9 @@ object Cancel_Child_Coroutine {
         var child2: Job? = null
         val parentJob = scope.launch {
             child1 =
-                launch { delay(1000) }.onCompletion("child1")
+                launch { delay(1_000) }.onCompletion("child1")
             child2 =
-                launch { delay(1000) }.onCompletion("child2")
+                launch { delay(1_000) }.onCompletion("child2")
         }.onCompletion("parentJob")
 
         delay(500)
@@ -100,7 +99,7 @@ object Cancel_Parent_Job_Quiz {
 
         // Who's my parent?
         val child = scope.launch(job) {
-            delay(1000)
+            delay(1_000)
         }.onCompletion("child")
 
         delay(500)
@@ -122,8 +121,8 @@ object Cancel_Children_Only_To_Reuse_Parent_Job {
         var child1: Job? = null
         var child2: Job? = null
         val parentJob = scope.launch {
-            child1 = launch { delay(1000) }.onCompletion("child1")
-            child2 = launch { delay(1000) }.onCompletion("child2")
+            child1 = launch { delay(1_000) }.onCompletion("child1")
+            child2 = launch { delay(1_000) }.onCompletion("child2")
         }.onCompletion("parentJob")
 
         delay(500)
@@ -146,8 +145,8 @@ object Cancel_Children_Only_To_Reuse_Scope {
         var child1: Job? = null
         var child2: Job? = null
         val parentJob = scope.launch {
-            child1 = launch { delay(1000) }.onCompletion("child1")
-            child2 = launch { delay(1000) }.onCompletion("child2")
+            child1 = launch { delay(1_000) }.onCompletion("child1")
+            child2 = launch { delay(1_000) }.onCompletion("child2")
         }.onCompletion("parentJob")
 
         delay(500)

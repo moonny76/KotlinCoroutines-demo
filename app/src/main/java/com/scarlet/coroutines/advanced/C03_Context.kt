@@ -115,7 +115,7 @@ object CoroutineContext_ContextInheritance_Demo {
             launch {
 //            launch(CoroutineName("Child Coroutine: launch") + Dispatchers.Default) {
                 coroutineInfo(2)
-                delay(1000)
+                delay(1_000)
             }.join()
 
             log("runBlocking: try to exit runBlocking")

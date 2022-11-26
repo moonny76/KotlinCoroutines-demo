@@ -6,7 +6,7 @@ import java.util.concurrent.Executors
 object Phase1 {
     private fun fooWithDelay(a: Int, b: Int): Int {
         log("step 1")
-        Thread.sleep(3000)
+        Thread.sleep(3_000)
         log("step 2")
         return a + b
     }

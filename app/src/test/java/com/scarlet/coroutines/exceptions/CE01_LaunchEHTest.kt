@@ -66,8 +66,6 @@ class LaunchEHTest {
             delay(10)
             throw IOException("mellow")
         }
-
-        joinAll(job1, job2)
     }
 
     @Test
@@ -105,7 +103,7 @@ class LaunchEHTest {
             }.onCompletion("child1")
 
             launch {
-                delay(1000)
+                delay(1_000)
             }.onCompletion("child2")
         }.onCompletion("parentJob")
 

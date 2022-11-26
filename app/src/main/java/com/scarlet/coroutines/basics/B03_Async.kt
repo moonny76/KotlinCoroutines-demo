@@ -5,7 +5,7 @@ import com.scarlet.util.log
 import kotlinx.coroutines.*
 
 private suspend fun getUser(userId: String): User {
-    log("inside getUser $userId")
+    log("\tinside getUser $userId")
     delay(1_000)
     return User("A001", "Sara Corner", 33)
 }
@@ -16,13 +16,13 @@ object Async_Demo1 {
     fun main(args: Array<String>) = runBlocking {
 
         val deferred = async {
-            log("Request user with Id A001")
+            log("\tRequest user with Id A001")
             getUser("A001")
         }
 
         log("Waiting for results ...")
         val user = deferred.await()
-        log(user)
+        log("Returned user = $user")
 
         log("Done")
     }
@@ -37,13 +37,13 @@ object Async_Demo2 {
     fun main(args: Array<String>) = runBlocking {
 
         val deferred = GlobalScope.async {
-            log("Request user with Id A001")
+            log("\tRequest user with Id A001")
             getUser("A001")
         }
 
         log("Waiting for results ...")
         val user = deferred.await()
-        log(user)
+        log("Returned user = $user")
 
         log("Done")
     }

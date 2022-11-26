@@ -38,7 +38,7 @@ object UsingSyncCall {
     // Blocking network request code
     private fun requestToken(): Token {
         log("Token request is being processed ...")
-        sleep(1000) // simulate network delay
+        sleep(1_000) // simulate network delay
         log("Token creation done")
 
         return Token(42)
@@ -47,7 +47,7 @@ object UsingSyncCall {
     // Blocking network request code
     private fun createPost(token: Token, item: Item): Post {
         log("Post creation is being processed ...")
-        sleep(1000) // simulate network delay
+        sleep(1_000) // simulate network delay
         log("Post creation done")
 
         return Post(token, item)
@@ -80,7 +80,7 @@ fun <T> background(value: T, msg: String, callback: (T) -> Unit) {
         log(msg)
         callback(value)
         scheduler.shutdown()
-    }, 1000L, TimeUnit.MILLISECONDS)
+    }, 1_000L, TimeUnit.MILLISECONDS)
 }
 
 object UsingCallback {
@@ -170,7 +170,7 @@ object AsyncWithCompletableFuture {
 
     private fun requestToken(): CompletableFuture<Token> = CompletableFuture.supplyAsync {
         log("Token request is being processed ...")
-        sleep(1000) // simulate network delay
+        sleep(1_000) // simulate network delay
         log("Token creation done")
 
         Token(42)
@@ -179,7 +179,7 @@ object AsyncWithCompletableFuture {
     private fun createPost(token: Token, item: Item): CompletableFuture<Post> =
         CompletableFuture.supplyAsync {
             log("Post creation is being processed ...")
-            sleep(1000) // simulate network delay
+            sleep(1_000) // simulate network delay
             log("Post creation done")
 
             Post(token, item)
@@ -216,7 +216,7 @@ object AsyncWithRx {
 
     private fun requestToken(): Observable<Token> = Observable.create { emitter ->
         log("Token request is being processed ...")
-        sleep(1000) // simulate network delay
+        sleep(1_000) // simulate network delay
         log("Token creation done")
         emitter.onNext(Token(42))
         emitter.onComplete()
@@ -224,7 +224,7 @@ object AsyncWithRx {
 
     private fun createPost(token: Token, item: Item): Observable<Post> = Observable.create { emitter ->
         log("Post creation is being processed ...")
-        sleep(1000) // simulate network delay
+        sleep(1_000) // simulate network delay
         log("Post creation done")
 
         emitter.onNext(Post(token, item))
@@ -264,7 +264,7 @@ object AsyncWithCoroutine {
     // Suspending network request code
     private suspend fun requestToken(): Token = withContext(Dispatchers.IO) {
         log("Token request is being processed ...")
-        delay(1000) // simulate network delay
+        delay(1_000) // simulate network delay
         log("Token creation done")
 
         Token(42)
@@ -273,7 +273,7 @@ object AsyncWithCoroutine {
     // Suspending network request code
     private suspend fun createPost(token: Token, item: Item): Post = withContext(Dispatchers.IO) {
         log("Post creation is being processed ...")
-        delay(1000) // simulate network delay
+        delay(1_000) // simulate network delay
         log("Post creation done")
 
         Post(token, item)

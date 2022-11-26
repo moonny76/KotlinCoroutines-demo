@@ -67,7 +67,7 @@ class CoroutineScopeBuilderTest {
                 }.onCompletion("child1")
 
                 launch {
-                    delay(1000)
+                    delay(1_000)
                 }.onCompletion("child2")
             }
         } catch (ex: Exception) {
@@ -89,7 +89,7 @@ class CoroutineScopeBuilderTest {
                 }.onCompletion("child1")
 
                 launch {
-                    delay(1000)
+                    delay(1_000)
                 }.onCompletion("child2")
             }
         }.onCompletion("parentJob")

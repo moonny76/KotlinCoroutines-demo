@@ -48,7 +48,7 @@ class RunBlockingVsRunTest {
         coEvery {
             mockArticleService.getArticle(any())
         } coAnswers {
-            delay(2000) // fake network delay
+            delay(2_000) // fake network delay
             expectedArticle
         }
 
@@ -68,7 +68,7 @@ class RunBlockingVsRunTest {
         coEvery {
             mockArticleService.getArticle(any())
         } coAnswers {
-            delay(2000) // fake network delay
+            delay(2_000) // fake network delay
             expectedArticle
         }
 

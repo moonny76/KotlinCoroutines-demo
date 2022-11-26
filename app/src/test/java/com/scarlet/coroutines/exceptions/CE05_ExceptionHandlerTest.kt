@@ -3,7 +3,6 @@ package com.scarlet.coroutines.exceptions
 import com.scarlet.util.completeStatus
 import com.scarlet.util.log
 import com.scarlet.util.onCompletion
-import com.scarlet.util.testDispatcher
 import kotlinx.coroutines.*
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
@@ -22,7 +21,7 @@ class ExceptionHandlerTest {
 
     @Test
     fun `CEH at the scope`() = runTest {
-        val scope = CoroutineScope(Job() + ehandler /*+ testDispatcher*/)
+        val scope = CoroutineScope(Job() + ehandler)
 
         val parent = scope.launch {
             launch {
@@ -36,7 +35,7 @@ class ExceptionHandlerTest {
         }.onCompletion("parent")
 
         parent.join()
-        scope.completeStatus("scope")
+        scope.completeStatus("scope") // Is scope cancelled?
     }
 
     @Test
@@ -55,13 +54,13 @@ class ExceptionHandlerTest {
         }.onCompletion("parent")
 
         parent.join()
-        scope.completeStatus("scope")
+        scope.completeStatus("scope") // Is scope cancelled?
     }
 
     @Test
     fun `CEH at the root coroutine - child of supervisorScope`() = runTest {
         supervisorScope {
-            onCompletion("supervisorScope")
+            onCompletion("supervisorScope") // Is scope cancelled?
 
             launch(ehandler) {
                 launch {
@@ -108,7 +107,7 @@ class ExceptionHandlerTest {
         }.onCompletion("parent")
 
         parent.join()
-        scope.completeStatus("scope")
+        scope.completeStatus("scope") // Is scope cancelled?
     }
 }
 

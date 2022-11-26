@@ -5,7 +5,7 @@ import com.scarlet.util.log
 import kotlinx.coroutines.*
 
 private suspend fun save(user: User) {
-    delay(1000) // simulate some delay
+    delay(1_000) // simulate some delay
     log("User saved: $user")
 }
 
@@ -34,11 +34,11 @@ object Launch_Demo2 {
 
         runBlocking {
             launch {
-                delay(1000)
+                delay(1_000)
                 log("2. child 1 done.")
             }
             launch {
-                delay(2000)
+                delay(2_000)
                 log("3. child 2 done.")
             }
 
@@ -57,7 +57,7 @@ object Launch_Join_Demo {
 
         launch {
             log("2. child 1 start")
-            delay(1000)
+            delay(1_000)
             log("3. child 1 done")
         }
 

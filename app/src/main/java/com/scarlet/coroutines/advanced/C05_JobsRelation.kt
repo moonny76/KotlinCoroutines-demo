@@ -27,30 +27,28 @@ object Dependency_Between_Jobs {
     }
 }
 
-object Jobs_Forms_Hierarchy {
+object Jobs_Form_Coroutines_Hierarchy {
     @JvmStatic
     fun main(args: Array<String>) = runBlocking {
         val parentJob = launch {
             log("I am parent")
 
             launch {
-                log("\t\tI am a child of the parentJob")
-                delay(1000)
-            }.invokeOnCompletion { log("\t\tchild completes") }
+                log("I am a child1 of the parentJob")
+                delay(1_000)
+            }.onCompletion("child1")
 
             launch { // To check whether already finished child counted as children
-                log("\t\tI am another child of the parentJob")
+                log("I am child2 of the parentJob")
                 delay(500)
-            }.invokeOnCompletion { log("\t\tanother child completes") }
+            }.onCompletion("child2")
 
-        }.apply{
-            invokeOnCompletion { log("parentJob completes") }
-        }
+        }.onCompletion("parentJob")
 
         launch {
             log("I’m a sibling of the parentJob, not its child")
-            delay(1000)
-        }.invokeOnCompletion { log("sibling completes") }
+            delay(1_000)
+        }.onCompletion("sibling")
 
         delay(300)
         log("The parentJob has ${parentJob.children.count()} children")
@@ -60,7 +58,7 @@ object Jobs_Forms_Hierarchy {
     }
 }
 
-object In_Hierarchy_Parent_Waits_Until_All_Children_Finished {
+object In_Hierarchy_Parent_Waits_Until_All_Children_Finish {
 
     /**
      * Parental responsibilities:
@@ -108,7 +106,7 @@ object In_Hierarchy_Parent_Waits_Until_All_Children_Finished {
  * from and operates independently.
  */
 
-object In_Hierarchy_Parent_Waits_Until_All_Children_Finished_Other_Demo {
+object In_Hierarchy_Parent_Waits_Until_All_Children_Finish_Other_Demo {
     @JvmStatic
     fun main(args: Array<String>) = runBlocking {
         val parentJob = launch {
@@ -117,7 +115,7 @@ object In_Hierarchy_Parent_Waits_Until_All_Children_Finished_Other_Demo {
 
         launch(parentJob) {
             log("\t\tI’m a child")
-            delay(1000)
+            delay(1_000)
         }.onCompletion("\t\tChild finished after 1000")
 
         delay(100)

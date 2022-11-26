@@ -3,7 +3,6 @@ package com.scarlet.coroutines.cancellation
 import com.scarlet.util.log
 import com.scarlet.util.onCompletion
 import kotlinx.coroutines.*
-import kotlinx.coroutines.NonCancellable.isCancelled
 import java.lang.Exception
 
 /**
@@ -62,16 +61,18 @@ object Call_Suspending_Function_in_Cancelling_State_To_Cleanup {
                 println("Finally")
 
                 // DO NOT USE NonCancellable with `launch` or `async`
-                withContext(NonCancellable) {
-                    delay(1000L)
-                    println("Cleanup done")
-                }
+                cleanUp()
+                println("Cleanup done")
             }
         }
 
         delay(100)
         job.cancelAndJoin()
         println("Cancel done")
+    }
+
+    private suspend fun cleanUp() {
+        delay(3_000)
     }
 }
 

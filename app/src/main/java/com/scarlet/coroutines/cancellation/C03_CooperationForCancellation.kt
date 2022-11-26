@@ -22,7 +22,7 @@ object Uncooperative_Cancellation {
             printTwice()
         }
 
-        delay(1500)
+        delay(1_500)
         log("Cancelling job ...")
         job.cancelAndJoin()
     }
@@ -81,7 +81,7 @@ object Cleanup_When_Cancelled {
             printTwice()
         }
 
-        delay(1500)
+        delay(1_500)
 
         log("Try to cancel the job ...")
         job.cancelAndJoin()

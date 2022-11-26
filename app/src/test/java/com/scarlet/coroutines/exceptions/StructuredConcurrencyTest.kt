@@ -37,7 +37,7 @@ class StructuredConcurrencyTest {
     @Test
     fun `loadAndCombineImages - parent job cancelled`() = runTest {
         coEvery { imageService.loadImage(any()) } coAnswers  {
-            delay(1000)
+            delay(1_000)
             Image("image1")
         } coAndThen {
             delay(2000)
@@ -54,7 +54,7 @@ class StructuredConcurrencyTest {
             }
         }.onCompletion("parent")
 
-        delay(1500)
+        delay(1_500)
         job.cancelAndJoin()
 
         assertThat(image).isNull()
@@ -63,10 +63,10 @@ class StructuredConcurrencyTest {
     @Test
     fun `loadAndCombineImages - child fails`() = runTest {
         coEvery { imageService.loadImage(any()) } coAnswers  {
-            delay(1000)
+            delay(1_000)
             throw RuntimeException("Oops")
         } coAndThen {
-            delay(2000)
+            delay(2_000)
             Image("image2")
         }
 

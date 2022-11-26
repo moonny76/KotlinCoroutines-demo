@@ -11,35 +11,10 @@ import java.lang.RuntimeException
 
 /**
  * **SupervisorJob** - failing child does not affect the parent and its sibling.
- *
- * Location of SupervisorJob matters:
- *  - Warning: SupervisorJob only works when it is part of a failing
- *    coroutine's direct parent context!! <-- by kim
  */
+
 @ExperimentalCoroutinesApi
 class LaunchSupervisorJobTest {
-
-    /**
-     * Quiz: Who's child1's parent?
-     */
-
-    @Test
-    fun `lecture note example - who's child1's parent`() = runTest {
-        onCompletion("runBlocking")
-
-        val parentJob = launch(SupervisorJob()) {
-            launch {
-                delay(100)
-                throw IOException("failure")
-            }.onCompletion("child1")
-
-            launch {
-                delay(200)
-            }.onCompletion("child2")
-        }.onCompletion("parent")
-
-        parentJob.join()
-    }
 
     @Test
     fun `SupervisorJob in failing child's parent context takes effect`() = runTest {
@@ -57,6 +32,33 @@ class LaunchSupervisorJobTest {
 
         joinAll(child1, child2)
         scope.completeStatus("scope")
+    }
+
+
+    /**
+     * Quiz: Who's child1's parent?
+     */
+
+    /**
+     *  Side Note: `runTest()` strange behavior(?): if parentJob is launched via another scope,
+     *  then runTest doesn't rethrow exception!@##$% in this example. See next example.
+     */
+    @Test // Try runBlocking { ... } instead of runTest { ... }
+    fun `lecture note example - who's child1's parent`() = runTest {
+        onCompletion("runTest")
+
+        val parentJob = launch(SupervisorJob()) {
+            launch {
+                delay(100)
+                throw IOException("failure")
+            }.onCompletion("child1")
+
+            launch {
+                delay(200)
+            }.onCompletion("child2")
+        }.onCompletion("parent")
+
+        parentJob.join()
     }
 
     @Test
@@ -110,14 +112,13 @@ class LaunchSupervisorJobTest {
         try {
             val scope = CoroutineScope(Job())
             try {
-
                 val parentJob = scope.launch(SupervisorJob()) {
                     launch {
                         delay(100)
                         throw RuntimeException("oops")
                     }.onCompletion("child1")
                     launch {
-                        delay(1000)
+                        delay(1_000)
                     }.onCompletion("child2")
                 }.onCompletion("parentJob")
                 parentJob.join()
