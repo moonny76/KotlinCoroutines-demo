@@ -7,6 +7,7 @@ import com.scarlet.model.Article
 import com.scarlet.util.Resource
 import com.scarlet.util.getValueForTest
 import com.scarlet.util.log
+import com.scarlet.util.testDispatcher
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -17,7 +18,6 @@ import kotlinx.coroutines.test.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import kotlin.coroutines.ContinuationInterceptor
 
 @ExperimentalCoroutinesApi
 class SetMainTest {
@@ -41,7 +41,7 @@ class SetMainTest {
 
         coEvery { mockApiService.getArticles() } coAnswers {
             log("coAnswers")
-            delay(3000)
+            delay(3_000)
             testArticles
         }
     }
@@ -49,13 +49,12 @@ class SetMainTest {
     @Test
     fun `runTest - test fun creating new coroutines`() = runTest {
         // Given
-        val testDispatcher = coroutineContext[ContinuationInterceptor] as TestDispatcher
         viewModel = ArticleViewModel(mockApiService, testDispatcher)
 
         // When
         viewModel.onButtonClicked()
 
-        // TODO - what?
+        advanceUntilIdle()
 
         // Then
         coVerify { mockApiService.getArticles() }

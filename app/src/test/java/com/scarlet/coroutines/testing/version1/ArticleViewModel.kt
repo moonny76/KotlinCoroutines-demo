@@ -4,7 +4,6 @@ import androidx.lifecycle.*
 import com.scarlet.coroutines.testing.ApiService
 import com.scarlet.model.Article
 import com.scarlet.util.Resource
-import com.scarlet.util.log
 import kotlinx.coroutines.*
 
 class ArticleViewModel(
@@ -19,7 +18,6 @@ class ArticleViewModel(
         get() = _articles
 
     fun onButtonClicked() {
-        log("onButtonClicked()")
         scope.launch {
             loadData()
         }

@@ -40,7 +40,7 @@ class CoroutineTestRuleTest {
         MockKAnnotations.init(this)
 
         coEvery { apiService.getArticles() } coAnswers {
-            delay(3000)
+            delay(3_000)
             testArticles
         }
     }

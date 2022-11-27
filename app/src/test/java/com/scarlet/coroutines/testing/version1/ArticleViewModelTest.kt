@@ -5,7 +5,6 @@ import com.scarlet.coroutines.testing.ApiService
 import com.scarlet.model.Article
 import com.scarlet.util.Resource
 import com.scarlet.util.getValueForTest
-import com.scarlet.util.log
 import io.mockk.coEvery
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
@@ -33,7 +32,7 @@ class ArticleViewModelTest {
         // TODO() - initialize mocks
 
         coEvery { apiService.getArticles() } coAnswers {
-            delay(3000)
+            delay(3_000)
             testArticles
         }
     }
@@ -60,7 +59,7 @@ class ArticleViewModelTest {
         // When
         viewModel.onButtonClicked()
 
-        delay(3000)
+        delay(3_000)
 
         // Then
         val articles = viewModel.articles.getValueForTest()
