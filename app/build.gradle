@@ -116,7 +116,7 @@ dependencies {
     testImplementation          "androidx.arch.core:core-testing:$androidxCoreTesting_version"
     androidTestImplementation   "androidx.arch.core:core-testing:$androidxCoreTesting_version"
 
-    def logback_version = '1.4.5' // On error, downgrade to 1.2.11 (1.4.3 causes error)
+    def logback_version = '1.2.11' // On error, downgrade to 1.2.11 (1.4.5 causes error)
     implementation              "ch.qos.logback:logback-classic:$logback_version"
 
     def rxKotlin_version = '2.4.0'
