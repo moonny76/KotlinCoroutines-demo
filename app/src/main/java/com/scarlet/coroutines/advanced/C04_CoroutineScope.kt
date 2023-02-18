@@ -1,3 +1,5 @@
+@file:OptIn(DelicateCoroutinesApi::class)
+
 package com.scarlet.coroutines.advanced
 
 import com.scarlet.util.*
@@ -101,15 +103,115 @@ object Canceling_A_Scope_Does_Not_Affect_Its_Siblings {
     }
 }
 
-@ExperimentalStdlibApi
-@DelicateCoroutinesApi
 object GlobalScope_Cancellation_Demo {
     @JvmStatic
     fun main(args: Array<String>) = runBlocking {
         log("Job for GlobalScope is ${GlobalScope.coroutineContext[Job]}")
 
         val job = GlobalScope.launch {
+            launch(CoroutineName("Child 1")) { delay(100) }.onCompletion("Child 1")
+            launch(CoroutineName("Child 2")) { delay(1_000) }.onCompletion("Child 2")
+            log("GlobalScope is active")
+//            delay(700)
+        }.onCompletion("Parent")
+
+        delay(500)
+
+        log(job.children.toList().toString())
+
+        job.cancelAndJoin()
+        // what will happen? GlobalScope.cancel()
+//        GlobalScope.cancel()
+    }
+}
+
+object GlobalScope_Cancellation_Demo3 {
+    @JvmStatic
+    fun main(args: Array<String>) = runBlocking {
+        log("Job for GlobalScope is ${GlobalScope.coroutineContext[Job]}")
+
+        val job = GlobalScope.launch(CoroutineName("Parent")) {
             launch(CoroutineName("Child 1")) { delay(1_000) }.onCompletion("Child 1")
+            launch(CoroutineName("Child 2")) { delay(1_000) }.onCompletion("Child 2")
+            log("GlobalScope is active")
+//            delay(700)
+        }.onCompletion("Parent")
+
+        val job2 = GlobalScope.launch(CoroutineName("Parent 2")) {
+//            launch(CoroutineName("Child3")) { delay(1_000)}.onCompletion("Child 3")
+            delay(700)
+        }.onCompletion("Parent 2")
+
+        delay(500)
+
+        log(job.children.toList().toString())
+
+        job.cancelAndJoin()
+        // what will happen? GlobalScope.cancel()
+//        GlobalScope.cancel()
+
+        delay(2_000)
+    }
+}
+
+object GlobalScope_Cancellation_Demo4 {
+    @JvmStatic
+    fun main(args: Array<String>) = runBlocking {
+        log("Job for GlobalScope is ${GlobalScope.coroutineContext[Job]}")
+
+        val job = GlobalScope.launch(CoroutineName("Parent")) {
+            launch(CoroutineName("Child 1")) {
+                launch(CoroutineName("Grand Child")) {
+                    delay(1_000)
+                }.onCompletion("Grand Child")
+                delay(1_000)
+            }.onCompletion("Child 1")
+            launch(CoroutineName("Child 2")) { delay(1_000) }.onCompletion("Child 2")
+
+            log("GlobalScope is active")
+//            delay(700)
+        }.onCompletion("Parent")
+
+        delay(500)
+
+        log(job.children.toList().toString())
+
+        job.cancelAndJoin()
+        // what will happen? GlobalScope.cancel()
+//        GlobalScope.cancel()
+    }
+}
+
+object GlobalScope_Cancellation_Demo2 {
+    @JvmStatic
+    fun main(args: Array<String>) = runBlocking {
+
+        val job = launch {
+            launch(CoroutineName("Child 1")) { delay(1_000) }.onCompletion("Child 1")
+            launch(CoroutineName("Child 2")) { delay(900) }.onCompletion("Child 2")
+            delay(700)
+            log("GlobalScope is active")
+        }.onCompletion("Parent")
+
+        delay(500)
+
+        job.cancelAndJoin()
+        // what will happen? GlobalScope.cancel()
+//        GlobalScope.cancel()
+    }
+}
+
+object GlobalScope_Cancellation_Demo5 {
+    @JvmStatic
+    fun main(args: Array<String>) = runBlocking {
+
+        val job = launch {
+            launch(CoroutineName("Child 1")) {
+                launch(CoroutineName("Grand Child")) {
+                    delay(1_000)
+                }.onCompletion("Grand Child")
+//                delay(700)
+            }.onCompletion("Child 1")
             launch(CoroutineName("Child 2")) { delay(1_000) }.onCompletion("Child 2")
         }.onCompletion("Parent")
 
