@@ -3,6 +3,7 @@ package com.scarlet.util
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
+import kotlinx.coroutines.test.TestDispatcher
 import java.util.*
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
@@ -13,13 +14,27 @@ import java.util.concurrent.TimeoutException
  */
 fun <T> LiveData<T>.getValueForTest(): T? {
     var value: T? = null
-    var observer = Observer<T> {
+    val observer = Observer<T> {
         value = it
     }
     observeForever(observer)
     removeObserver(observer)
     return value
 }
+
+fun <T> LiveData<T>.getValueForTest(dispatcher: TestDispatcher): T? {
+    var value: T? = null
+    val observer = Observer<T> {
+        value = it
+    }
+    observeForever(observer)
+
+    dispatcher.scheduler.runCurrent()
+
+    removeObserver(observer)
+    return value
+}
+
 /**
  * Gets the value of a [LiveData] or waits for it to have one, with a timeout.
  *
@@ -35,12 +50,13 @@ fun <T> LiveData<T>.getOrAwaitValue(
     var data: T? = null
     val latch = CountDownLatch(1)
     val observer = object : Observer<T> {
-        override fun onChanged(o: T?) {
-            data = o
+        override fun onChanged(value: T) {
+            data = value
             latch.countDown()
             this@getOrAwaitValue.removeObserver(this)
         }
     }
+
     this.observeForever(observer)
 
     try {
@@ -63,7 +79,7 @@ fun <T> LiveData<T>.getOrAwaitValue(
  * Represents a list of capture values from a LiveData.
  */
 class LiveDataValueCapture<T> {
-    val lock = Any()
+    private val lock = Any()
 
     private val _values = mutableListOf<T?>()
     val values: List<T?>

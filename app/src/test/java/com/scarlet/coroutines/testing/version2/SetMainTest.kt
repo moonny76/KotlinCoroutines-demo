@@ -2,7 +2,7 @@ package com.scarlet.coroutines.testing.version2
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth.assertThat
-import com.scarlet.coroutines.testing.ApiService
+import com.scarlet.coroutines.android.livedata.ApiService
 import com.scarlet.model.Article
 import com.scarlet.util.Resource
 import com.scarlet.util.getValueForTest
@@ -47,7 +47,7 @@ class SetMainTest {
     }
 
     @Test
-    fun `runTest - test fun creating new coroutines`() = runTest {
+    fun `test fun creating new coroutines`() = runTest {
         // Given
         viewModel = ArticleViewModel(mockApiService, testDispatcher)
 

@@ -1,10 +1,8 @@
-package com.scarlet.coroutines.testing.livedata
+package com.scarlet.coroutines.android.livedata
 
 import androidx.lifecycle.*
-import com.scarlet.coroutines.android.livedata.ApiService
 import com.scarlet.model.Article
 import com.scarlet.util.Resource
-import com.scarlet.util.log
 import kotlinx.coroutines.*
 
 class ArticleViewModel(
@@ -14,45 +12,31 @@ class ArticleViewModel(
     /**
      * Style 1
      */
-//    private val _articles = MutableLiveData<Resource<List<Article>>>()
-//    val articles: LiveData<Resource<List<Article>>> = _articles
-//
-//    init {
-//        viewModelScope.launch {
-//            log("viewModelScope.launch")
-//            _articles.value = apiService.getArticles()
-//            log("_articles.value = ${_articles.value}")
-//        }
-//    }
+    private val _articles = MutableLiveData<Resource<List<Article>>>()
+    val articles: LiveData<Resource<List<Article>>> = _articles
+
+    init {
+        viewModelScope.launch {
+            _articles.value = apiService.getArticles()
+        }
+    }
 
     /**
-     * Style 2: Use MutableLiveData and apply
+     * Style 2
      */
 //    val articles: LiveData<Resource<List<Article>>> =
 //        MutableLiveData<Resource<List<Article>>>().apply {
 //            viewModelScope.launch {
-//                log("viewModelScope.launch")
 //                value = apiService.getArticles()
-//                log("value = $value")
 //            }
 //        }
-
-    /**
-     * Style 3: Use liveData builder
-     */
-    val articles: LiveData<Resource<List<Article>>> = liveData {
-        log("liveData")
-        emit(apiService.getArticles())
-    }
 
     /**
      * The block starts executing when the returned LiveData becomes active.
      */
     val topArticle: LiveData<Resource<Article>> = liveData {
         while (true) {
-            log("start emitting topArticle")
             emit(apiService.getTopArticle())
-            log("done emitting topArticle")
             delay(FETCH_INTERVAL)
         }
     }
@@ -76,6 +60,6 @@ class ArticleViewModel(
             }
 
     companion object {
-        const val FETCH_INTERVAL = 30_000L
+        const val FETCH_INTERVAL = 5_000L
     }
 }
