@@ -56,7 +56,7 @@ class LaunchEHTest {
     // `runTest` rethrows only the first propagated uncaught exception
     @Test
     fun `multiple exceptions - runTest`() = runTest {
-        onCompletion("runBlocking")
+        onCompletion("runTest")
 
         launch {
             delay(50)
@@ -91,7 +91,7 @@ class LaunchEHTest {
             }
         }
 
-    @Test
+    @Test // Try runBlocking ...
     fun `Failure of child cancels the parent and its siblings`() = runTest {
         onCompletion("runBlocking")
         val scope = CoroutineScope(SupervisorJob()).onCompletion("scope")

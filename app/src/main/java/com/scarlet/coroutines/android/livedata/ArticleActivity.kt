@@ -2,11 +2,12 @@ package com.scarlet.coroutines.android.livedata
 
 import android.os.Bundle
 import android.util.Log
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.scarlet.R
 
 class ArticleActivity : AppCompatActivity() {
-    private val viewModel by lazy { ArticleViewModel(FakeApiService()) }
+    private val viewModel: ArticleViewModel by viewModels { ArticleViewModelFactory() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,6 +46,7 @@ class ArticleActivity : AppCompatActivity() {
         super.onDestroy()
         Log.d(TAG, "onDestroy:")
     }
+
 
     companion object {
         private const val TAG = "Article"

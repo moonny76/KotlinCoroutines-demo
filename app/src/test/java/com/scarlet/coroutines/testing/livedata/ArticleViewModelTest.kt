@@ -4,30 +4,24 @@ import com.scarlet.model.Article
 import com.scarlet.util.Resource
 import kotlinx.coroutines.*
 import kotlinx.coroutines.test.runTest
-import org.junit.After
 import org.junit.Before
 import org.junit.Test
 
 @ExperimentalCoroutinesApi
-class LiveDataTest {
+class ArticleViewModelTest {
     // TODO: Add `InstantTaskExecutorRule` here for testing LiveData
+
+    // TODO: Add `CoroutineTestRule for testing Coroutines
 
     // SUT
     // TODO: Specify the SUT
 
     // TODO: Specify the mock dependencies: `ApiService`
 
-    // TODO: Create a test dispatcher
-
     private val expectedArticles = Resource.Success(Article.articleSamples)
 
     @Before
     fun init() {
-        // TODO
-    }
-
-    @After
-    fun tearDown() {
         // TODO
     }
 
@@ -49,9 +43,6 @@ class LiveDataTest {
         // Assert (Then)
     }
 
-    /*
-     * Note that `getValuesForTest()` only works for `UnconfinedTestDispatcher`
-     */
     @Test
     fun `articles - getValueForTest`() = runTest {
         // Arrange (Given)
@@ -61,9 +52,6 @@ class LiveDataTest {
         // Assert (Then)
     }
 
-    /*
-     * Note that `getValuesForTest()` only works for `UnconfinedTestDispatcher`
-     */
     @Test
     fun `test topArticle by getValueForTest`() = runTest {
         // Arrange (Given)

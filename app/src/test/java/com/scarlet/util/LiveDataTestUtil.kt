@@ -3,6 +3,7 @@ package com.scarlet.util
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestDispatcher
 import java.util.*
 import java.util.concurrent.CountDownLatch
@@ -22,13 +23,18 @@ fun <T> LiveData<T>.getValueForTest(): T? {
     return value
 }
 
-fun <T> LiveData<T>.getValueForTest(dispatcher: TestDispatcher): T? {
+// Added by Jungsun Kim
+@ExperimentalCoroutinesApi
+fun <T> LiveData<T>.getValueForTest(dispatcher: TestDispatcher, ms: Long): T? {
     var value: T? = null
     val observer = Observer<T> {
+        log("getValueForTest() - observer.onChanged()")
         value = it
+        log("getValueForTest() - value = $value")
     }
     observeForever(observer)
 
+    dispatcher.scheduler.advanceTimeBy(ms)
     dispatcher.scheduler.runCurrent()
 
     removeObserver(observer)

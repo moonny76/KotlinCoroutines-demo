@@ -18,7 +18,7 @@ class LaunchSupervisorJobTest {
 
     @Test
     fun `SupervisorJob in failing child's parent context takes effect`() = runTest {
-        onCompletion("runBlocking")
+        onCompletion("runTest")
         val scope = CoroutineScope(SupervisorJob()) // Compare with Job()
 
         val child1 = scope.launch {
@@ -38,9 +38,8 @@ class LaunchSupervisorJobTest {
     /**
      * Quiz: Who's child1's parent?
      */
-    // Try runBlocking { ... } instead of runTest { ... }
     @Test
-    fun `lecture note example - who's child1's parent`() = runBlocking {
+    fun `lecture note example - who's child1's parent`() = runTest {
         onCompletion("runTest")
 
         val parentJob = launch(SupervisorJob()) {

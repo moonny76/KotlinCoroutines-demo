@@ -17,8 +17,9 @@ class SupervisorScopeBuilderTest {
      * (Wrong!!!!)
      * `supervisorScope` does not rethrow an uncaught exception, but propagates it instead!!
      *
-     * Failure of a child coroutine does not propagate to its parent. But, failure of the scope
-     * itself rethrows the exception unless it is caught.
+     * Failure of a child coroutine does not propagate(?) to its parent. But, failure of the scope
+     * itself rethrows the exception unless it is caught. (Jungsun's note: Actually, it does propagate
+     * to its parent. But, it does not cancel its parent.)
      *
      * This feature requires an installed `CoroutineExceptionHandler` in its root coroutines,
      * otherwise the `supervisorScope` will fail anyway. That's because a scope always looks
@@ -27,6 +28,7 @@ class SupervisorScopeBuilderTest {
      * Note: Those exceptions not propagated from child coroutines are not propagated, but
      * rethrown instead.
      */
+
 
     /**
      * Exceptions propagated via `supervisorScope` do not cancel the parent. <== Strange!!
@@ -95,7 +97,7 @@ class SupervisorScopeBuilderTest {
             }
         }
 
-    @Test //(expected = RuntimeException::class)
+    @Test
     fun `supervisorScope - failed child doesn't affect its parent nor siblings`() = runTest {
         try {
             supervisorScope {
@@ -193,37 +195,4 @@ class SupervisorScopeBuilderTest {
 
         scope.completeStatus()
     }
-
-    @Test
-    fun foo() = runTest {
-        val handler = CoroutineExceptionHandler { _, exception ->
-            log("CoroutineExceptionHandler got $exception")
-        }
-
-        val scope = CoroutineScope(Job())
-        scope.onCompletion("scope")
-
-        scope.launch {
-            log("parent started")
-
-            supervisorScope {
-                coroutineContext.job.onCompletion("supervisorScope")
-
-                launch {
-                    log("child 1 started")
-                    delay(2_000)
-                    throw RuntimeException("OOPS!")
-                }.onCompletion("child1")
-
-                launch {
-                    log("child 2 started")
-                    delay(5_000)
-                }.onCompletion("child2")
-
-                log("inside subScope... ")
-            }
-
-        }.onCompletion("parent").join()
-    }
-
 }

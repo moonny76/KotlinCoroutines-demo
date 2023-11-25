@@ -12,8 +12,8 @@ import kotlin.time.Duration.Companion.seconds
 @ExperimentalCoroutinesApi
 class ExceptionHandlerTest {
 
-    private val ehandler = CoroutineExceptionHandler { _, exception ->
-        log("Global exception handler Caught $exception")
+    private val ehandler = CoroutineExceptionHandler { context, exception ->
+        log("Global exception handler Caught $exception in: $context")
     }
 
     /**
@@ -65,8 +65,6 @@ class ExceptionHandlerTest {
     @Test
     fun `CEH at the root coroutine - child of supervisorScope`() = runTest {
         supervisorScope {
-            onCompletion("supervisorScope") // Is scope cancelled?
-
             launch(ehandler) {
                 launch {
                     delay(100)
@@ -84,11 +82,9 @@ class ExceptionHandlerTest {
      * CEHs installed neither at the scope nor at root coroutines do not take effect.
      */
 
-    @Test(expected = RuntimeException::class)
+    @Test
     fun `CEH not at the root coroutine - child of coroutineScope`() = runTest {
         coroutineScope {
-            onCompletion("coroutineScope")
-
             launch(ehandler) {
                 launch {
                     delay(100)
@@ -100,7 +96,7 @@ class ExceptionHandlerTest {
         }
     }
 
-    @Test(expected = RuntimeException::class)
+    @Test
     fun `CEH not at the root coroutine - not a direct child of scope`() = runTest {
         val scope = CoroutineScope(Job())
 

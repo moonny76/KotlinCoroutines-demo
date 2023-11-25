@@ -4,6 +4,7 @@ import androidx.lifecycle.*
 import com.scarlet.model.Article
 import com.scarlet.util.Resource
 import kotlinx.coroutines.*
+import java.lang.IllegalArgumentException
 
 class ArticleViewModel(
     private val apiService: ApiService
@@ -22,7 +23,7 @@ class ArticleViewModel(
     }
 
     /**
-     * Style 2
+     * Style 2: Use MutableLiveData and apply
      */
 //    val articles: LiveData<Resource<List<Article>>> =
 //        MutableLiveData<Resource<List<Article>>>().apply {
@@ -30,6 +31,13 @@ class ArticleViewModel(
 //                value = apiService.getArticles()
 //            }
 //        }
+
+    /**
+     * Style 3: Use liveData builder
+     */
+//    val articles: LiveData<Resource<List<Article>>> = liveData {
+//        emit(apiService.getArticles())
+//    }
 
     /**
      * The block starts executing when the returned LiveData becomes active.
@@ -61,5 +69,14 @@ class ArticleViewModel(
 
     companion object {
         const val FETCH_INTERVAL = 5_000L
+    }
+}
+
+@Suppress("UNCHECKED_CAST")
+class ArticleViewModelFactory() : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (!modelClass.isAssignableFrom(ArticleViewModel::class.java))
+            throw IllegalArgumentException("No such viewmodel")
+        return ArticleViewModel(FakeApiService()) as T
     }
 }

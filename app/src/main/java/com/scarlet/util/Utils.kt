@@ -45,7 +45,6 @@ fun CoroutineScope.completeStatus(name: String = "scope", level: Int = 0) = appl
     log("${spaces(level)}$name: isCancelled = ${coroutineContext.job.isCancelled}")
 }
 
-// DO NOT APPLY LIKE THIS: CoroutineScope(Job()).onCompletion("scope"); use scope.completeStatus() instead!!
 fun CoroutineScope.onCompletion(name: String): CoroutineScope = apply {
     coroutineContext.job.invokeOnCompletion {
         log("$name: isCancelled = ${coroutineContext.job.isCancelled}, exception = ${it?.javaClass?.name}")

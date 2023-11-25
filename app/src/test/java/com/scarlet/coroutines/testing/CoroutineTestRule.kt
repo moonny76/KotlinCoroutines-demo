@@ -9,13 +9,13 @@ import org.junit.runner.Description
 
 @ExperimentalCoroutinesApi
 class CoroutineTestRule(
-    val testDispatcher: TestDispatcher = UnconfinedTestDispatcher()
+    val testDispatcher: TestDispatcher = StandardTestDispatcher()
 ) : TestWatcher() {
 
     /*
      * testDispatchersProvider goes here
      */
-    val testDispatcherProvider: DispatcherProvider = TODO()
+//    val testDispatcherProvider: DispatcherProvider = TODO()
 
     override fun starting(description: Description) {
         super.starting(description)
