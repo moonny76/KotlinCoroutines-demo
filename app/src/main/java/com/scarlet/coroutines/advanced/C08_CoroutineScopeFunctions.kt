@@ -1,6 +1,5 @@
 package com.scarlet.coroutines.advanced
 
-import com.scarlet.util.completeStatus
 import com.scarlet.util.coroutineInfo
 import com.scarlet.util.log
 import com.scarlet.util.onCompletion

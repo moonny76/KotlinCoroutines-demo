@@ -6,8 +6,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.scarlet.R
 import kotlinx.coroutines.*
-import kotlinx.coroutines.NonCancellable.invokeOnCompletion
-import kotlinx.coroutines.NonCancellable.isCancelled
 
 class ScopedActivity : AppCompatActivity() {
 

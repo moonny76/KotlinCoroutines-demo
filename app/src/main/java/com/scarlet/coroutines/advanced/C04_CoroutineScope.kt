@@ -1,5 +1,3 @@
-@file:OptIn(DelicateCoroutinesApi::class)
-
 package com.scarlet.coroutines.advanced
 
 import com.scarlet.util.*
@@ -14,6 +12,7 @@ import kotlinx.coroutines.*
  * too. This is a very powerful feature, because it allows you to cancel all coroutines.
  */
 
+@ExperimentalStdlibApi
 object CoroutineScope_Has_Context {
     @JvmStatic
     fun main(args: Array<String>) = runBlocking {
