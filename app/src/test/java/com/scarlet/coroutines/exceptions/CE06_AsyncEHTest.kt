@@ -38,7 +38,7 @@ class AsyncEHTest {
      * Documentation says the exposed exception will be silently dropped unless
      * `.await()` is called on the deferred value.
      * However, actually it propagates and cancels all siblings and the scope
-     * without failing the test.
+     * **without failing the test**.
      * Therefore, structured concurrency still works, but we have a chance to handle
      * exceptions using `try-catch`.
      */
@@ -50,7 +50,7 @@ class AsyncEHTest {
         // a root coroutine
         val deferred: Deferred<Int> = scope.async {
             delay(1_000)
-            throw RuntimeException("Oops!")
+            throw RuntimeException("Oops!") // exposed exception
         }.onCompletion("deferred")
 
         // Comment out the entire try block and see whether exception still happens.
@@ -70,7 +70,7 @@ class AsyncEHTest {
             // root coroutine
             val parent: Deferred<Int> = scope.async {
                 delay(1_000)
-                throw RuntimeException("my exception")
+                throw RuntimeException("my exception") // exposed exception
             }.onCompletion("parent")
 
             scope.launch {
@@ -92,7 +92,8 @@ class AsyncEHTest {
             supervisorScope {
                 onCompletion("supervisorScope")
 
-                val deferred: Deferred<Int> = async { // root coroutine
+                // launch will make test fail, but async will not!
+                val deferred = async { // root coroutine
                     delay(100)
                     throw RuntimeException("my exception")
                 }.onCompletion("child")
@@ -102,11 +103,11 @@ class AsyncEHTest {
                     log("sibling done")
                 }.onCompletion("sibling")
 
-                try {
-                    deferred.await()
-                } catch (ex: Exception) {
-                    log("Caught: $ex") // caught and handled
-                }
+//                try {
+//                    deferred.await()
+//                } catch (ex: Exception) {
+//                    log("Caught: $ex") // caught and handled
+//                }
             }
         }
 
@@ -128,7 +129,8 @@ class AsyncEHTest {
             } catch (ex: Exception) {
                 log("Caught: $ex")
             }
-        }.onCompletion("whoAmI").join()
+            delay(1_000) // runs concurrently with `deferred`
+        }.onCompletion("whoAmI")
 
         scope.completeStatus("scope")
     }
@@ -142,7 +144,7 @@ class AsyncEHTest {
             throw RuntimeException("Oops!")
         }.onCompletion("child")
 
-        deferred.await() // Exception will be thrown at this point
+//        deferred.await() // Exception will be thrown at this point
     }
 
     @Test
@@ -160,7 +162,7 @@ class AsyncEHTest {
                 log("sibling done")
             }.onCompletion("sibling")
 
-            deferred.await() // Exception will be thrown at this point
+//            deferred.await() // Exception will be thrown at this point
         }
     }
 
@@ -205,16 +207,16 @@ class AsyncEHTest {
 
 
     @Test
-    fun `exception handler of no use #3`() = runTest {
+    fun `exception handler of no use - since non root coroutine#3`() = runTest {
         // Not a root coroutine
         async(ehandler) {
             delay(1_000)
             throw RuntimeException("my exception")
-        }.onCompletion("child").join()
+        }.onCompletion("child")
     }
 
     @Test
-    fun `exception handler of no use #4`() = runTest {
+    fun `exception handler of no use - since non root coroutine #4`() = runTest {
 
         // Not a root coroutine
         async(ehandler) {
@@ -225,6 +227,79 @@ class AsyncEHTest {
         }.onCompletion("parent")
 
     }
+
+    @Test
+    fun `ehandler installed in scope for non-root async exception catches the exception`() =
+        runTest {
+            val scope = CoroutineScope(Job() + testDispatcher + ehandler).onCompletion("scope")
+
+            scope.launch {
+                val deferred: Deferred<Int> = async {
+                    delay(100)
+                    throw RuntimeException("Oops!")
+                }.onCompletion("child")
+
+//            try {
+//                deferred.await()
+//            } catch (ex: Exception) {
+//                log("Caught: $ex")
+//            }
+            }.onCompletion("root coroutine")
+        }
+
+    /**/
+
+    /**
+     * CEH installed in `async` root coroutines has no effect at all!
+     */
+    @Test
+    fun `ehandler installed in async root coroutine for non-root async exception has no effect at all`() =
+        runTest {
+
+            supervisorScope {
+                onCompletion("supervisorScope")
+
+                val res = async(ehandler) {
+                    val deferred: Deferred<Int> = async {
+                        throw RuntimeException("Oops!")
+                    }.onCompletion("child")
+
+                    try {
+                        deferred.await()
+                    } catch (ex: Exception) {
+                        log("Caught: $ex") // Covered, but not considered as handled
+                    }
+                }.onCompletion("root coroutine")
+
+                try {
+                    res.await()
+                } catch (ex: Exception) {
+                    log("Root Coroutine: Caught: $ex") // Exception handled
+                }
+            }
+        }
+
+    @Test
+    fun `ehandler installed in launch root coroutine for non-root async exception handles the exception`() =
+        runTest {
+
+            supervisorScope {
+                onCompletion("supervisorScope")
+
+                launch(ehandler) {
+                    val deferred: Deferred<Int> = async {
+                        throw RuntimeException("Oops!")
+                    }.onCompletion("child")
+
+                    try {
+                        deferred.await()
+                    } catch (ex: Exception) {
+                        log("Caught: $ex") // Covered, but not considered as handled
+                    }
+                }.onCompletion("root coroutine")
+            }
+        }
+
 
 }
 

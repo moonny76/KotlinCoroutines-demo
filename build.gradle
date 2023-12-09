@@ -1,7 +1,7 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
-    ext.kotlinVersion = '1.9.10'
-    ext.gradleVersion = '8.1.2'
+    ext.kotlinVersion = '1.9.20'
+    ext.gradleVersion = '8.2.0'
 
     repositories {
         google()
@@ -19,7 +19,7 @@ buildscript {
 
 // for ksp
 plugins {
-    id 'com.google.devtools.ksp' version '1.9.10-1.0.13' apply false
+    id 'com.google.devtools.ksp' version '1.9.20-1.0.14' apply false
 }
 
 allprojects {
@@ -30,5 +30,5 @@ allprojects {
 }
 
 tasks.register('clean', Delete) {
-    delete rootProject.buildDir
+    delete rootProject.layout.buildDirectory
 }
