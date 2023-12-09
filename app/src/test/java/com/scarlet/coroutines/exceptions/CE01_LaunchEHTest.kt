@@ -17,7 +17,8 @@ import java.lang.RuntimeException
  *   handling of their exceptions to their parent coroutine, which also delegates to the
  *   parent, and so on until the root.
  *
- *  Root scope do not propagate exceptions. Do default behavior of printing to console.
+ *  Root scope do not propagate exceptions. Do default behavior of either printing
+ *  to console or crash application.
  */
 
 @ExperimentalCoroutinesApi
@@ -32,30 +33,15 @@ class LaunchEHTest {
         failingFunction()
     }
 
-    // `runBlocking` and `runTest` rethrows uncaught exception.
+    // Both `runBlocking` and `runTest` rethrow uncaught exceptions.
     @Test(expected = RuntimeException::class)
     fun `exception with runBlocking or runTest`() = runTest {
         failingFunction()
     }
 
-    // `runBlocking` rethrows only the first propagated uncaught exception
+    // Both `runBlocking` and `runTest` rethrow only the first propagated uncaught exceptions.
     @Test
-    fun `multiple exceptions - runBlocking`() = runBlocking<Unit> {
-        onCompletion("runBlocking")
-
-        launch {
-            delay(50)
-            throw RuntimeException("yellow")
-        }
-        launch {
-            delay(10)
-            throw IOException("mellow")
-        }
-    }
-
-    // `runTest` rethrows only the first propagated uncaught exception
-    @Test
-    fun `multiple exceptions - runTest`() = runTest {
+    fun `rethrows only the first uncaught exception`() = runTest {
         onCompletion("runTest")
 
         launch {
@@ -80,7 +66,7 @@ class LaunchEHTest {
     }
 
     @Test(expected = RuntimeException::class)
-    fun `Nested coroutine - cannot handle propagated exception on site using try-catch`() =
+    fun `cannot handle propagated exception from nested coroutines on site using try-catch`() =
         runTest {
             try {
                 launch {
@@ -91,9 +77,17 @@ class LaunchEHTest {
             }
         }
 
+    /**
+     * `runBlocking` vs. `runTest`
+     *
+     * `runBlocking` do not rethrow uncaught exception propagated via `supervisorScope`.
+     *
+     * But, `runTest` do rethrow it.
+     */
     @Test // Try runBlocking ...
     fun `Failure of child cancels the parent and its siblings`() = runTest {
-        onCompletion("runBlocking")
+        onCompletion("runTest")
+
         val scope = CoroutineScope(SupervisorJob()).onCompletion("scope")
 
         val parentJob = scope.launch {
@@ -111,6 +105,5 @@ class LaunchEHTest {
 
         log("is Parent scope cancelled? = ${scope.coroutineContext.job.isCancelled}")
     }
-
 }
 

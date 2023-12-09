@@ -12,7 +12,7 @@ import org.junit.Test
 class AsyncEHTest {
 
     private val ehandler = CoroutineExceptionHandler { context, exception ->
-        log("Global exception handler: Caught $exception in $context")
+        log("Global CEH: Caught $exception, and handled in $context")
     }
 
     @Test
@@ -34,10 +34,11 @@ class AsyncEHTest {
     /**
      * Root Coroutines Cases
      *
-     * Jungsun's note:
-     * Documentation says the exposed exception will be silently dropped unless
+     * ⚠️Jungsun's note:
+     * Documentation says the "exposed exception" will be silently dropped unless
      * `.await()` is called on the deferred value.
-     * However, actually it propagates and cancels all siblings and the scope
+     *
+     * However, actually it propagates and cancels all siblings and the scope (if Job() is used)
      * **without failing the test**.
      * Therefore, structured concurrency still works, but we have a chance to handle
      * exceptions using `try-catch`.
@@ -63,7 +64,6 @@ class AsyncEHTest {
 
     @Test
     fun `root coroutine - direct child of scope - what a surprise 😱`() =
-
         runTest {
             val scope = CoroutineScope(Job() + testDispatcher).onCompletion("scope")
 
@@ -103,11 +103,12 @@ class AsyncEHTest {
                     log("sibling done")
                 }.onCompletion("sibling")
 
-//                try {
-//                    deferred.await()
-//                } catch (ex: Exception) {
-//                    log("Caught: $ex") // caught and handled
-//                }
+                // Comment out the entire try block and see whether exception still happens.
+                try {
+                    deferred.await()
+                } catch (ex: Exception) {
+                    log("Caught: $ex") // caught and handled
+                }
             }
         }
 
@@ -136,7 +137,7 @@ class AsyncEHTest {
     }
 
     @Test
-    fun `exception handler_of_no_use #1 - because not propagated exceptions`() = runTest {
+    fun `exception handler_of_no_use #1 - not propagated exceptions`() = runTest {
         val scope = CoroutineScope(Job() + testDispatcher + ehandler).onCompletion("scope")
 
         val deferred = scope.async {
@@ -144,7 +145,7 @@ class AsyncEHTest {
             throw RuntimeException("Oops!")
         }.onCompletion("child")
 
-//        deferred.await() // Exception will be thrown at this point
+        deferred.await() // Exception will be thrown at this point
     }
 
     @Test
@@ -162,17 +163,17 @@ class AsyncEHTest {
                 log("sibling done")
             }.onCompletion("sibling")
 
-//            deferred.await() // Exception will be thrown at this point
+            deferred.await() // Exception will be thrown at this point
         }
     }
 
     /**
-     * Non-Root Coroutines Case
+     * Non-Root Coroutines Cases
      */
 
     @Test
     fun `non-root coroutine - uncaught exception propagates`() = runTest {
-        onCompletion("Top-level coroutine")
+        onCompletion("runTest: Top-level coroutine")
 
         // Not a root coroutine
         val deferred: Deferred<Int> = async {
@@ -180,12 +181,12 @@ class AsyncEHTest {
             throw RuntimeException("Oops!") // Exception will be thrown at this point, and propagate to parent
         }.onCompletion("deferred")
 
-        // Unlike documentation says it is useless,
+        // Unlike documentation saying it useless,
         // exceptions covered, but not considered as handled!!! <-- another surprise!😱
         try {
             deferred.await()
         } catch (ex: Exception) {
-            log("Caught: $ex")
+            log("Caught: $ex") // Covered, but not considered as handled
         }
     }
 
@@ -207,7 +208,7 @@ class AsyncEHTest {
 
 
     @Test
-    fun `exception handler of no use - since non root coroutine#3`() = runTest {
+    fun `exception handler of no use - since non root coroutine#1`() = runTest {
         // Not a root coroutine
         async(ehandler) {
             delay(1_000)
@@ -216,7 +217,7 @@ class AsyncEHTest {
     }
 
     @Test
-    fun `exception handler of no use - since non root coroutine #4`() = runTest {
+    fun `exception handler of no use - since non root coroutine #2`() = runTest {
 
         // Not a root coroutine
         async(ehandler) {

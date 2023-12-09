@@ -19,6 +19,7 @@ class LaunchSupervisorJobTest {
     @Test
     fun `SupervisorJob in failing child's parent context takes effect`() = runTest {
         onCompletion("runTest")
+
         val scope = CoroutineScope(SupervisorJob()) // Compare with Job()
 
         val child1 = scope.launch {
@@ -75,6 +76,13 @@ class LaunchSupervisorJobTest {
         scope.completeStatus("scope")
     }
 
+    //
+    //       scope (Job)           sharedJob (SupervisorJob)
+    //           |                          |
+    //    +------+-------+          +-------+-------+
+    //    |              |          |               |
+    //  child3        child4      child1(🔥)       child2
+    //
     @Test
     fun `SupervisorJob in parent context controls only the lifetime of its own children`() =
         runTest {
@@ -124,5 +132,13 @@ class LaunchSupervisorJobTest {
             }
             scope.completeStatus()
         }
-
+    //
+    //   scope (Job)       SupervisorJob
+    //                         |
+    //                    parent Job(X)
+    //                         |
+    //                 +-------+-------+
+    //                 |               |
+    //               child1(🔥)       child2(X)
+    //
 }

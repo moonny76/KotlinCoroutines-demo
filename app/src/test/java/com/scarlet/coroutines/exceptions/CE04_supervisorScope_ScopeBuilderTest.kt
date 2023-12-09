@@ -1,5 +1,6 @@
 package com.scarlet.coroutines.exceptions
 
+import androidx.test.core.app.ActivityScenario.launch
 import com.scarlet.util.completeStatus
 import com.scarlet.util.log
 import com.scarlet.util.onCompletion
@@ -17,63 +18,51 @@ class SupervisorScopeBuilderTest {
      * (Wrong!!!!)
      * `supervisorScope` does not rethrow an uncaught exception, but propagates it instead!!
      *
-     * Failure of a child coroutine does not propagate(?) to its parent. But, failure of the scope
-     * itself rethrows the exception unless it is caught. (Jungsun's note: Actually, it does propagate
-     * to its parent. But, it does not cancel its parent.)
+     * Failure of a child coroutine does not propagate(?) to its parent.
+     *
+     * (⚠️Jungsun's note:
+     * Actually, it does propagate to its parent. But, it does "not" cancel its parent. <== _Strange!!_)
      *
      * This feature requires an installed `CoroutineExceptionHandler` in its root coroutines,
      * otherwise the `supervisorScope` will fail anyway. That's because a scope always looks
      * for an installed exception handler. If it can't find any, it fails.
      *
-     * Note: Those exceptions not propagated from child coroutines are not propagated, but
-     * rethrown instead.
-     */
-
-
-    /**
-     * Exceptions propagated via `supervisorScope` do not cancel the parent. <== Strange!!
-     */
-
-    /**
-     * `runBlocking` vs. `runTest`
+     * ⚠️Important Note: Exceptions not propagated from child coroutines do not propagate,
+     * (i.e., exceptions thrown supervisorScope body) they are rethrown instead unless it
+     * is caught on-site.
      *
-     * `runBlocking` do not rethrow uncaught exception propagated via `supervisorScope`.
-     *
-     * But, `runTest` do rethrow it.
+     * Recommendation by Jungsun: Always install a CEH when using `supervisorScope`.
      */
 
     @Test
-    fun `supervisorScope propagates propagated uncaught exceptions - runBlocking`() =
-        /* runBlocking may call default CEH, which prints the stack trace.
-           runBlocking regards this as the exception as handled. */
-        runBlocking<Unit> {
-            launch {
-                supervisorScope {
-                    launch {
-                        delay(100)
-                        throw RuntimeException("oops")
-                    }.onCompletion("child1")
-                }
-                log("parent: Hey, I'm still alive!")
-            }.onCompletion("parent")
-        }
+    fun `supervisorScope propagates propagated uncaught exceptions1`() = runBlocking<Unit> {
+        // `supervisorScope` may call default CEH, which prints the stack trace.
+        // `runBlockingTest` regards this as the exception as handled.
+        launch {
+            supervisorScope {
+                launch {
+                    delay(100)
+                    throw RuntimeException("oops")
+                }.onCompletion("child1")
+            }
+            log("parent: Hey, I'm still alive!")
+        }.onCompletion("parent")
+    }
 
     @Test
-    fun `supervisorScope propagates propagated uncaught exceptions - runTest`() =
-        /* runTest calls installed CEH at TestScope, which prints the stack trace.
-           and rethrows first uncaught exception as not handled */
-        runTest {
-            launch {
-                supervisorScope {
-                    launch {
-                        delay(100)
-                        throw RuntimeException("oops")
-                    }.onCompletion("child1")
-                }
-                log("Hey, I'm still alive!")
-            }.onCompletion("parent")
-        }
-
+    fun `supervisorScope propagates propagated uncaught exceptions2`() = runTest {
+        // `supervisorScope` calls installed CEH at TestScope, which prints the stack trace.
+        // and `runTest` rethrows first uncaught exception as not handled */
+        launch {
+            supervisorScope {
+                launch {
+                    delay(100)
+                    throw RuntimeException("oops")
+                }.onCompletion("child1")
+            }
+            log("Hey, I'm still alive!")
+        }.onCompletion("parent")
+    }
 
     @Test
     fun `supervisorScope looks for CEH to handle exceptions from children`() =

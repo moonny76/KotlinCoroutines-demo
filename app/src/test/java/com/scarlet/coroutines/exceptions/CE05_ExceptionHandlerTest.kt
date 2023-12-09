@@ -12,15 +12,18 @@ import kotlin.time.Duration.Companion.seconds
 @ExperimentalCoroutinesApi
 class ExceptionHandlerTest {
 
+    /**
+     * Coroutine Exception Handlers (CEH) only catches propagated uncaught exceptions.
+     */
     private val ehandler = CoroutineExceptionHandler { context, exception ->
-        log("Global exception handler Caught $exception in: $context")
+        log("Global CEH: Caught $exception, and handles it in: $context")
     }
 
     /**
      * Coroutine Exception Handlers installed at scope
      */
 
-    @Test
+    @Test // DEFAULT_TIMEOUT = 10.seconds
     fun `CEH at the scope`() = runTest(timeout = 20_000.seconds) {
         val scope = CoroutineScope(Job() + ehandler)
 
@@ -33,6 +36,7 @@ class ExceptionHandlerTest {
             launch {
                 delay(20_000)
             }.onCompletion("child2")
+            // Will child2 be cancelled? - What is the take-away from this fact?
 
         }.onCompletion("parent").join()
 
