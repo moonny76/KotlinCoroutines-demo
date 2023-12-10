@@ -10,7 +10,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Test
 
 @ExperimentalCoroutinesApi
-class M01_Mockk_CoroutinesTest {
+class M02_Mockk_CoroutinesTest {
 
     /**
      * Coroutines:
@@ -38,7 +38,7 @@ class M01_Mockk_CoroutinesTest {
         coEvery { mockedPath.readAsync() } returns "hello world"
 //        coEvery { mockedPath.readAsync() } coAnswers { "hello world" }
 
-        coEvery { mockedPath.doAsyncWork() } coAnswers  {
+        coEvery { mockedPath.doAsyncWork() } coAnswers {
             delay(1000)
             println("Async done")
         }
